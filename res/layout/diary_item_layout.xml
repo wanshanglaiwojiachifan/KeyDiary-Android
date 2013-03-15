@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <org.holoeverywhere.widget.TextView
+        android:id="@+id/day_diary_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2日"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/purple"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/vpi__tab_selected_pressed_holo" />
+
+    <TextView
+        android:id="@+id/content_diary_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+       	android:gravity="center"
+       	android:maxLength="7"
+        android:text="就烦死了放假了"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>

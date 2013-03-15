@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <org.holoeverywhere.widget.EditText
+        android:id="@+id/username_etv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:hint="输入用户名"
+        android:imeOptions="actionNext"
+        android:singleLine="true" />
+
+    <org.holoeverywhere.widget.EditText
+        android:id="@+id/password_etv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ems="10"
+        android:hint="输入密码"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword" 
+        android:singleLine="true"/>
+
+    <org.holoeverywhere.widget.Button
+        android:id="@+id/login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="登录" />
+
+</LinearLayout>

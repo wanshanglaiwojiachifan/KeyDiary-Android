@@ -1,0 +1,12 @@
+# Android generated
+bin/
+gen/
+
+# Ant
+build.xml
+local.properties
+
+# Eclipse
+.classpath
+.project
+.externalToolBuilders/
