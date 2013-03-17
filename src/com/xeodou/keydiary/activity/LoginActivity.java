@@ -1,9 +1,5 @@
 package com.xeodou.keydiary.activity;
 
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.ProgressDialog;
-import org.holoeverywhere.widget.Button;
-import org.holoeverywhere.widget.EditText;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
@@ -15,6 +11,11 @@ import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.LoadUser;
 import com.xeodou.keydiary.http.API;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class LoginActivity extends Activity implements OnClickListener{
 
@@ -83,6 +86,15 @@ public class LoginActivity extends Activity implements OnClickListener{
                 }
                
             });
+        } else {
+            if(username.getText().toString().length() <= 0){
+                Crouton.showText(this, "用户名不能为空", Style.ALERT);
+                return;
+            }
+            if(password.getText().toString().length() <= 0){
+                Crouton.showText(this, "密码不能为空", Style.ALERT);
+                return;
+            }
         }
     }
     
@@ -123,14 +135,11 @@ public class LoginActivity extends Activity implements OnClickListener{
                 break;
             }
             dismissDialog();
+            if(msg.obj != null){
+                Crouton.showText(LoginActivity.this, msg.obj.toString(), Style.ALERT);
+            }
         }
        
     };
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            setResult(Config.FAIL_CODE);
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+
 }

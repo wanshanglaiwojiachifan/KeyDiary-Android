@@ -1,8 +1,5 @@
 package com.xeodou.keydiary;
 
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.ProgressDialog;
-
 import android.content.Context;
 
 public class UIHelper {

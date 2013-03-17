@@ -4,12 +4,38 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity" >
-	<com.viewpagerindicator.TitlePageIndicator
-    android:id="@+id/diarytitles"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent" />
-	<android.support.v4.view.ViewPager
-	    android:id="@+id/diarycontent"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"/>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        layout="@layout/head_layout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/pager_logo" />
+
+        <Button
+            android:id="@+id/set_btn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/set_btn" />
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/diarycontent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

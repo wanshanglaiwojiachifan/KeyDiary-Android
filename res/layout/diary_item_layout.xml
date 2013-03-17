@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
     
-    <org.holoeverywhere.widget.TextView
+    <TextView
         android:id="@+id/day_diary_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="2日"
-        android:layout_gravity="center_horizontal"
-        android:textColor="@color/purple"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@drawable/vpi__tab_selected_pressed_holo" />
+        android:text="01"
+        android:textColor="@color/diaryday"
+        android:textSize="30sp"
+        android:layout_marginLeft="24dp"/>
 
     <TextView
         android:id="@+id/content_diary_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-       	android:gravity="center"
+        android:layout_gravity="center_vertical"
+ 		android:background="@null" 
+ 		android:singleLine="true"      
+       	android:gravity="left"
        	android:maxLength="7"
-        android:text="就烦死了放假了"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:hint="无日记"
+        android:textSize="22sp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/diarycontent"/>
 
 </LinearLayout>

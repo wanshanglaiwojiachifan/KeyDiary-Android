@@ -3,16 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	
-    <org.holoeverywhere.widget.GridView
-        android:id="@+id/diary_grid" 
+
+    <TextView 
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/title"
+        android:textSize="30sp"
+        android:layout_marginLeft="20dp"
+        android:text="2013 03"/>
+    
+    <ListView
+        android:id="@+id/diary_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-       	android:layout_marginLeft="5dp"
-       	android:layout_marginRight="5dp"
-        android:numColumns="3"
-        android:horizontalSpacing="5dp">
-        
-    </org.holoeverywhere.widget.GridView>
+        android:scrollbars="none"
+        android:divider="@null"
+        android:cacheColorHint="@android:color/transparent" >
+    </ListView>
 
 </LinearLayout>

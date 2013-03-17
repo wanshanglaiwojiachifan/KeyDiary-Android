@@ -2,5 +2,8 @@
 <resources>
     <color name="title_indicator_text_color">#739127</color>
     <color name="purple">#ffaa66cc</color>
-    
+    <color name="maincolor">#45d4da</color>
+    <color name="diaryday">#d2d2d2</color>
+    <color name="diarycontent">#2f2f2f</color>
+    <color name="title">#797979</color>
 </resources>

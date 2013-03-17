@@ -1,18 +1,14 @@
 package com.xeodou.keydiary.activity;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.widget.Button;
-import org.holoeverywhere.widget.EditText;
-import org.holoeverywhere.widget.TextView;
-
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class AddDiaryActivity extends Activity {
 
@@ -27,8 +23,6 @@ public class AddDiaryActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adddiary);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         dayTv = (TextView)findViewById(R.id.day_tv);
         monthTv = (TextView)findViewById(R.id.month_tv);
         yearTv = (TextView)findViewById(R.id.year_tv);
@@ -44,19 +38,5 @@ public class AddDiaryActivity extends Activity {
         }
         
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //Used to put dark icons on light action bar
 
-        menu.add("删除").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-
-        menu.add("添加").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //This uses the imported MenuItem from ActionBarSherlock
-//        Toast.makeText(this, "Got click: " + item.toString(), Toast.LENGTH_SHORT).show();
-        return true;
-    }
 }

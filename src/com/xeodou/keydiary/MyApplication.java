@@ -1,6 +1,6 @@
 package com.xeodou.keydiary;
 
-import org.holoeverywhere.app.Application;
+import android.app.Application;
 
 public class MyApplication extends Application {
 

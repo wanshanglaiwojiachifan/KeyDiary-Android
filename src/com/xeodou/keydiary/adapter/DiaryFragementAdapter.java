@@ -2,16 +2,17 @@ package com.xeodou.keydiary.adapter;
 
 import java.util.List;
 import java.util.Map;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.widget.GridView;
 import com.xeodou.keydiary.R;
+import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.Diary;
 import com.xeodou.keydiary.bean.DiaryTime;
-import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class DiaryFragementAdapter extends PagerAdapter{
 
@@ -31,10 +32,13 @@ public class DiaryFragementAdapter extends PagerAdapter{
 
     @Override
     public View instantiateItem(ViewGroup container, int position) {
-        View view = LayoutInflater.inflate(container.getContext(), R.layout.diaryitem_layout);
-        GridView grid = (GridView)view.findViewById(R.id.diary_grid);
+        View view = LayoutInflater.from(container.getContext()).inflate(R.layout.diaryitem_layout, null);
+        ListView grid = (ListView)view.findViewById(R.id.diary_grid);
+        TextView title = (TextView)view.findViewById(R.id.title);
         diaryAdapter = new DiaryAdapter(container.getContext(), diaries, data.get(position).getYear(), data.get(position).getMonth());
         grid.setAdapter(diaryAdapter);
+        title.setText(data.get(position).toTitle());
+        grid.setSelection(Utils.getCurrentDay() - 1);
         container.addView(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         return view;
     }

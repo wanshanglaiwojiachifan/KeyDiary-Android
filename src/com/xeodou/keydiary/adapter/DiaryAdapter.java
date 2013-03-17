@@ -1,20 +1,17 @@
 package com.xeodou.keydiary.adapter;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
-
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.widget.TextView;
-
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.Diary;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class DiaryAdapter extends BaseAdapter {
 
@@ -55,16 +52,27 @@ public class DiaryAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         ViewHolder viewHolder = null;
-        if(convertView == null){
+//        if(convertView == null){
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.diary_item_layout);
+            convertView = LayoutInflater.from(context).inflate(R.layout.diary_item_layout, null);
             viewHolder.day = (TextView)convertView.findViewById(R.id.day_diary_tv);
             viewHolder.content = (TextView)convertView.findViewById(R.id.content_diary_tv);
-            convertView.setTag(viewHolder);
+//            convertView.setTag(viewHolder);
+//        } else {
+//            viewHolder = (ViewHolder)convertView.getTag();
+//        }
+        if( year > Utils.getCurrentYear()){
+            viewHolder.content.setEnabled(false);
         } else {
-            viewHolder = (ViewHolder)convertView.getTag();
+            if(month > Utils.getCurrentMonth()){
+                viewHolder.content.setEnabled(false);
+            } else {
+                if(position + 1 > Utils.getCurrentDay()){
+                    viewHolder.content.setEnabled(false);
+                }
+            }
         }
-        viewHolder.day.setText(position+1 + "日");
+        viewHolder.day.setText(Utils.douInt(position+1));
         Diary diary = diaries.get(year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position));
         if(diary != null){
             viewHolder.content.setText(diary.getContent());
