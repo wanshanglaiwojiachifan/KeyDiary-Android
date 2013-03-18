@@ -38,7 +38,9 @@ public class DiaryFragementAdapter extends PagerAdapter{
         diaryAdapter = new DiaryAdapter(container.getContext(), diaries, data.get(position).getYear(), data.get(position).getMonth());
         grid.setAdapter(diaryAdapter);
         title.setText(data.get(position).toTitle());
-        grid.setSelection(Utils.getCurrentDay() - 1);
+        if(data.get(position).getMonth() == Utils.getCurrentMonth()){
+            grid.setSelection(Utils.getCurrentDay() - 1);
+        }
         container.addView(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         return view;
     }

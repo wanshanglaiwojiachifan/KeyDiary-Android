@@ -16,10 +16,17 @@ import com.xeodou.keydiary.bean.DiaryTime;
 import com.xeodou.keydiary.bean.LoadDiary;
 import com.xeodou.keydiary.bean.User;
 import com.xeodou.keydiary.http.API;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -38,6 +45,7 @@ public class MainActivity extends Activity {
     private Map<String, Diary> diaries;
     private List<DiaryTime> titles;
     private Button setBtn;
+    private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +66,7 @@ public class MainActivity extends Activity {
         adapter = new DiaryFragementAdapter(diaries, titles);
         viewPager = (ViewPager)findViewById(R.id.diarycontent);
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(2);
         viewPager.setOnPageChangeListener(pageChangeListener);
         loadAllDiaries();
     }
@@ -90,12 +98,12 @@ public class MainActivity extends Activity {
     private void getFiveMonth(){
         int m = Utils.getCurrentMonth();
         int y = Utils.getCurrentYear();
-        m = m - 2;
+        m = m - 3;
         if(m < 0){
             m = 12 + m;
             y = y - 1;
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             DiaryTime time = new DiaryTime();
             m++;
             if(m > 12){
@@ -134,24 +142,55 @@ public class MainActivity extends Activity {
                         hashMap.put(d.getD(), d);
                     }
                     diaries.putAll(hashMap);
-                    adapter.notifyDataSetChanged();
+                    sendMsg(Config.SUCCESSS_CODE, null);
+                } else {
+                    sendMsg(Config.FAIL_CODE, null);
                 }
             }
 
             @Override
             public void onFailure(Throwable e, JSONObject errorResponse) {
                 // TODO Auto-generated method stub
-                super.onFailure(e, errorResponse);
+                sendMsg(Config.FAIL_CODE, errorResponse.toString());
             }
 
             @Override
             public void onStart() {
                 // TODO Auto-generated method stub
-                super.onStart();
+                if (dialog == null) {
+                    dialog = ProgressDialog.show(MainActivity.this, null, "正在加载所有日记");
+                }
             }
             
         });
     } 
+    
+    private void sendMsg(int code , Object obj){
+        Message msg = new Message();
+        msg.what = code;
+        msg.obj = obj;
+        handler.sendMessage(msg);
+    }
+    
+    private Handler handler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg) {
+            // TODO Auto-generated method stub
+            if(dialog != null && dialog.isShowing() ) dialog.dismiss();
+            dialog = null;
+            if(msg.what == Config.SUCCESSS_CODE){
+                adapter.notifyDataSetChanged();
+                Crouton.showText(MainActivity.this , "加载成功", Style.INFO);
+                return ;
+            }
+            String str = msg.obj.toString();
+            if(str == null) str = "加载失败";
+            if(str.length() <= 0) str = "加载失败";
+            Crouton.showText(MainActivity.this, str, Style.ALERT);
+        }
+        
+    };
     
     private void addPager(int i, int p){
         DiaryTime time = titles.get(p);
@@ -197,7 +236,7 @@ public class MainActivity extends Activity {
 //            Toast.makeText(MainActivity.this, position + " position", Toast.LENGTH_SHORT).show();
             if((last > position) && position - 2 <= 0 ){
 //                Toast.makeText(MainActivity.this, last - position +  "left", Toast.LENGTH_SHORT).show();
-                addPager(-1, position);
+//                addPager(-1, position);
             } else if((last < position) && position + 2 == titles.size()) {
 //                Toast.makeText(MainActivity.this, last - position + "right", Toast.LENGTH_SHORT).show();
                 addPager(1, position);

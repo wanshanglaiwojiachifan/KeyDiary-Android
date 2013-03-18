@@ -19,4 +19,11 @@ public class API {
         params.put("content", content);
         KeyDiaryRequest.post(APIConfig.API_ADD_DIARY, params, responseHandler);
     }
+    
+    public static void updateDiary(String data,String content, AsyncHttpResponseHandler responseHandler){
+        RequestParams params = new RequestParams();
+        params.put("d", data);
+        params.put("content", content);
+        KeyDiaryRequest.post(APIConfig.API_UPDATE_DIARY, params, responseHandler);
+    }
 }
