@@ -31,4 +31,7 @@ public class Config {
     //sharedpreference
     public final static String PREF_NAME_LOGIN = "keydiary";
     public final static String PREF_NAME_USER = "keydiary";
+    
+    //alerm id
+    public final static int ALERM_ID = 0x000100;
 }

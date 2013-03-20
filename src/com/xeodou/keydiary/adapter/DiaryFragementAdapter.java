@@ -2,6 +2,8 @@ package com.xeodou.keydiary.adapter;
 
 import java.util.List;
 import java.util.Map;
+
+import com.haarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.Diary;
@@ -37,6 +39,9 @@ public class DiaryFragementAdapter extends PagerAdapter{
         TextView title = (TextView)view.findViewById(R.id.title);
         diaryAdapter = new DiaryAdapter(container.getContext(), diaries, data.get(position).getYear(), data.get(position).getMonth());
         grid.setAdapter(diaryAdapter);
+        ScaleInAnimationAdapter sia = new ScaleInAnimationAdapter(diaryAdapter, 0.5f, 100, 500);
+        sia.setListView(grid);
+        grid.setAdapter(sia);
         title.setText(data.get(position).toTitle());
         if(data.get(position).getMonth() == Utils.getCurrentMonth()){
             grid.setSelection(Utils.getCurrentDay() - 1);

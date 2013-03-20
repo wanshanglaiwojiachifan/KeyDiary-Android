@@ -26,4 +26,10 @@ public class API {
         params.put("content", content);
         KeyDiaryRequest.post(APIConfig.API_UPDATE_DIARY, params, responseHandler);
     }
+    
+    public static void deleteDiary(String data, AsyncHttpResponseHandler responseHandler){
+        RequestParams params = new RequestParams();
+        params.put("d", data);
+        KeyDiaryRequest.post(APIConfig.API_DELETE_DIARY, params, responseHandler);
+    }
 }

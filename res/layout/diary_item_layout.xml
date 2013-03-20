@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="30dp"
     android:orientation="horizontal" >
     
     <TextView
@@ -13,16 +14,15 @@
         android:textSize="30sp"
         android:layout_marginLeft="24dp"/>
 
-    <EditText
+    <com.xeodou.keydiary.PanningEditText
         android:id="@+id/content_diary_tv"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
- 		android:background="@null" 
+ 		android:background="@drawable/diary_input_ex"
  		android:singleLine="true"
  		android:imeOptions="actionDone"      
        	android:gravity="left"
-       	android:maxLength="7"
         android:textSize="22sp"
         android:layout_marginLeft="20dp"
         android:textColor="@color/diarycontent"/>

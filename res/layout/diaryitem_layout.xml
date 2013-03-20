@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:scrollbars="none"
         android:divider="@null"
+        android:descendantFocusability="beforeDescendants"
         android:cacheColorHint="@android:color/transparent" >
     </ListView>
 

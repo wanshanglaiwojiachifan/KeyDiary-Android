@@ -9,14 +9,13 @@ public class LoadDiary extends Result {
      */
     private static final long serialVersionUID = 804329432941L;
 
-    List<Diary> data;
+    DiaryResult data;
 
-    public List<Diary> getData() {
+    public DiaryResult getData() {
         return data;
     }
 
-    public void setData(List<Diary> data) {
+    public void setData(DiaryResult data) {
         this.data = data;
     }
-    
 }

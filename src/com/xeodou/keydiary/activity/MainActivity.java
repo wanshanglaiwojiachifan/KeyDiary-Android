@@ -1,11 +1,14 @@
 package com.xeodou.keydiary.activity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.Log;
 import com.xeodou.keydiary.R;
@@ -46,10 +49,12 @@ public class MainActivity extends Activity {
     private List<DiaryTime> titles;
     private Button setBtn;
     private ProgressDialog dialog;
+    private long startDate, endDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        UmengUpdateAgent.update(this);
         if(!Utils.isLogin(this)){
             login();
             return;
@@ -62,7 +67,6 @@ public class MainActivity extends Activity {
         setBtn.setOnClickListener(clickListener);
         diaries = new HashMap<String, Diary>();
         titles = new ArrayList<DiaryTime>();
-        getFiveMonth();
         adapter = new DiaryFragementAdapter(diaries, titles);
         viewPager = (ViewPager)findViewById(R.id.diarycontent);
         viewPager.setAdapter(adapter);
@@ -96,24 +100,21 @@ public class MainActivity extends Activity {
     };
     
     private void getFiveMonth(){
-        int m = Utils.getCurrentMonth();
-        int y = Utils.getCurrentYear();
-        m = m - 3;
-        if(m < 0){
-            m = 12 + m;
-            y = y - 1;
-        }
+        if(startDate <= 0) return;
+        Date date = Utils.getDate(startDate);
+        int m = date.getMonth() + 1;
+        int y = date.getYear() + 1900;
         for (int i = 0; i < 5; i++) {
             DiaryTime time = new DiaryTime();
+            time.setYear(y);
+            time.setMonth(m);
+            time.setDay(0);
+            titles.add(time);
             m++;
             if(m > 12){
                 m = m - 12;
                 y += 1;
             }
-            time.setYear(y);
-            time.setMonth(m);
-            time.setDay(0);
-            titles.add(time);
         }
     }
     
@@ -133,10 +134,22 @@ public class MainActivity extends Activity {
             public void onSuccess(int statusCode, JSONObject response) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, response.toString());
-                Gson gson = new Gson();
+                Gson gson = null;
+                try {
+                    gson = new Gson();
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    sendMsg(Config.FAIL_CODE, "解析数据失败，请重试！");
+                }
                 LoadDiary result = gson.fromJson(response.toString() , LoadDiary.class);
-                if (result.getStat() == 1) {
-                    List<Diary> ds = result.getData();
+                if (result.getStat() == 1 && result.getData() != null) {
+                    List<Diary> ds = result.getData().getDiaries();
+                    startDate = result.getData().getStartDate();
+                    endDate = result.getData().getEndDate();
+                    if(ds == null || ds.size() <= 0){
+                        sendMsg(Config.FAIL_CODE, "你还没有添加任何日记");
+                        return;
+                    }
                     Map<String, Diary> hashMap = new HashMap<String, Diary>();
                     for(Diary d : ds){
                         hashMap.put(d.getD(), d);
@@ -180,6 +193,7 @@ public class MainActivity extends Activity {
             if(dialog != null && dialog.isShowing() ) dialog.dismiss();
             dialog = null;
             if(msg.what == Config.SUCCESSS_CODE){
+                getFiveMonth();
                 adapter.notifyDataSetChanged();
                 Crouton.showText(MainActivity.this , "加载成功", Style.INFO);
                 return ;
@@ -193,6 +207,7 @@ public class MainActivity extends Activity {
     };
     
     private void addPager(int i, int p){
+        Date date = Utils.getDate(endDate);
         DiaryTime time = titles.get(p);
         int y = time.getYear();
         int m = time.getMonth();
@@ -204,7 +219,8 @@ public class MainActivity extends Activity {
             if(m > 12) { 
                 m = m -12;
                 y ++;
-            }        
+            }
+            if(y == date.getYear() + 1900 && m == date.getMonth() + 1) return;
             time.setYear(y);
             time.setMonth(m);
             titles.add(time);
@@ -270,6 +286,20 @@ public class MainActivity extends Activity {
         } else if(resultCode == Config.LOGOUT_CODE){
             finish();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 
 

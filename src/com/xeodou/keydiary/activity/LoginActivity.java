@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.umeng.analytics.MobclickAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.Log;
 import com.xeodou.keydiary.R;
@@ -141,5 +142,17 @@ public class LoginActivity extends Activity implements OnClickListener{
         }
        
     };
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
 }

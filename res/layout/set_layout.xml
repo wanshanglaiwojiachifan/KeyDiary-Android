@@ -1,26 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <include
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            layout="@layout/head_layout" />
-
-        <Button
-            android:id="@+id/back_btn"
-            android:layout_width="20dp"
-            android:layout_height="25dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/back_btn" />
-    </LinearLayout>
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
 
     <Button
         android:id="@+id/logout_btn"
@@ -32,5 +14,64 @@
         android:background="@drawable/logout_btn"
         android:text="退             出"
         android:textColor="@android:color/white" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical" >
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            layout="@layout/head_layout" />
+
+        <Button
+            android:id="@+id/back_btn"
+            android:layout_width="20dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/back_btn" />
+
+        <TextView
+            android:id="@+id/user"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:maxWidth="200dp"
+            android:text=""
+            android:textColor="@color/maincolor"
+            android:textSize="18sp" />
+
+		<LinearLayout 
+		    android:layout_width="wrap_content"
+		    android:layout_height="match_parent"
+		    android:layout_centerVertical="true"
+		    android:layout_alignParentRight="true"
+		    android:layout_marginRight="20dp"
+		    android:orientation="vertical">
+		    <Button
+                android:id="@+id/noti_btn"
+                android:layout_width="24dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/set_noti_n" />
+
+            <TextView
+                android:id="@+id/alert_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="22:30"
+                android:textColor="@color/maincolor"
+                android:textSize="12sp" />
+
+		</LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

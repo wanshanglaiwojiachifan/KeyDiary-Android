@@ -44,6 +44,18 @@ public class Utils {
         editor.commit();
     }
     
+    public void storeAlerm(Context context,String time){
+        SharedPreferences preferences = context.getSharedPreferences(Config.PREF_NAME_USER, Context.MODE_PRIVATE);
+        Editor editor = preferences.edit();
+        editor.putString("ALERM", time);
+        editor.commit();
+    }
+    
+    public String getAlerm(Context context){
+        SharedPreferences preferences = context.getSharedPreferences(Config.PREF_NAME_USER, Context.MODE_PRIVATE);
+        return preferences.getString("ALERM", "");
+    }
+    
     public String getPass(Context context){
         SharedPreferences preferences = context.getSharedPreferences(Config.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
         String user = preferences.getString(Config.USER, "");
@@ -96,6 +108,16 @@ public class Utils {
        return getDate().getDate();
    }
    
+   public static int getCurrentHour(){
+       return getDate().getHours();
+   }
+   public static int getCurrentMin(){
+       return getDate().getMinutes();
+   }
+   
+   public static Date getDate(long time){
+       return new Date(time);
+   }
    private static Date getDate(){
        if(date != null){
            return date;
