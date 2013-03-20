@@ -25,6 +25,7 @@ public class PanningEditText extends EditText implements IKeyboardChanged{
     public void onKeyboardShown() {
         // TODO Auto-generated method stub
         setCursorVisible(true);
+        requestFocus();
     }
     @Override
     public void onKeyboardHidden() {
