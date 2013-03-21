@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.MyApplication;
+import com.xeodou.keydiary.PanningEditText;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.Diary;
@@ -45,7 +46,7 @@ public class DiaryAdapter extends BaseAdapter {
 
     class ViewHolder {
         TextView day;
-        EditText content;
+        PanningEditText content;
     }
     
     private Map<String, Diary> diaries;
@@ -87,8 +88,8 @@ public class DiaryAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.diary_item_layout, null);
             viewHolder.day = (TextView)convertView.findViewById(R.id.day_diary_tv);
-            editText = (EditText)convertView.findViewById(R.id.content_diary_tv);
-//            convertView.setTag(viewHolder);
+            editText = (PanningEditText)convertView.findViewById(R.id.content_diary_tv);
+            convertView.setTag(viewHolder);
 //        } else {
 //            viewHolder = (ViewHolder)convertView.getTag();
 //        }
@@ -105,52 +106,7 @@ public class DiaryAdapter extends BaseAdapter {
         }
         final String day = year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position + 1);
         viewHolder.day.setText(Utils.douInt(position+1));
-        editText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                // TODO Auto-generated method stub
-                if(!hasFocus)
-                    editText.setBackgroundResource(R.drawable.edit_text_n);
-            }
-        });
-        editText.setOnTouchListener(new OnTouchListener() {
-            
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // TODO Auto-generated method stub
-                editText.setBackgroundResource(R.drawable.edit_text_n);
-                return false;
-            }
-        });
-        editText.addTextChangedListener(new TextWatcher() {
-            
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(editText.isSelected() && editText.isFocused()){
-                    if (calculateLength(s) > 7) {
-                        editText.setBackgroundResource(R.drawable.edit_text_e);
-                    } else {
-                        editText.setBackgroundResource(R.drawable.edit_text_s);
-                    }
-                }
-            }
-            
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                    int after) {
-                // TODO Auto-generated method stub
-//                editText.setBackgroundResource(R.drawable.edit_text_s);
-                text = s.toString();
-            }
-            
-            @Override
-            public void afterTextChanged(Editable s) {
-                // TODO Auto-generated method stub
-                
-            }
-        });
+ 
         editText.setOnEditorActionListener(new OnEditorActionListener() {
             
             @Override
@@ -176,8 +132,6 @@ public class DiaryAdapter extends BaseAdapter {
                         }
                     }
                 }
-                v.clearFocus();
-                v.setSelected(false);
                 ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
                         editText.getWindowToken(), 0);
                 return false;

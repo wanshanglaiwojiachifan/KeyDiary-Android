@@ -75,19 +75,6 @@ public class MainActivity extends Activity {
         loadAllDiaries();
     }
     
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        // TODO Auto-generated method stub
-        // Checks whether a hardware keyboard is available
-        if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_NO) {
-            Toast.makeText(this, "keyboard visible", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES) {
-            Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show();
-        }
-      super.onConfigurationChanged(newConfig);
-
-    }
-
     private OnClickListener clickListener = new OnClickListener() {
         
         @Override
@@ -104,7 +91,16 @@ public class MainActivity extends Activity {
         Date date = Utils.getDate(startDate);
         int m = date.getMonth() + 1;
         int y = date.getYear() + 1900;
-        for (int i = 0; i < 5; i++) {
+        Date endD = Utils.getDate(endDate);
+        int nm = endD.getMonth() + 1;
+        int ny = endD.getYear() + 1900;
+        if(nm < m) {
+            nm += 12;
+            ny --;
+            if(ny < y) ny = y;
+        }else if(nm == m) nm = m + 1; 
+        int l = (ny - y) * 12 + nm -m;
+        for(int i = 0;i < l; i ++ ){
             DiaryTime time = new DiaryTime();
             time.setYear(y);
             time.setMonth(m);
@@ -206,43 +202,6 @@ public class MainActivity extends Activity {
         
     };
     
-    private void addPager(int i, int p){
-        Date date = Utils.getDate(endDate);
-        DiaryTime time = titles.get(p);
-        int y = time.getYear();
-        int m = time.getMonth();
-        time = null;
-        time = new DiaryTime();
-        time.setDay(0);
-        if(i == 1){
-            m += 2;
-            if(m > 12) { 
-                m = m -12;
-                y ++;
-            }
-            if(y == date.getYear() + 1900 && m == date.getMonth() + 1) return;
-            time.setYear(y);
-            time.setMonth(m);
-            titles.add(time);
-        } else if(i == -1){
-            m --;
-            if(m <= 0){
-                m += 12;
-                y --;
-            }
-            time.setYear(y);
-            time.setMonth(m);
-            List<DiaryTime> arr = new ArrayList<DiaryTime>();
-            arr.add(time);
-            arr.addAll(titles);
-            titles.clear();
-            titles.addAll(arr);
-            arr = null;
-            
-        }
-        adapter.notifyDataSetChanged();
-    }
-    
     private int last;
     private OnPageChangeListener pageChangeListener = new OnPageChangeListener() {
         
@@ -255,7 +214,7 @@ public class MainActivity extends Activity {
 //                addPager(-1, position);
             } else if((last < position) && position + 2 == titles.size()) {
 //                Toast.makeText(MainActivity.this, last - position + "right", Toast.LENGTH_SHORT).show();
-                addPager(1, position);
+//                addPager(1, position);
             }
             last = position;
         }

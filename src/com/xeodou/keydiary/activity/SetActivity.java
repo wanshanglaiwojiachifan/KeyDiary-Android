@@ -140,8 +140,8 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
     public boolean onLongClick(View v) {
         // TODO Auto-genetrated method stub
         if(alermTime.getVisibility() == View.GONE){
-            isShow = true;
-            dialog.show();
+//            isShow = true;
+//            dialog.show();
         } else {
             delAlarm();
             alermTime.setVisibility(View.GONE);

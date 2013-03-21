@@ -36,6 +36,7 @@ public class DiaryFragementAdapter extends PagerAdapter{
     public View instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.diaryitem_layout, null);
         ListView grid = (ListView)view.findViewById(R.id.diary_grid);
+//        grid.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         TextView title = (TextView)view.findViewById(R.id.title);
         diaryAdapter = new DiaryAdapter(container.getContext(), diaries, data.get(position).getYear(), data.get(position).getMonth());
         grid.setAdapter(diaryAdapter);
