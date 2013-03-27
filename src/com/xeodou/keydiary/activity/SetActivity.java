@@ -34,7 +34,8 @@ import android.widget.TimePicker;
 public class SetActivity extends Activity implements OnClickListener, OnLongClickListener {
 
     
-    private Button backBtn, logoutBtn, notiBtn;
+    private Button logoutBtn, notiBtn;
+    private View backBtn;
     private TextView textView, alermTime;
     private boolean isShow = false;
     private Dialog dialog;
@@ -50,7 +51,7 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         alermTime = (TextView) findViewById(R.id.alert_time);
         alermTime.setVisibility(View.GONE);
         notiBtn = (Button) findViewById(R.id.noti_btn);
-        backBtn = (Button) findViewById(R.id.back_btn);
+        backBtn = (View) findViewById(R.id.back_btn);
         logoutBtn = (Button) findViewById(R.id.logout_btn);        
         notiBtn.setOnClickListener(this);
         notiBtn.setOnLongClickListener(this);
@@ -148,6 +149,7 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
             (new Utils()).storeAlerm(SetActivity.this, "");
             Crouton.showText(SetActivity.this, "删除每日提醒成功！", Style.CONFIRM);
             notiBtn.setBackgroundResource(R.drawable.set_noti_n);
+            return true;
         }
         return false;
     }

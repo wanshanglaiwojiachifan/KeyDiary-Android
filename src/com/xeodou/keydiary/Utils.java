@@ -1,9 +1,12 @@
 package com.xeodou.keydiary;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.xeodou.keydiary.bean.User;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -113,6 +116,27 @@ public class Utils {
    }
    public static int getCurrentMin(){
        return getDate().getMinutes();
+   }
+   
+   @SuppressLint("SimpleDateFormat")
+   public static String getFormatDate(){
+       return (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(getDate());
+   }
+   
+   @SuppressLint("SimpleDateFormat")
+   public static String getFormatDate(long time){
+       return (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).format(getDate(time));
+   }
+   
+   @SuppressLint("SimpleDateFormat")
+   public static long getSignatue(String time){
+       if(time == null) return 0;
+       try {
+        return (new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")).parse(time).getTime();
+    } catch (ParseException e) {
+        // TODO Auto-generated catch block
+        return 0;
+    }
    }
    
    public static Date getDate(long time){

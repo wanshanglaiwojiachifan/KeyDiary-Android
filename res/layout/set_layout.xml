@@ -27,15 +27,20 @@
             android:layout_height="6dp"
             layout="@layout/head_layout" />
 
-        <Button
+        <RelativeLayout
             android:id="@+id/back_btn"
-            android:layout_width="20dp"
-            android:layout_height="25dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/back_btn" />
+            android:layout_marginTop="20dp" >
+
+            <Button
+                android:layout_width="20dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/back_btn" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/user"
@@ -48,14 +53,15 @@
             android:textColor="@color/maincolor"
             android:textSize="18sp" />
 
-		<LinearLayout 
-		    android:layout_width="wrap_content"
-		    android:layout_height="match_parent"
-		    android:layout_centerVertical="true"
-		    android:layout_alignParentRight="true"
-		    android:layout_marginRight="20dp"
-		    android:orientation="vertical">
-		    <Button
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical" >
+
+            <Button
                 android:id="@+id/noti_btn"
                 android:layout_width="24dp"
                 android:layout_height="25dp"
@@ -70,8 +76,7 @@
                 android:text="22:30"
                 android:textColor="@color/maincolor"
                 android:textSize="12sp" />
-
-		</LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 
 </RelativeLayout>

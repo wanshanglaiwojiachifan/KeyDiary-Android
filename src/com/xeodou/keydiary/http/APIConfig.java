@@ -8,5 +8,6 @@ public class APIConfig {
     public static String API_ADD_DIARY = "/diaries/create";
     public static String API_UPDATE_DIARY = "/diaries/update";
     public static String API_DELETE_DIARY = "/diaries/remove";
+    public static String API_UPSERT_DIARY = "/diaries/upsert";
     public static String API_AUTH = "?source=4&accessKey=hEllo$worlD";
 }

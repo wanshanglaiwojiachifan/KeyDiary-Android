@@ -1,11 +1,13 @@
 package com.xeodou.keydiary.activity;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
+import com.j256.ormlite.dao.Dao;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
@@ -17,28 +19,24 @@ import com.xeodou.keydiary.adapter.DiaryFragementAdapter;
 import com.xeodou.keydiary.bean.Diary;
 import com.xeodou.keydiary.bean.DiaryTime;
 import com.xeodou.keydiary.bean.LoadDiary;
-import com.xeodou.keydiary.bean.User;
+import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
-
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
 import org.json.JSONObject;
-
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -47,7 +45,7 @@ public class MainActivity extends Activity {
     private DiaryFragementAdapter adapter;
     private Map<String, Diary> diaries;
     private List<DiaryTime> titles;
-    private Button setBtn;
+    private View setBtn;
     private ProgressDialog dialog;
     private long startDate, endDate;
     @Override
@@ -55,6 +53,14 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         UmengUpdateAgent.update(this);
+        setBtn = (View)findViewById(R.id.set_btn);
+        setBtn.setOnClickListener(clickListener);
+        diaries = new HashMap<String, Diary>();
+        titles = new ArrayList<DiaryTime>();
+        adapter = new DiaryFragementAdapter(diaries, titles);
+        viewPager = (ViewPager)findViewById(R.id.diarycontent);
+        viewPager.setAdapter(adapter);
+        viewPager.setOnPageChangeListener(pageChangeListener);
         if(!Utils.isLogin(this)){
             login();
             return;
@@ -63,15 +69,6 @@ public class MainActivity extends Activity {
     }
     
     private void init(){
-        setBtn = (Button)findViewById(R.id.set_btn);
-        setBtn.setOnClickListener(clickListener);
-        diaries = new HashMap<String, Diary>();
-        titles = new ArrayList<DiaryTime>();
-        adapter = new DiaryFragementAdapter(diaries, titles);
-        viewPager = (ViewPager)findViewById(R.id.diarycontent);
-        viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(2);
-        viewPager.setOnPageChangeListener(pageChangeListener);
         loadAllDiaries();
     }
     
@@ -86,6 +83,28 @@ public class MainActivity extends Activity {
         }
     };
     
+    private void checkLocal(){
+        if(diaries.isEmpty()) return;
+        try {
+            Dao<Diary, Integer> diaryDao = DBUtils.getHelper(this).getDiaryDao();
+            List<Diary> diaryList = diaryDao.queryForAll(); 
+            if(!diaryList.isEmpty()){
+                for(Diary d : diaryList){
+                    if(diaries.containsKey(d.getD())){
+                        if(Utils.getSignatue(d.getCreated()) > Utils.getSignatue(diaries.get(d.getD()).getCreated())){
+                            diaries.put(d.getD(), d);
+                        }
+                    } else {
+                        diaries.put(d.getD(), d);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            Crouton.showText(this, "数据库异常", Style.ALERT);
+        }
+    }
+    
     private void getFiveMonth(){
         if(startDate <= 0) return;
         Date date = Utils.getDate(startDate);
@@ -98,8 +117,8 @@ public class MainActivity extends Activity {
             nm += 12;
             ny --;
             if(ny < y) ny = y;
-        }else if(nm == m) nm = m + 1; 
-        int l = (ny - y) * 12 + nm -m;
+        } 
+        int l = (ny - y) * 12 + nm - m + 1;
         for(int i = 0;i < l; i ++ ){
             DiaryTime time = new DiaryTime();
             time.setYear(y);
@@ -186,18 +205,20 @@ public class MainActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
-            if(dialog != null && dialog.isShowing() ) dialog.dismiss();
-            dialog = null;
             if(msg.what == Config.SUCCESSS_CODE){
                 getFiveMonth();
+                checkLocal();
                 adapter.notifyDataSetChanged();
+                viewPager.setCurrentItem(titles.size() - 1);
                 Crouton.showText(MainActivity.this , "加载成功", Style.INFO);
-                return ;
+            } else {
+                String str = msg.obj.toString();
+                if(str == null) str = "加载失败";
+                if(str.length() <= 0) str = "加载失败";
+                Crouton.showText(MainActivity.this, str, Style.ALERT);   
             }
-            String str = msg.obj.toString();
-            if(str == null) str = "加载失败";
-            if(str.length() <= 0) str = "加载失败";
-            Crouton.showText(MainActivity.this, str, Style.ALERT);
+            if(dialog != null && dialog.isShowing() ) dialog.dismiss();
+            dialog = null;
         }
         
     };
@@ -241,7 +262,7 @@ public class MainActivity extends Activity {
         if(resultCode == Config.FAIL_CODE){
             finish();
         } else if(resultCode == Config.LOGIN_CODE) {
-            init();
+            loadAllDiaries();
         } else if(resultCode == Config.LOGOUT_CODE){
             finish();
         }
@@ -261,5 +282,11 @@ public class MainActivity extends Activity {
         MobclickAgent.onResume(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        DBUtils.releaseDB();
+    }
 
 }

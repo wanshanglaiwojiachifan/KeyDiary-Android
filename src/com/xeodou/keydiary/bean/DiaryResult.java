@@ -12,6 +12,20 @@ public class DiaryResult extends Result{
     Long endDate;
     Long startDate;
     List<Diary> diaries;
+    String startDateFormat;
+    String endDateFormat;
+    public String getStartDateFormat() {
+        return startDateFormat;
+    }
+    public void setStartDateFormat(String startDateFormat) {
+        this.startDateFormat = startDateFormat;
+    }
+    public String getEndDateFormat() {
+        return endDateFormat;
+    }
+    public void setEndDateFormat(String endDateFormat) {
+        this.endDateFormat = endDateFormat;
+    }
     public Long getEndDate() {
         return endDate;
     }

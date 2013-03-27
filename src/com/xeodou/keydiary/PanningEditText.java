@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -56,6 +57,8 @@ public class PanningEditText extends EditText implements IKeyboardChanged{
     public void onEditorAction(int actionCode) {
         // TODO Auto-generated method stub
         if(actionCode == EditorInfo.IME_ACTION_DONE){
+            ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                    getWindowToken(), 0);
             clearFocus();
         }
         super.onEditorAction(actionCode);

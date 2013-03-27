@@ -32,4 +32,11 @@ public class API {
         params.put("d", data);
         KeyDiaryRequest.post(APIConfig.API_DELETE_DIARY, params, responseHandler);
     }
+    
+    public static void upsertDiary(String date, String content, AsyncHttpResponseHandler responseHandler){
+        RequestParams params = new RequestParams();
+        params.put("d", date);
+        params.put("content", content);
+        KeyDiaryRequest.post(APIConfig.API_UPSERT_DIARY, params, responseHandler);
+    }
 }

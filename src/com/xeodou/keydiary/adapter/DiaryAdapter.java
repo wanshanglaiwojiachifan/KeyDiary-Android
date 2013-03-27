@@ -1,10 +1,13 @@
 package com.xeodou.keydiary.adapter;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.MyApplication;
@@ -14,14 +17,18 @@ import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.Diary;
 import com.xeodou.keydiary.bean.LoadADiary;
 import com.xeodou.keydiary.bean.Result;
+import com.xeodou.keydiary.database.DBHelper;
+import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -38,6 +45,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -47,6 +55,7 @@ public class DiaryAdapter extends BaseAdapter {
     class ViewHolder {
         TextView day;
         PanningEditText content;
+        Button uploadBtn;
     }
     
     private Map<String, Diary> diaries;
@@ -55,11 +64,13 @@ public class DiaryAdapter extends BaseAdapter {
     private ProgressDialog dialog;
     private String text;
     private EditText editText;
+    private Diary diaryData;
     public DiaryAdapter(Context context, Map<String, Diary> diaries,int year, int month){
         this.context = context;
         this.diaries = diaries;
         this.year = year;
         this.month = month;
+        this.diaryData = null;
     }
     
     @Override
@@ -88,6 +99,7 @@ public class DiaryAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.diary_item_layout, null);
             viewHolder.day = (TextView)convertView.findViewById(R.id.day_diary_tv);
+            viewHolder.uploadBtn = (Button)convertView.findViewById(R.id.updload_btn);
             editText = (PanningEditText)convertView.findViewById(R.id.content_diary_tv);
             convertView.setTag(viewHolder);
 //        } else {
@@ -106,7 +118,39 @@ public class DiaryAdapter extends BaseAdapter {
         }
         final String day = year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position + 1);
         viewHolder.day.setText(Utils.douInt(position+1));
- 
+        Diary diary = diaries.get(year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position + 1));
+        boolean isLocal = false;
+        if(diary != null && diary.getIsLocal() != null) isLocal = diary.getIsLocal();
+        if(isLocal){
+            viewHolder.uploadBtn.setVisibility(View.VISIBLE);
+            viewHolder.uploadBtn.setOnClickListener(new OnClickListener() {
+                
+                @Override
+                public void onClick(View v) {
+                    // TODO Auto-generated method stub
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("未同步日记");
+                    builder.setMessage("由于网络不好日记没有保存成功\n是否重新发送！");
+                    builder.setNegativeButton("算了", new DialogInterface.OnClickListener() {
+                        
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            dialog.cancel();
+                        }
+                    });
+                    builder.setPositiveButton("重新发送", new DialogInterface.OnClickListener() {
+                        
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            upsertDiary(context, day, diaries.get(day).getContent());
+                        }
+                    });
+                    builder.show();
+                }
+            });
+        }
         editText.setOnEditorActionListener(new OnEditorActionListener() {
             
             @Override
@@ -123,11 +167,17 @@ public class DiaryAdapter extends BaseAdapter {
                                 diary = diaries.get(day);
                                 if(str.equals(diary.getContent())) return false;
                                 diary.setContent(str);
+                                diaryData = diary;
                                 updateDiary(context, day, str, diary);
                             }
                         }
                     } else {
                         if(str != null && str.length() > 0){
+                            diary = new Diary();
+                            diary.setD(day);
+                            diary.setContent(str);
+                            diary.setDid((int)Math.random() * 1000 + "");
+                            diaryData = diary;
                             addDiary(context, day, str);
                         }
                     }
@@ -137,7 +187,6 @@ public class DiaryAdapter extends BaseAdapter {
                 return false;
             }
         });
-        Diary diary = diaries.get(year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position + 1));
         if(diary != null){
             editText.setText(diary.getContent());
         }
@@ -169,14 +218,14 @@ public class DiaryAdapter extends BaseAdapter {
                     diaries.put(result.getData().getD(), result.getData());
                     sendMsg(Config.SUCCESSS_CODE, "添加日记成功");
                 } else {
-                    sendMsg(Config.FAIL_CODE, "添加日记失败");
+                    sendMsg(Config.FAIL_ADD, "添加日记失败");
                 }            
             }
 
             @Override
             public void onFailure(Throwable e, JSONObject errorResponse) {
                 // TODO Auto-generated method stub
-                sendMsg(Config.FAIL_CODE, "添加日记失败");
+                sendMsg(Config.FAIL_ADD, "添加日记失败");
             }
             @Override
             public void onStart() {
@@ -233,7 +282,7 @@ public class DiaryAdapter extends BaseAdapter {
             @Override
             public void onFailure(Throwable e, JSONObject errorResponse) {
                 // TODO Auto-generated method stub
-                sendMsg(Config.FAIL_CODE, "修改日记失败");
+                sendMsg(Config.FAIL_UPDATE, "修改日记失败");
             }
 
             @Override
@@ -245,7 +294,7 @@ public class DiaryAdapter extends BaseAdapter {
                     diaries.put(data, diary);
                     sendMsg(Config.SUCCESSS_CODE, "修改日记成功");
                 } else {
-                    sendMsg(Config.FAIL_CODE, "修改日记失败");
+                    sendMsg(Config.FAIL_UPDATE, "修改日记失败");
                 }
             }
 
@@ -260,6 +309,42 @@ public class DiaryAdapter extends BaseAdapter {
             
         });
     } 
+    
+    private void upsertDiary(final Context c ,String date, String content){
+        API.upsertDiary(date, content, new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, JSONObject response) {
+                // TODO Auto-generated method stub
+                Gson gson = new Gson();
+                LoadADiary result = gson.fromJson(response.toString(), LoadADiary.class);
+                if(result.getStat() == 1 && result.getData() != null ) {
+                    diaryData = diaries.get(result.getData().getD());
+                    diaryData.setIsLocal(false);
+                    diaries.put(diaryData.getD(), diaryData);
+                    sendMsg(Config.SUCCESS_UPSERT, "上传日记成功");
+                } else {
+                    sendMsg(Config.FAIL_UPSERT, "上传日记失败");
+                }  
+            }
+
+            @Override
+            public void onFailure(Throwable e, JSONObject errorResponse) {
+                // TODO Auto-generated method stub
+                sendMsg(Config.FAIL_UPSERT, "上传日记失败");
+            }
+
+            @Override
+            public void onStart() {
+                // TODO Auto-generated method stub
+                if(dialog == null){
+                    dialog = ProgressDialog.show(c, null, "正在上传日记...");
+                    dialog.setCancelable(true);
+                }
+            }
+            
+        });
+    }
     
     private void sendMsg(int code, Object obj){
         Message msg = new Message();
@@ -277,14 +362,43 @@ public class DiaryAdapter extends BaseAdapter {
             if(dialog.isShowing()) dialog.dismiss();
             dialog = null;
             if(msg.what == Config.SUCCESSS_CODE){
+                if(diaryData != null) diaryData = null;
                 if(str == null) str = "修改失败";
                 Crouton.showText((Activity)context, str, Style.INFO);
+                return;
+            }
+            if(msg.what == Config.SUCCESS_UPSERT){
+                if(msg.obj != null) Crouton.showText((Activity)context, msg.obj.toString(), Style.INFO);
+                try {
+                    Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
+                    diaryDao.delete(diaryData);
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
                 return;
             }
             if(str == null) str = "修改失败";
             if(str.length() <= 0) str = "修改失败";
             Crouton.showText((Activity)context, str, Style.ALERT);
+            if(diaryData != null){
+                diaryData.setIsLocal(true);
+                diaryData.setCreated(Utils.getFormatDate());
+                try {
+                    Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
+                    if(msg.what == Config.FAIL_ADD){
+                        diaryDao.create(diaryData);
+                    } else if(msg.what == Config.FAIL_UPDATE || msg.what == Config.FAIL_UPSERT){
+                        diaryDao.update(diaryData);
+                    }
+                    diaries.put(diaryData.getD(), diaryData);
+                    Crouton.showText((Activity)context, "您的日记已经被缓存到本地", Style.INFO);
+//                    diaryDao.update(diaryData);
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    Crouton.showText((Activity)context, "插入数据库失败！", Style.ALERT);
+                }
+            }
         }
-        
     };
 }
