@@ -107,10 +107,10 @@ public class DiaryAdapter extends BaseAdapter {
 //        }
         if( year > Utils.getCurrentYear()){
             editText.setEnabled(false);
-        } else {
+        } else if(year == Utils.getCurrentYear()){
             if(month > Utils.getCurrentMonth()){
                 editText.setEnabled(false);
-            } else {
+            } else if(month == Utils.getCurrentMonth()){
                 if(position + 1 > Utils.getCurrentDay()){
                     editText.setEnabled(false);
                 }
@@ -386,10 +386,8 @@ public class DiaryAdapter extends BaseAdapter {
                 diaryData.setCreated(Utils.getFormatDate());
                 try {
                     Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
-                    if(msg.what == Config.FAIL_ADD){
-                        diaryDao.create(diaryData);
-                    } else if(msg.what == Config.FAIL_UPDATE || msg.what == Config.FAIL_UPSERT){
-                        diaryDao.update(diaryData);
+                    if(msg.what == Config.FAIL_ADD || msg.what == Config.FAIL_UPDATE || msg.what == Config.FAIL_UPSERT){
+                        diaryDao.createOrUpdate(diaryData);
                     }
                     diaries.put(diaryData.getD(), diaryData);
                     Crouton.showText((Activity)context, "您的日记已经被缓存到本地", Style.INFO);

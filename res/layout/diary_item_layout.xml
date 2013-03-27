@@ -29,7 +29,7 @@
        	android:gravity="left"
         android:textSize="22sp"
         android:paddingLeft="3dp"
-        android:paddingRight="30dp"
+        android:paddingRight="34dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:layout_marginLeft="20dp"

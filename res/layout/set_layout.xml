@@ -17,7 +17,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="56dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical" >
@@ -28,16 +28,16 @@
             layout="@layout/head_layout" />
 
         <RelativeLayout
-            android:id="@+id/back_btn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginTop="20dp" >
+            android:layout_marginTop="25dp" >
 
             <Button
-                android:layout_width="20dp"
-                android:layout_height="25dp"
+                android:id="@+id/back_btn"
+                android:layout_width="25dp"
+                android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/back_btn" />
         </RelativeLayout>
@@ -65,7 +65,7 @@
                 android:id="@+id/noti_btn"
                 android:layout_width="24dp"
                 android:layout_height="25dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/set_noti_n" />
 
             <TextView

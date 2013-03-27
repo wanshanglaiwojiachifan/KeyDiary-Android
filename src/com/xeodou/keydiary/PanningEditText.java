@@ -68,7 +68,7 @@ public class PanningEditText extends EditText implements IKeyboardChanged{
             int lengthBefore, int lengthAfter) {
         // TODO Auto-generated method stub
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        if (calculateLength(text) > 7) {
+        if (calculateLength(text) > 7 && isFocused()) {
 //            if(editText.isFocused()){
                 this.setBackgroundResource(R.drawable.edit_text_e);
 //            }
