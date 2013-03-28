@@ -377,7 +377,7 @@ public class DiaryAdapter extends BaseAdapter {
             Diary d = diaries.get(day);
             if(d !=null){
                 diaryDao.delete(d);
-                diaries.remove(d);
+                diaries.remove(d.getD());
                 Crouton.showText((Activity)context, "数据已清除 ！", Style.INFO);
                 notifyDataSetChanged();
             }
@@ -429,9 +429,9 @@ public class DiaryAdapter extends BaseAdapter {
                     Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
                     if(msg.what == Config.FAIL_ADD || msg.what == Config.FAIL_UPDATE || msg.what == Config.FAIL_UPSERT){
                         diaryDao.createOrUpdate(diaryData);
-                    }
-                    diaries.put(diaryData.getD(), diaryData);
-                    Crouton.showText((Activity)context, "您的日记已经被缓存到本地", Style.INFO);
+                        diaries.put(diaryData.getD(), diaryData);                        
+                        Crouton.showText((Activity)context, "您的日记已经被缓存到本地", Style.INFO);
+                    }                 
 //                    diaryDao.update(diaryData);
                 } catch (SQLException e) {
                     // TODO Auto-generated catch block
