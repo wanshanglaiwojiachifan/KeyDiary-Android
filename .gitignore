@@ -9,4 +9,5 @@ local.properties
 # Eclipse
 .classpath
 .project
+project.properties
 .externalToolBuilders/
