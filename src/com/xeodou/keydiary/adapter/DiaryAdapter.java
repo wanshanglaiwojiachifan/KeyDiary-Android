@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -136,6 +137,7 @@ public class DiaryAdapter extends BaseAdapter {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // TODO Auto-generated method stub
+                            deleeteLocal(day);
                             dialog.cancel();
                         }
                     });
@@ -225,7 +227,18 @@ public class DiaryAdapter extends BaseAdapter {
             @Override
             public void onFailure(Throwable e, JSONObject errorResponse) {
                 // TODO Auto-generated method stub
-                sendMsg(Config.FAIL_ADD, "添加日记失败");
+                Gson gson = new Gson();
+                try {
+                    Result result = gson.fromJson(errorResponse.toString(), Result.class);
+                    if(result.getStat() == 2101){
+                        sendMsg(Config.FAIL_TO_LONG, "您的日记太长");
+                    } else {
+                        sendMsg(Config.FAIL_ADD, "添加日记失败");
+                    }
+                } catch (JsonSyntaxException e1) {
+                    // TODO Auto-generated catch block
+                    sendMsg(Config.FAIL_ADD, "添加日记失败");
+                }
             }
             @Override
             public void onStart() {
@@ -282,7 +295,18 @@ public class DiaryAdapter extends BaseAdapter {
             @Override
             public void onFailure(Throwable e, JSONObject errorResponse) {
                 // TODO Auto-generated method stub
-                sendMsg(Config.FAIL_UPDATE, "修改日记失败");
+                Gson gson = new Gson();
+                try {
+                    Result result = gson.fromJson(errorResponse.toString(), Result.class);
+                    if(result.getStat() == 2101){
+                        sendMsg(Config.FAIL_TO_LONG, "您的日记太长");
+                    } else {
+                        sendMsg(Config.FAIL_UPDATE, "修改日记失败");
+                    }
+                } catch (JsonSyntaxException e1) {
+                    // TODO Auto-generated catch block
+                    sendMsg(Config.FAIL_UPDATE, "修改日记失败");
+                }
             }
 
             @Override
@@ -346,6 +370,23 @@ public class DiaryAdapter extends BaseAdapter {
         });
     }
     
+    
+    private void deleeteLocal(String day){
+        try {
+            Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
+            Diary d = diaries.get(day);
+            if(d !=null){
+                diaryDao.delete(d);
+                diaries.remove(d);
+                Crouton.showText((Activity)context, "数据已清除 ！", Style.INFO);
+                notifyDataSetChanged();
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            Crouton.showText((Activity)context, "数据库错误 ！", Style.ALERT);
+        }
+    }
+    
     private void sendMsg(int code, Object obj){
         Message msg = new Message();
         msg.what = code;
@@ -374,7 +415,7 @@ public class DiaryAdapter extends BaseAdapter {
                     diaryDao.delete(diaryData);
                 } catch (SQLException e) {
                     // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    Crouton.showText((Activity)context, "数据库错误 ！", Style.ALERT);
                 }
                 return;
             }

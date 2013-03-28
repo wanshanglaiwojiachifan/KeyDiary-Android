@@ -35,12 +35,14 @@ public class LoginActivity extends Activity implements OnClickListener{
     private EditText password;
     private Button button;
     private ProgressDialog dialog;
+    private String action;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        action = getIntent().getAction();
         username = (EditText)findViewById(R.id.username_etv);
         password = (EditText)findViewById(R.id.password_etv);
         button = (Button)findViewById(R.id.login_btn);
@@ -62,8 +64,8 @@ public class LoginActivity extends Activity implements OnClickListener{
                     Gson gson = new Gson();
                     LoadUser user = gson.fromJson(response.toString(), LoadUser.class);
                     if (user.getStat() == 1 && user != null) {
-                        sendMsg(Config.SUCCESSS_CODE, null);
                         (new Utils()).storeUser(LoginActivity.this, user.getData());
+                        sendMsg(Config.SUCCESSS_CODE, null);
                     }
                 }
 
@@ -131,6 +133,12 @@ public class LoginActivity extends Activity implements OnClickListener{
             switch (msg.what) {
             case Config.SUCCESSS_CODE:
                 (new Utils()).storePass(LoginActivity.this, username.getText().toString(), password.getText().toString());
+                if(action != null && action.equals(Config.ACTION_SET)){
+                    Intent intent = new Intent();
+                    intent.setClass(LoginActivity.this, MainActivity.class);
+                    intent.setAction(Config.ACTION_LOGIN);
+                    startActivity(intent);
+                }
                 setResult(Config.LOGIN_CODE);
                 finish();
                 break;

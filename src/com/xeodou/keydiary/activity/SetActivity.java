@@ -94,6 +94,7 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         case R.id.logout_btn:
             (new Utils()).storePass(SetActivity.this, "", "");
             Intent intent = new Intent(SetActivity.this, LoginActivity.class);
+            intent.setAction(Config.ACTION_SET);
             startActivity(intent);
             setResult(Config.LOGOUT_CODE);
             finish();
