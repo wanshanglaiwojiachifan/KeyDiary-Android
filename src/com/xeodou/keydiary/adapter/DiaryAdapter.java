@@ -422,7 +422,7 @@ public class DiaryAdapter extends BaseAdapter {
             if(str == null) str = "修改失败";
             if(str.length() <= 0) str = "修改失败";
             Crouton.showText((Activity)context, str, Style.ALERT);
-            if(diaryData != null){
+            if(diaryData != null  && msg.what != Config.FAIL_TO_LONG){
                 diaryData.setIsLocal(true);
                 diaryData.setCreated(Utils.getFormatDate());
                 try {
@@ -431,6 +431,7 @@ public class DiaryAdapter extends BaseAdapter {
                         diaryDao.createOrUpdate(diaryData);
                         diaries.put(diaryData.getD(), diaryData);                        
                         Crouton.showText((Activity)context, "您的日记已经被缓存到本地", Style.INFO);
+                        notifyDataSetChanged();
                     }                 
 //                    diaryDao.update(diaryData);
                 } catch (SQLException e) {
