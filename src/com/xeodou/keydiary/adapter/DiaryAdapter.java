@@ -195,19 +195,6 @@ public class DiaryAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private long calculateLength(CharSequence c) {  
-        double len = 0;  
-        for (int i = 0; i < c.length(); i++) {  
-            int tmp = (int) c.charAt(i);  
-            if (tmp > 0 && tmp < 127) {  
-                len += 0.5;  
-            } else {  
-                len++;  
-            }  
-        }  
-        return Math.round(len);  
-    }  
-    
     public void addDiary(final Context c,String data, String content){
         API.addDiary(data, content, new JsonHttpResponseHandler(){
             
