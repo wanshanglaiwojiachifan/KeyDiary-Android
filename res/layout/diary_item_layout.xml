@@ -26,10 +26,10 @@
  		android:imeOptions="actionDone"      
        	android:gravity="left"
         android:textSize="22sp"
-        android:paddingLeft="3dp"
+        android:paddingLeft="4dp"
         android:paddingRight="34dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:layout_marginLeft="20dp"
         android:textColor="@color/diarycontent"/>
 	
