@@ -186,7 +186,7 @@ public class MainActivity extends Activity {
             public void onStart() {
                 // TODO Auto-generated method stub
                 if (dialog == null) {
-                    dialog = ProgressDialog.show(MainActivity.this, null, "正在加载所有日记");
+                    dialog = ProgressDialog.show(MainActivity.this, null, "正在加载日记...");
                 }
             }
             
