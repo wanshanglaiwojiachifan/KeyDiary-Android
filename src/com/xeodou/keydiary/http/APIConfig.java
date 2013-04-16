@@ -10,4 +10,6 @@ public class APIConfig {
     public static String API_DELETE_DIARY = "/diaries/remove";
     public static String API_UPSERT_DIARY = "/diaries/upsert";
     public static String API_AUTH = "?source=4&accessKey=hEllo$worlD";
+    public static String API_REGISTER_URI = "/app/accounts/register";
+    public static String API_CALLBACK = "keydiary://login";
 }

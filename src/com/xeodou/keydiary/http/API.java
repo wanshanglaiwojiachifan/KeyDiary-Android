@@ -13,6 +13,14 @@ public class API {
         KeyDiaryRequest.get(APIConfig.API_ACCOUNT_LOGIN, null, responseHandler);
     }
     
+    public static void getDiaryByDay(String date, AsyncHttpResponseHandler responseHandler){
+        KeyDiaryRequest.get(APIConfig.API_GET_ALL + "/" + date, null, responseHandler);
+    }
+    
+    public static void getDiaryFromTo(String from, String to, AsyncHttpResponseHandler responseHandler){
+        KeyDiaryRequest.get(APIConfig.API_GET_ALL + "/" + from + "/" + to, null, responseHandler);
+    }
+    
     public static void addDiary(String date,String content, AsyncHttpResponseHandler responseHandler){
         RequestParams params = new RequestParams();
         params.put("d", date);

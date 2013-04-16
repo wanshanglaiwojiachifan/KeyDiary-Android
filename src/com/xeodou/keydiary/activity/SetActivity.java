@@ -125,10 +125,13 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, h);
         calendar.set(Calendar.MINUTE, m);
+        calendar.set(Calendar.SECOND, 0);
         Intent intent = new Intent(this, DiaryReciver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this, Config.ALERM_ID , intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+        Crouton.showText(SetActivity.this, "设置每日提醒成功！", Style.CONFIRM);
+
     }
     
     private void delAlarm(){

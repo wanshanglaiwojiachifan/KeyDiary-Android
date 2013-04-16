@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:text="01"
         android:textColor="@color/diaryday"
         android:textSize="30sp"
@@ -16,7 +17,7 @@
 
     <com.xeodou.keydiary.PanningEditText
         android:id="@+id/content_diary_tv"
-        android:layout_width="220dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/day_diary_tv"
@@ -24,14 +25,17 @@
  		android:background="@drawable/diary_input_ex"
  		android:singleLine="true"
  		android:imeOptions="actionDone"      
-       	android:gravity="left"
+       	android:gravity="left|center_vertical"
         android:textSize="22sp"
-        android:paddingLeft="4dp"
-        android:paddingRight="34dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_marginLeft="20dp"
-        android:textColor="@color/diarycontent"/>
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/diarycontent">
+    </com.xeodou.keydiary.PanningEditText>
 	
     <Button 
         android:id="@+id/updload_btn"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xeodou.keydiary"
-    android:versionCode="8"
-    android:versionName="0.8" >
+    android:versionCode="11"
+    android:versionName="0.11" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -25,15 +25,24 @@
             android:windowSoftInputMode="adjustPan"
             android:theme="@android:style/Theme.Light.NoTitleBar"
              >
+        </activity>
+        <activity
+            android:name="com.xeodou.keydiary.activity.LoadingActivity"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity 
+		<activity 
             android:name="com.xeodou.keydiary.activity.LoginActivity"            
-            android:theme="@android:style/Theme.Light.NoTitleBar"           
-           ></activity>
+            android:theme="@android:style/Theme.Light.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"></action>
+                <data android:scheme="keydiary" android:host="login"/>
+            </intent-filter>
+        </activity>
        <activity 
             android:name="com.xeodou.keydiary.activity.AddDiaryActivity"            
             android:theme="@android:style/Theme.Light.NoTitleBar"           
@@ -45,8 +54,16 @@
        <activity android:name="com.xeodou.keydiary.activity.SetActivity"            
        android:theme="@android:style/Theme.Light.NoTitleBar"
        ></activity>
-       <receiver android:name=".activity.DiaryReciver" android:process=":diaryReciver"></receiver>
-       <service
+       <activity android:name="com.xeodou.keydiary.activity.WebActivity"            
+       android:theme="@android:style/Theme.Light.NoTitleBar"
+       ></activity>
+       <receiver android:name="com.xeodou.keydiary.activity.DiaryReciver" android:process=":diaryReciver"></receiver>
+       <receiver android:name="com.xeodou.keydiary.activity.BootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+		<service
 		    android:name="com.umeng.common.net.DownloadingService"
 		    android:exported="true"
 		    android:process=":DownloadingService" >

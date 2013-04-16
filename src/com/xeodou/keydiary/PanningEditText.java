@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class PanningEditText extends EditText implements IKeyboardChanged{
 
     private Context context;
-    public PanningEditText(Context context, AttributeSet attrs) {
+    public PanningEditText(final Context context, AttributeSet attrs) {
         super(context, attrs);
         // TODO Auto-generated constructor stub
         this.context = context;
@@ -86,7 +86,7 @@ public class PanningEditText extends EditText implements IKeyboardChanged{
             Rect previouslyFocusedRect) {
         // TODO Auto-generated method stub
         if(focused) setBackgroundResource(R.drawable.edit_text_s);
-        else if(calculateLength(getText().toString()) < 7) setBackgroundResource(R.drawable.edit_text_n);
+        else if(calculateLength(getText().toString()) <= 7) setBackgroundResource(R.drawable.edit_text_n);
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
     private long calculateLength(CharSequence c) {  

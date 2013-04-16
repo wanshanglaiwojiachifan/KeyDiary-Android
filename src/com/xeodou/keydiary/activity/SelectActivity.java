@@ -2,9 +2,11 @@ package com.xeodou.keydiary.activity;
 
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.R;
+import com.xeodou.keydiary.http.APIConfig;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,22 +23,23 @@ public class SelectActivity extends Activity implements OnClickListener {
         setContentView(R.layout.firstpager_layout);
         
         registerBtn = (Button)findViewById(R.id.register_btn);
-        loginBtn = (Button)findViewById(R.id.login_select_btn);
-        
-        
+        loginBtn = (Button)findViewById(R.id.login_select_btn);     
         registerBtn.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
     }
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
+        Intent intent = null;
         switch (v.getId()) {
         case R.id.register_btn:
-            
+//            Uri uri = Uri.parse(APIConfig.API_BASIC + APIConfig.API_REGISTER_URI);
+            intent = new Intent(this, WebActivity.class);
+            startActivity(intent);
             break;
 
         case R.id.login_select_btn:
-            Intent intent = new Intent(this, LoginActivity.class);
+            intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, Config.REQ_CODE);
             break;
         }

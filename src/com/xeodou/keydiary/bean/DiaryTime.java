@@ -32,6 +32,6 @@ public class DiaryTime {
     }
     
     public String toTitle(){
-        return year + "-" + Utils.douInt(month);
+        return year + " " + Utils.douInt(month);
     }
 }

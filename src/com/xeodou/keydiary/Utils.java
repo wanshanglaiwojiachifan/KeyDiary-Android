@@ -10,11 +10,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Typeface;
 
 public class Utils {
 
     private static Date date = null;
+    private static Typeface typeface;
     
+    public static Typeface getTypeface() {
+        return typeface;
+    }
+
+    public static void setTypeface(Typeface typeface) {
+        Utils.typeface = typeface;
+    }
+
     public static boolean isLogin(Context context){
         boolean isLogin = false;
         //to do something
@@ -116,6 +126,11 @@ public class Utils {
    }
    public static int getCurrentMin(){
        return getDate().getMinutes();
+   }
+   
+   @SuppressLint("SimpleDateFormat")
+   public static String getFormatDayDate(){
+       return (new SimpleDateFormat("yyyy-MM-dd")).format(getDate());
    }
    
    @SuppressLint("SimpleDateFormat")

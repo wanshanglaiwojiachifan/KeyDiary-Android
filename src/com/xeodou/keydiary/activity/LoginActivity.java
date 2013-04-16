@@ -27,6 +27,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class LoginActivity extends Activity implements OnClickListener{
 
@@ -91,7 +92,7 @@ public class LoginActivity extends Activity implements OnClickListener{
             });
         } else {
             if(username.getText().toString().length() <= 0){
-                Crouton.showText(this, "用户名不能为空", Style.ALERT);
+                Crouton.showText(this, "邮箱不能为空", Style.ALERT);
                 return;
             }
             if(password.getText().toString().length() <= 0){

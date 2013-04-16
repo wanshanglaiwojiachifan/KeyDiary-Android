@@ -9,6 +9,8 @@ public class Config {
     public static final String ACTION_SELECT_LOGIN = "com.xeodou.keydiary.select.login";
     public static final String ACTION_SET = "com.xeodou.keydiary.set";
     public static final String ACTION_LOGOUT = "com.xeodou.keydiary.logout";
+    public static final String ACTION_LOADING = "com.xeodou.keydiary.loaging";
+    public static final String ACTION_REGISTER = "com.xeodou.keydiary.register";
     
     //status code
     public static final int FAIL_CODE = -0x000001;
@@ -24,6 +26,7 @@ public class Config {
     public static final int FAIL_UPSERT = 0x00010;
     public static final int SUCCESS_UPSERT = 0x00011;
     public static final int FAIL_TO_LONG = 0x00012;
+    public static final int SUCCESS_REGISTER = 0x00013;
   
     //user pass
     public static String username = "";

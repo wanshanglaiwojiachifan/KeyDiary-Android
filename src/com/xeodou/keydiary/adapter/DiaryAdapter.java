@@ -30,6 +30,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -43,6 +45,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
@@ -84,6 +87,10 @@ public class DiaryAdapter extends BaseAdapter {
     public Object getItem(int position) {
         // TODO Auto-generated method stub
         return diaries.get(year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position));
+    }
+    
+    public String getDay(int position){
+        return year + "-" + month + "-" + ( position + 1);
     }
 
     @Override
@@ -184,14 +191,35 @@ public class DiaryAdapter extends BaseAdapter {
                         }
                     }
                 }
-                ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                        editText.getWindowToken(), 0);
+                v.clearFocus();
+                v.setSelected(false);
+//                ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+//                        editText.getWindowToken(), 0);
                 return false;
             }
         });
         if(diary != null){
             editText.setText(diary.getContent());
         }
+        
+        if(Utils.getTypeface() != null){
+            editText.setTypeface(Utils.getTypeface());
+            viewHolder.day.setTypeface(Utils.getTypeface());
+        }
+        
+        editText.getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            
+            @Override
+            public void onGlobalLayout() {
+                // TODO Auto-generated method stub
+                if (context.getResources().getConfiguration().keyboardHidden == Configuration.KEYBOARDHIDDEN_YES) { // Check if keyboard is not hidden
+                    // ... do something here
+                    Crouton.showText((Activity)context, "key board hidden！", Style.ALERT);
+                    editText.clearFocus();
+                 }
+            }
+        });
+        
         return convertView;
     }
 
@@ -387,7 +415,7 @@ public class DiaryAdapter extends BaseAdapter {
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             String str = msg.obj.toString();
-            if(dialog.isShowing()) dialog.dismiss();
+            if(dialog !=null && dialog.isShowing()) dialog.dismiss();
             dialog = null;
             if(msg.what == Config.SUCCESSS_CODE){
                 if(diaryData != null) diaryData = null;

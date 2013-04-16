@@ -39,6 +39,9 @@ public class DiaryFragementAdapter extends PagerAdapter{
         View v = new View(container.getContext());
         v.setMinimumHeight((int)container.getContext().getResources().getDimension(R.dimen.footerHeight));
         grid.addFooterView(v);
+        v = new View(container.getContext());
+        v.setMinimumHeight((int)container.getContext().getResources().getDimension(R.dimen.headerHeight));
+        grid.addHeaderView(v);
         TextView title = (TextView)view.findViewById(R.id.title);
         diaryAdapter = new DiaryAdapter(container.getContext(), diaries, data.get(position).getYear(), data.get(position).getMonth());
         grid.setAdapter(diaryAdapter);
@@ -46,6 +49,7 @@ public class DiaryFragementAdapter extends PagerAdapter{
         sia.setListView(grid);
         grid.setAdapter(sia);
         title.setText(data.get(position).toTitle());
+        title.setTypeface(Utils.getTypeface());
         if(data.get(position).getMonth() == Utils.getCurrentMonth()){
             grid.setSelection(Utils.getCurrentDay() - 1);
         }
