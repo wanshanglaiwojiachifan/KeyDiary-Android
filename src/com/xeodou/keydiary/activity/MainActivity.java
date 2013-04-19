@@ -53,6 +53,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        UmengUpdateAgent.setUpdateOnlyWifi(false);
         UmengUpdateAgent.update(this);
         setBtn = (View)findViewById(R.id.set_btn);
         setBtn.setOnClickListener(clickListener);

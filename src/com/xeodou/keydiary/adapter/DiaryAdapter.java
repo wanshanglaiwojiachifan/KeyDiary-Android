@@ -43,6 +43,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -160,6 +161,49 @@ public class DiaryAdapter extends BaseAdapter {
                 }
             });
         }
+        
+        editText.setOnKeyListener(new OnKeyListener() {
+            
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // TODO Auto-generated method stub
+                if (KeyEvent.KEYCODE_ENTER == keyCode && event.getAction() == KeyEvent.ACTION_DOWN) {  
+                    String str = ((EditText)v).getText().toString();
+                    Diary diary = null;
+                    if(diaries.containsKey(day)) {
+                        if(str != null) {
+                            if(str.equals("")){
+                               delDiary(context, day);
+                            } else {
+                                diary = diaries.get(day);
+                                if(str.equals(diary.getContent())){
+                                    ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                                            editText.getWindowToken(), 0);
+                                    return false;  
+                                } 
+                                diary.setContent(str);
+                                diaryData = diary;
+                                updateDiary(context, day, str, diary);
+                            }
+                        }
+                    } else {
+                        if(str != null && str.length() > 0){
+                            diary = new Diary();
+                            diary.setD(day);
+                            diary.setContent(str);
+                            diary.setDid((int)Math.random() * 1000 + "");
+                            diaryData = diary;
+                            addDiary(context, day, str);
+                        }
+                    }
+                  ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                  editText.getWindowToken(), 0);
+                    return false;  
+                }
+                return false;
+            }
+        });
+        
         editText.setOnEditorActionListener(new OnEditorActionListener() {
             
             @Override

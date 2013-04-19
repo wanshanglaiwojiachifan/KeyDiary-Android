@@ -4,6 +4,7 @@
 * [Crouton](https://github.com/keyboardsurfer/Crouton)
 * [Asy-http](https://github.com/loopj/android-async-http)
 * [Gson](https://code.google.com/p/google-gson)
+* [ListViewAnimations](https://github.com/nhaarman/ListViewAnimations)
 
 ## Support
 * Holo Style in 2.2 or high
