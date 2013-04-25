@@ -6,6 +6,8 @@ import com.umeng.analytics.MobclickAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
+import com.xeodou.keydiary.database.DBUtils;
+import com.xeodou.keydiary.http.KeyDiaryRequest;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -19,6 +21,8 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,13 +38,14 @@ import android.widget.TimePicker;
 public class SetActivity extends Activity implements OnClickListener, OnLongClickListener {
 
     
-    private Button logoutBtn, notiBtn;
-    private View backBtn;
-    private TextView textView, alermTime;
+    private Button logoutBtn;
+    private View backBtn, notiBtn, pricyView;
+    private TextView textView, alermTime, version;
     private boolean isShow = false;
     private Dialog dialog;
     private TimePicker timePicker;
     private Button cancelBtn, okBtn;
+    private boolean isAlarm = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -48,23 +53,33 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         setContentView(R.layout.set_layout);
         
         textView = (TextView)findViewById(R.id.user);
+        version = (TextView)findViewById(R.id.version);
         alermTime = (TextView) findViewById(R.id.alert_time);
-        alermTime.setVisibility(View.GONE);
-        notiBtn = (Button) findViewById(R.id.noti_btn);
+        notiBtn = (View) findViewById(R.id.noti_btn);
         backBtn = (View) findViewById(R.id.back_btn);
+        pricyView = (View) findViewById(R.id.pricy);
         logoutBtn = (Button) findViewById(R.id.logout_btn);        
         notiBtn.setOnClickListener(this);
         notiBtn.setOnLongClickListener(this);
         backBtn.setOnClickListener(this);
+        pricyView.setOnClickListener(this);
         logoutBtn.setOnClickListener(this);
+        Utils.isLogin(this);
         textView.setText(Config.username);
         initDialog();
         String str = (new Utils()).getAlerm(this);
         if(str != null && !str.equals("")){
-            alermTime.setText(str);
-            alermTime.setVisibility(View.VISIBLE);
-            notiBtn.setBackgroundResource(R.drawable.set_noti_y);
+            isAlarm = true;
+            alermTime.setText("每日 " + str + " 提醒");
         }
+        String versionName;
+        try {
+            versionName = getPackageManager().getPackageInfo(getApplication().getPackageName(), PackageManager.GET_ACTIVITIES).versionName;
+        } catch (NameNotFoundException e) {
+            // TODO Auto-generated catch block
+            versionName = "0.16";
+        }
+        version.setText("版本 " + versionName);
     }
     
     private void initDialog(){
@@ -92,7 +107,13 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
             break;
 
         case R.id.logout_btn:
+            if(!DBUtils.clearTables(this)){
+                Crouton.showText(SetActivity.this, "清除数据失败！请重试！", Style.ALERT);
+                return;
+            }
             (new Utils()).storePass(SetActivity.this, "", "");
+            Config.username = "";
+            Config.password = "";
             Intent intent = new Intent(SetActivity.this, LoginActivity.class);
             intent.setAction(Config.ACTION_SET);
             startActivity(intent);
@@ -111,12 +132,16 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         case R.id.dialog_ok:
             int hour = timePicker.getCurrentHour();
             int min = timePicker.getCurrentMinute();
-            alermTime.setText(hour+":"+min);
-            alermTime.setVisibility(View.VISIBLE);
+            alermTime.setText("每日 " + hour+":"+ Utils.douInt(min) + " 提醒");
             setAlerm(hour, min);
-            (new Utils()).storeAlerm(SetActivity.this, hour+":"+min);
-            notiBtn.setBackgroundResource(R.drawable.set_noti_y);
+            (new Utils()).storeAlerm(SetActivity.this, hour+":"+ Utils.douInt(min));
             dialog.cancel();
+            break;
+        case R.id.pricy:
+            intent = new Intent(Config.ACTION_SET);
+            intent.setClass(SetActivity.this, WebActivity.class);
+            intent.putExtra("URL", "http://api.keydiary.net/app/static/android/copyright");
+            startActivity(intent);
             break;
         }
     }
@@ -131,7 +156,7 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
         Crouton.showText(SetActivity.this, "设置每日提醒成功！", Style.CONFIRM);
-
+        isAlarm = true;
     }
     
     private void delAlarm(){
@@ -144,18 +169,14 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
     @Override
     public boolean onLongClick(View v) {
         // TODO Auto-genetrated method stub
-        if(alermTime.getVisibility() == View.GONE){
-//            isShow = true;
-//            dialog.show();
-        } else {
-            delAlarm();
-            alermTime.setVisibility(View.GONE);
-            (new Utils()).storeAlerm(SetActivity.this, "");
-            Crouton.showText(SetActivity.this, "删除每日提醒成功！", Style.CONFIRM);
-            notiBtn.setBackgroundResource(R.drawable.set_noti_n);
-            return true;
-        }
-        return false;
+        if(!isAlarm) return true;
+        isAlarm = !isAlarm;
+        delAlarm();
+        (new Utils()).storeAlerm(SetActivity.this, "");
+        Crouton.showText(SetActivity.this, "删除每日提醒成功！", Style.CONFIRM);
+        alermTime.setText("点击设置提醒");
+        return true;
+
     }
     @Override
     protected void onPause() {

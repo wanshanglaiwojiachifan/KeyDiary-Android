@@ -12,6 +12,7 @@ public class Result implements Serializable {
     Integer stat;
 
     public Integer getStat() {
+        if(stat == null) stat = 7;
         return stat;
     }
 

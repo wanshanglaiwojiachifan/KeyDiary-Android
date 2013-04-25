@@ -15,6 +15,7 @@ import android.widget.Toast;
 public class PanningEditText extends EditText implements IKeyboardChanged{
 
     private Context context;
+    private onLostFocusListener lostFocusListener;
     public PanningEditText(final Context context, AttributeSet attrs) {
         super(context, attrs);
         // TODO Auto-generated constructor stub
@@ -68,6 +69,7 @@ public class PanningEditText extends EditText implements IKeyboardChanged{
             int lengthBefore, int lengthAfter) {
         // TODO Auto-generated method stub
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
+        text = text.toString().replace(" ", "");
         if (calculateLength(text) > 7 && isFocused()) {
 //            if(editText.isFocused()){
                 this.setBackgroundResource(R.drawable.edit_text_e);
@@ -86,9 +88,24 @@ public class PanningEditText extends EditText implements IKeyboardChanged{
             Rect previouslyFocusedRect) {
         // TODO Auto-generated method stub
         if(focused) setBackgroundResource(R.drawable.edit_text_s);
-        else if(calculateLength(getText().toString()) <= 7) setBackgroundResource(R.drawable.edit_text_n);
+        else if(calculateLength(getText().toString().replace(" ", "")) <= 7) {
+            setBackgroundResource(R.drawable.edit_text_n);
+            if(lostFocusListener != null){
+                lostFocusListener.lostFocus(this, true);
+            }
+        }
+        
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
+    
+    public void setOnLostFocusListener(onLostFocusListener lostFocusListener){
+        this.lostFocusListener = lostFocusListener;
+    }
+    
+    public interface onLostFocusListener{
+        public void lostFocus(PanningEditText v,boolean islost);
+    }
+    
     private long calculateLength(CharSequence c) {  
         double len = 0;  
         for (int i = 0; i < c.length(); i++) {  

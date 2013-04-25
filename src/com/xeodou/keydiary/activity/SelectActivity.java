@@ -35,6 +35,7 @@ public class SelectActivity extends Activity implements OnClickListener {
         case R.id.register_btn:
 //            Uri uri = Uri.parse(APIConfig.API_BASIC + APIConfig.API_REGISTER_URI);
             intent = new Intent(this, WebActivity.class);
+            intent.setAction(Config.ACTION_REGISTER);
             startActivity(intent);
             break;
 

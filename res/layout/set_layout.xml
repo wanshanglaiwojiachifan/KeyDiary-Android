@@ -6,150 +6,222 @@
 
     <Button
         android:id="@+id/logout_btn"
-        android:layout_width="292dp"
-        android:layout_height="38dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/logout_btn"
+        android:minHeight="38dp"
         android:text="退             出"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        layout="@layout/head_layout" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_marginTop="25dp" >
+
+        <Button
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/back_btn" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/list_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/set_list_bg"
         android:orientation="vertical" >
 
-        <include
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="6dp"
-            layout="@layout/head_layout" />
+            android:layout_height="wrap_content"
+            android:minHeight="45dp"
+            android:orientation="horizontal"
+            android:padding="1dp" >
 
-        <RelativeLayout
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="25dp" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:gravity="left|center_vertical"
+                android:minWidth="100dp"
+                android:paddingLeft="15dp"
+                android:text="账号信息"
+                android:textColor="@color/title"
+                android:textSize="17sp" />
 
-            <Button
-                android:id="@+id/back_btn"
-                android:layout_width="25dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                android:background="@drawable/back_btn" />
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/user"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:ellipsize="end"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@color/diarycontent"
+                android:textSize="17sp" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/user"
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            android:layout_centerInParent="true"
-            android:ellipsize="end"
-            android:maxWidth="200dp"
-            android:text=""
-            android:textColor="@color/maincolor"
-            android:textSize="18sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:background="@color/diaryday" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:orientation="vertical" >
+            android:id="@+id/noti_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:minHeight="45dp"
+            android:orientation="horizontal"
+            android:padding="1dp" >
 
-            <Button
-                android:id="@+id/noti_btn"
-                android:layout_width="24dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/set_noti_n" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:gravity="left|center_vertical"
+                android:minWidth="100dp"
+                android:paddingLeft="15dp"
+                android:text="每日提醒"
+                android:textColor="@color/title"
+                android:textSize="17sp" />
 
             <TextView
                 android:id="@+id/alert_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="22:30"
-                android:textColor="@color/maincolor"
-                android:textSize="12sp" />
-        </LinearLayout>
-    </RelativeLayout>
-	
-    <LinearLayout 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="200dp"
-       	android:layout_marginLeft="20dp"
-       	android:layout_marginRight="20dp"
-        android:background="@drawable/set_list_bg">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="30dp"
-            android:padding="1dp"
-            android:orientation="horizontal" >
-
-            <TextView 
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:minWidth="100dp"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="15dp"
-                android:textSize="15sp"
-                android:text="账号"
-                android:textColor="@color/title"
-                android:layout_gravity="left"/>
-            
-            <TextView 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="12sp"
                 android:layout_gravity="right"
-                android:textColor="@color/title"
-                android:text="test@test.com"/>
+                android:background="@drawable/btn_alarm"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="点击设置提醒"
+                android:textColor="@color/diarycontent"
+                android:textSize="17sp" />
         </LinearLayout>
-		<View 
-		    android:layout_width="match_parent"
-		    android:layout_height="1dp"
-		    android:layout_marginLeft="1dp"
-		    android:layout_marginRight="1dp"
-		    android:background="@color/diaryday"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:background="@color/diaryday"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="45dp"
             android:orientation="horizontal"
-            android:minHeight="30dp"
-            android:padding="1dp" >
-            
-            <TextView 
+            android:padding="1dp"
+            android:visibility="gone" >
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:minWidth="100dp"
+                android:layout_gravity="left"
                 android:gravity="left|center_vertical"
+                android:minWidth="100dp"
                 android:paddingLeft="15dp"
-                android:textSize="15sp"
-                android:text="每日提醒"
+                android:text="用户协议"
                 android:textColor="@color/title"
-                android:layout_gravity="left"/>
-            
-            <TextView 
+                android:textSize="17sp" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="12sp"
                 android:layout_gravity="right"
-                android:textColor="@color/title"
-                android:text="点击设置提醒"/>
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="点击查看"
+                android:textColor="@color/diarycontent"
+                android:textSize="17sp" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:background="@color/diaryday" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="45dp"
+            android:orientation="horizontal"
+            android:padding="1dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:gravity="left|center_vertical"
+                android:minWidth="100dp"
+                android:paddingLeft="15dp"
+                android:text="版权信息"
+                android:textColor="@color/title"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/pricy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:background="@drawable/btn_alarm"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="点击查看"
+                android:textColor="@color/diarycontent"
+                android:textSize="17sp" />
+
+        </LinearLayout>
     </LinearLayout>
-    
-    
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/list_group"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/pager_logo" />
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:textColor="@color/title"
+            android:textSize="14sp" />
+    </LinearLayout>
+
 </RelativeLayout>

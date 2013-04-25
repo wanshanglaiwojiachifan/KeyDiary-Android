@@ -1,4 +1,4 @@
-<com.xeodou.keydiary.KeyboardDetectorLineayLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,38 +11,19 @@
         android:layout_height="6dp"
         layout="@layout/head_layout" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" >
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="34dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="20dp"
-            android:background="@drawable/pager_logo" />
-
-        <RelativeLayout
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true" >
-
-            <Button
-                android:id="@+id/set_btn"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerInParent="true"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/set_btn" />
-        </RelativeLayout>
-    </RelativeLayout>
-
     <android.support.v4.view.ViewPager
         android:id="@+id/diarycontent"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</com.xeodou.keydiary.KeyboardDetectorLineayLayout>
+    <Button
+        android:id="@+id/set_btn"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/set_btn" />
+
+</RelativeLayout>

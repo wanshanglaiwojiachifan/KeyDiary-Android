@@ -10,7 +10,7 @@ public class API {
     }
     
     public static void getUser(AsyncHttpResponseHandler responseHandler){
-        KeyDiaryRequest.get(APIConfig.API_ACCOUNT_LOGIN, null, responseHandler);
+        KeyDiaryRequest.get(APIConfig.API_ACCOUNT_LOGIN, responseHandler);
     }
     
     public static void getDiaryByDay(String date, AsyncHttpResponseHandler responseHandler){

@@ -13,6 +13,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.MyApplication;
 import com.xeodou.keydiary.PanningEditText;
+import com.xeodou.keydiary.PanningEditText.onLostFocusListener;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.Diary;
@@ -68,7 +69,7 @@ public class DiaryAdapter extends BaseAdapter {
     private int year, month;
     private ProgressDialog dialog;
     private String text;
-    private EditText editText;
+    private PanningEditText editText;
     private Diary diaryData;
     public DiaryAdapter(Context context, Map<String, Diary> diaries,int year, int month){
         this.context = context;
@@ -168,39 +169,22 @@ public class DiaryAdapter extends BaseAdapter {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // TODO Auto-generated method stub
                 if (KeyEvent.KEYCODE_ENTER == keyCode && event.getAction() == KeyEvent.ACTION_DOWN) {  
-                    String str = ((EditText)v).getText().toString();
-                    Diary diary = null;
-                    if(diaries.containsKey(day)) {
-                        if(str != null) {
-                            if(str.equals("")){
-                               delDiary(context, day);
-                            } else {
-                                diary = diaries.get(day);
-                                if(str.equals(diary.getContent())){
-                                    ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                                            editText.getWindowToken(), 0);
-                                    return false;  
-                                } 
-                                diary.setContent(str);
-                                diaryData = diary;
-                                updateDiary(context, day, str, diary);
-                            }
-                        }
-                    } else {
-                        if(str != null && str.length() > 0){
-                            diary = new Diary();
-                            diary.setD(day);
-                            diary.setContent(str);
-                            diary.setDid((int)Math.random() * 1000 + "");
-                            diaryData = diary;
-                            addDiary(context, day, str);
-                        }
-                    }
-                  ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                  editText.getWindowToken(), 0);
-                    return false;  
+                    action(v, day);
+                    ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                            editText.getWindowToken(), 0);
+                    return false;
                 }
                 return false;
+            }
+        });
+        editText.setOnLostFocusListener(new onLostFocusListener() {
+            
+            @Override
+            public void lostFocus(PanningEditText v, boolean islost) {
+                // TODO Auto-generated method stub
+                if(islost){
+                    action(v, day);
+                }
             }
         });
         
@@ -210,36 +194,14 @@ public class DiaryAdapter extends BaseAdapter {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // TODO Auto-generated method stub
                 if(actionId == EditorInfo.IME_ACTION_DONE){
-                    String str = v.getText().toString();
-                    Diary diary = null;
-                    if(diaries.containsKey(day)) {
-                        if(str != null) {
-                            if(str.equals("")){
-                               delDiary(context, day);
-                            } else {
-                                diary = diaries.get(day);
-                                if(str.equals(diary.getContent())) return false;
-                                diary.setContent(str);
-                                diaryData = diary;
-                                updateDiary(context, day, str, diary);
-                            }
-                        }
-                    } else {
-                        if(str != null && str.length() > 0){
-                            diary = new Diary();
-                            diary.setD(day);
-                            diary.setContent(str);
-                            diary.setDid((int)Math.random() * 1000 + "");
-                            diaryData = diary;
-                            addDiary(context, day, str);
-                        }
-                    }
+                   action(v, day);
+                   ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                           editText.getWindowToken(), 0);
+                   return false;
                 }
-                v.clearFocus();
-                v.setSelected(false);
-//                ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-//                        editText.getWindowToken(), 0);
-                return false;
+//                v.clearFocus();
+//                v.setSelected(false);
+                return true;
             }
         });
         if(diary != null){
@@ -265,6 +227,40 @@ public class DiaryAdapter extends BaseAdapter {
         });
         
         return convertView;
+    }
+    
+    private boolean action(View v, String day){
+        String str = null;
+        str = ((TextView)v).getText().toString();
+        if(str == null) return false;
+        Diary diary = null;
+        if(diaries.containsKey(day)) {
+            if(str != null) {
+                if(str.equals("")){
+                   delDiary(context, day);
+                } else {
+                    diary = diaries.get(day);
+                    if(str.equals(diary.getContent())){
+                        return false;  
+                    } 
+                    diary.setContent(str);
+                    diaryData = diary;
+                    updateDiary(context, day, str, diary);
+                }
+            }
+        } else {
+            if(str != null && str.length() > 0){
+                diary = new Diary();
+                diary.setD(day);
+                diary.setContent(str);
+                diary.setDid((int)Math.random() * 1000 + "");
+                diaryData = diary;
+                addDiary(context, day, str);
+            }
+        }
+//        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+//                editText.getWindowToken(), 0);
+        return false;
     }
 
     public void addDiary(final Context c,String data, String content){
@@ -478,6 +474,12 @@ public class DiaryAdapter extends BaseAdapter {
                 }
                 return;
             }
+            if (msg.what == Config.FAIL_TO_LONG){
+//                if(editText != null){
+//                    editText.setBackgroundResource(R.drawable.edit_text_e);
+//                }
+            }
+            
             if(str == null) str = "修改失败";
             if(str.length() <= 0) str = "修改失败";
             Crouton.showText((Activity)context, str, Style.ALERT);

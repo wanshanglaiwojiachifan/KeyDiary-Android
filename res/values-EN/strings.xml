@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">KeyDiary</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+	<string name="islogin">login&#8230;</string>
+	<string name="loading">loading&#8230;</string>
+	<string name="intro">将每天浓缩成一个关键字</string>
+</resources>

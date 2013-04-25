@@ -37,7 +37,7 @@ public class Utils {
     public void storePass(Context context,String user, String pass){
         SharedPreferences preferences = context.getSharedPreferences(Config.PREF_NAME_LOGIN, Context.MODE_PRIVATE);
         Editor editor = preferences.edit();
-        editor.putString(Config.USER+"", user);
+        editor.putString(Config.USER + "", user);
         editor.putString(Config.PASS, pass);
         editor.commit();
     }
@@ -48,14 +48,14 @@ public class Utils {
         editor.commit();
     }
     
-    public void storeUser(Context context,User user){
-        SharedPreferences preferences = context.getSharedPreferences(Config.PREF_NAME_USER, Context.MODE_PRIVATE);
-        Editor editor = preferences.edit();
-        editor.putLong(Config.UID, user.getUid());
-        editor.putString(Config.EMAIL, user.getEmail());
-        editor.putString(Config.NAME, user.getUsername());
-        editor.commit();
-    }
+//    public void storeUser(Context context,User user){
+//        SharedPreferences preferences = context.getSharedPreferences(Config.PREF_NAME_USER, Context.MODE_PRIVATE);
+//        Editor editor = preferences.edit();
+//        editor.putLong(Config.UID, user.getUid());
+////        editor.putString(Config.EMAIL, user.getEmail());
+////        editor.putString(Config.NAME, user.getUsername());
+//        editor.commit();
+//    }
     
     public void storeAlerm(Context context,String time){
         SharedPreferences preferences = context.getSharedPreferences(Config.PREF_NAME_USER, Context.MODE_PRIVATE);
@@ -157,7 +157,8 @@ public class Utils {
    public static Date getDate(long time){
        return new Date(time);
    }
-   private static Date getDate(){
+   
+   public static Date getDate(){
        if(date != null){
            return date;
        }

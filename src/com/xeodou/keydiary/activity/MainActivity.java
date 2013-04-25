@@ -111,14 +111,18 @@ public class MainActivity extends Activity {
     }
     
     private void getFiveMonth(){
-        if(startDate <= 0) return;
-        Date date = Utils.getDate(startDate);
+        Date date;
+        if(startDate <= 0) date = Utils.getDate();
+        else date = Utils.getDate(startDate);
         int m = date.getMonth() + 1;
         int y = date.getYear() + 1900;
-        Date endD = Utils.getDate(endDate);
+        Date endD;
+        if(endDate <= 0) endD = Utils.getDate();
+        else endD = Utils.getDate(endDate);
         int nm = endD.getMonth() + 1;
-        int ny = endD.getYear() + 1900;
-        if(nm < m) {
+        int ny = Utils.getCurrentYear();
+//        if(nm == m ) nm = m + 1;
+        if(nm < m && ny > y) {
             nm += 12;
             ny --;
             if(ny < y) ny = y;
@@ -167,13 +171,14 @@ public class MainActivity extends Activity {
                     startDate = result.getData().getStartDate();
                     endDate = result.getData().getEndDate();
                     if(ds == null || ds.size() <= 0){
-                        sendMsg(Config.FAIL_CODE, "你还没有添加任何日记");
+                        sendMsg(Config.SUCCESSS_CODE, "你还没有添加任何日记");
                         return;
                     }
                     Map<String, Diary> hashMap = new HashMap<String, Diary>();
                     for(Diary d : ds){
                         hashMap.put(d.getD(), d);
                     }
+                    diaries.clear();
                     diaries.putAll(hashMap);
                     sendMsg(Config.SUCCESSS_CODE, null);
                 } else {
