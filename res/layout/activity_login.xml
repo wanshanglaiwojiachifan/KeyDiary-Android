@@ -39,9 +39,9 @@
                 android:hint="注册邮箱"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
-                android:minHeight="40dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
+                android:minHeight="44dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:singleLine="true"
                 android:textColor="@color/title" >
             </EditText>
@@ -60,9 +60,9 @@
                 android:hint="密码"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
-                android:minHeight="40dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
+                android:minHeight="44dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:singleLine="true"
                 android:textColor="@color/title" >
             </EditText>

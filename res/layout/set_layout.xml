@@ -25,16 +25,16 @@
         layout="@layout/head_layout" />
 
     <RelativeLayout
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="25dp" >
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp" >
 
         <Button
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
             android:background="@drawable/back_btn" />
     </RelativeLayout>
 
@@ -195,7 +195,6 @@
                 android:text="点击查看"
                 android:textColor="@color/diarycontent"
                 android:textSize="17sp" />
-
         </LinearLayout>
     </LinearLayout>
 
@@ -204,7 +203,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/list_group"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="40dp"
         android:orientation="vertical" >
 
         <ImageView
@@ -218,7 +217,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:textColor="@color/title"
             android:textSize="14sp" />
