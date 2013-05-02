@@ -21,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:background="@drawable/back_btn" />
-
     </RelativeLayout>
 
     <EditText
@@ -39,19 +38,19 @@
         android:padding="8dp"
         android:singleLine="false"
         android:textColor="@color/title" />
-    
-        <Button
-            android:id="@+id/send_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="80dp"
-            android:minHeight="30dp"
-            android:textSize="16sp"
-            android:layout_below="@id/feedback_content"
-            android:layout_alignRight="@id/feedback_content"
-            android:text="提交"
-            android:layout_marginTop="10dp"
-            android:textColor="@android:color/white"
-            android:background="@drawable/login_btn" />
+
+    <Button
+        android:id="@+id/send_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/feedback_content"
+        android:layout_below="@id/feedback_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/login_btn"
+        android:minHeight="40dp"
+        android:minWidth="90dp"
+        android:text="提交"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 </RelativeLayout>

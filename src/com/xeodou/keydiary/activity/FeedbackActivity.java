@@ -58,16 +58,16 @@ public class FeedbackActivity extends Activity implements OnClickListener {
                 // TODO Auto-generated method stub
                 Log.d("----", content);
                 if(content.contains("\"stat\": 1")){
-                    sendMsg(Config.SUCCESSS_CODE, "感谢您提供的宝贵意见！");
+                    sendMsg(Config.SUCCESSS_CODE, "感谢您提供的宝贵建议！");
                 } else {
-                    sendMsg(Config.SUCCESSS_CODE, "感谢您提供的宝贵意见！");
+                    sendMsg(Config.SUCCESSS_CODE, "感谢您提供的宝贵建议！");
                 }
             }
 
             @Override
             public void onFailure(Throwable error, String content) {
                 // TODO Auto-generated method stub
-                sendMsg(Config.FAIL_CODE, "提交意见失败请重试");
+                sendMsg(Config.FAIL_CODE, "提交建议失败请重试");
             }
             
         });
