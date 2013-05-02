@@ -1,7 +1,5 @@
 package com.xeodou.keydiary.bean;
 
-import java.util.List;
-
 public class LoadDiary extends Result {
 
     /**

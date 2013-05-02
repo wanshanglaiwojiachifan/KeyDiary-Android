@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xeodou.keydiary"
-    android:versionCode="20"
-    android:versionName="0.20" >
+    android:versionCode="27"
+    android:versionName="0.27" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -58,7 +58,10 @@
        <activity android:name="com.xeodou.keydiary.activity.WebActivity"            
        android:theme="@android:style/Theme.Light.NoTitleBar"
        ></activity>
-       <receiver android:name="com.xeodou.keydiary.activity.DiaryReciver" android:process=":diaryReciver"></receiver>
+       <activity android:name="com.xeodou.keydiary.activity.FeedbackActivity"            
+       android:theme="@android:style/Theme.Light.NoTitleBar"
+       ></activity>
+       <receiver android:name="com.xeodou.keydiary.activity.DiaryReciver" android:process="com.xeodou.keydiary.diaryReciver"></receiver>
        <receiver android:name="com.xeodou.keydiary.activity.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

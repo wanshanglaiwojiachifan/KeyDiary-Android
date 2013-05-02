@@ -13,17 +13,28 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/diarycontent"
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp" />
 
-    <Button
-        android:id="@+id/set_btn"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+    <RelativeLayout
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="25dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/set_btn" />
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp" >
+
+        <Button
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/set_btn" />
+
+        <Button
+            android:id="@+id/set_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent" />
+    </RelativeLayout>
 
 </RelativeLayout>

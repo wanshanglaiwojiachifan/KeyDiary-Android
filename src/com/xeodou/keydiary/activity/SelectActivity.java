@@ -1,12 +1,10 @@
 package com.xeodou.keydiary.activity;
 
+import com.umeng.update.UmengUpdateAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.R;
-import com.xeodou.keydiary.http.APIConfig;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,7 +19,8 @@ public class SelectActivity extends Activity implements OnClickListener {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.firstpager_layout);
-        
+        UmengUpdateAgent.setUpdateOnlyWifi(false);
+        UmengUpdateAgent.update(this);
         registerBtn = (Button)findViewById(R.id.register_btn);
         loginBtn = (Button)findViewById(R.id.login_select_btn);     
         registerBtn.setOnClickListener(this);

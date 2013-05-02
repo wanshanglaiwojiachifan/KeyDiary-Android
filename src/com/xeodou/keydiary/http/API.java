@@ -47,4 +47,10 @@ public class API {
         params.put("content", content);
         KeyDiaryRequest.post(APIConfig.API_UPSERT_DIARY, params, responseHandler);
     }
+    
+    public static void feedBack(String content, AsyncHttpResponseHandler responseHandler){
+        RequestParams params = new RequestParams();
+        params.put("content", content);
+        KeyDiaryRequest.post(APIConfig.API_FEED_BACK, params, responseHandler);
+    }
 }

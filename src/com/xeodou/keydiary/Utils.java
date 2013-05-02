@@ -3,9 +3,6 @@ package com.xeodou.keydiary;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.xeodou.keydiary.bean.User;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;

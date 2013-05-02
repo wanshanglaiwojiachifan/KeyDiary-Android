@@ -67,26 +67,22 @@
                 android:textColor="@color/title" >
             </EditText>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/login_btn"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/password_etv"
                 android:layout_below="@id/password_etv"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="24dp" >
-
-                <Button
-                    android:id="@+id/login_btn"
-                    android:layout_width="90dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/login_btn"
-                    android:gravity="center|center_horizontal"
-                    android:text="@string/login"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp" />
-            </RelativeLayout>
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/login_btn"
+                android:gravity="center|center_horizontal"
+                android:minHeight="40dp"
+                android:minWidth="90dp"
+                android:text="@string/login"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
         </RelativeLayout>
     </LinearLayout>
+
 </FrameLayout>

@@ -3,12 +3,7 @@ package com.xeodou.keydiary.activity;
 import java.util.Calendar;
 
 import com.xeodou.keydiary.Config;
-import com.xeodou.keydiary.MyApplication;
 import com.xeodou.keydiary.Utils;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;

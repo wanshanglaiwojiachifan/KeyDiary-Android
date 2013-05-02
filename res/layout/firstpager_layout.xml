@@ -4,46 +4,54 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical" >
-    <include 
+
+    <include
         android:layout_width="match_parent"
         android:layout_height="6dp"
-        layout="@layout/head_layout"/>
-	<ImageView 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_marginTop="45dp"
-	    android:layout_gravity="center_horizontal"
-	    android:background="@drawable/pager_logo"/>
-	
-	<Button 
-	    android:id="@+id/register_btn"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_gravity="center_horizontal"
-	    android:textColor="@android:color/white"
-	    android:layout_marginTop="50dp"
-	    android:background="@drawable/login_btn"
-	    android:textSize="18sp"
-	    android:text="免费注册"/>
-	
-	<TextView 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textColor="@color/maincolor"
-	    android:layout_gravity="center_horizontal"
-	    android:textSize="15sp"
-	    android:layout_marginTop="20dp"
-	    android:layout_marginBottom="20dp"
-	    android:text="或"/>
-	<Button 
-	    android:id="@+id/login_select_btn"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textColor="@android:color/white"
-	    android:layout_gravity="center_horizontal"
-	    android:background="@drawable/login_btn"
-	    android:textSize="18sp"
-	    android:text="登录"/>
-	
-	
+        layout="@layout/head_layout" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="45dp"
+        android:background="@drawable/pager_logo" />
+
+    <Button
+        android:id="@+id/register_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/login_btn"
+        android:minHeight="40dp"
+        android:text="免费注册"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:text="或"
+        android:textColor="@color/maincolor"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/login_select_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/login_btn"
+        android:minHeight="40dp"
+        android:text="登录"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
 </LinearLayout>

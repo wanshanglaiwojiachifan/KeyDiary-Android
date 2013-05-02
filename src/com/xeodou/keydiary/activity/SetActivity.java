@@ -2,47 +2,37 @@ package com.xeodou.keydiary.activity;
 
 import java.util.Calendar;
 
+import com.doomonafireball.betterpickers.BetterPickerUtils;
+import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment.TimePickerDialogHandler;
 import com.umeng.analytics.MobclickAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.database.DBUtils;
-import com.xeodou.keydiary.http.KeyDiaryRequest;
-
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
-
-import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Dialog;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
-import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-public class SetActivity extends Activity implements OnClickListener, OnLongClickListener {
+public class SetActivity extends FragmentActivity implements OnClickListener, OnLongClickListener, TimePickerDialogHandler {
 
     
     private Button logoutBtn;
-    private View backBtn, notiBtn, pricyView;
+    private View backBtn, notiBtn, pricyView, feedbackView;
     private TextView textView, alermTime, version;
     private boolean isShow = false;
-    private Dialog dialog;
     private TimePicker timePicker;
     private Button cancelBtn, okBtn;
     private boolean isAlarm = false;
@@ -58,15 +48,16 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         notiBtn = (View) findViewById(R.id.noti_btn);
         backBtn = (View) findViewById(R.id.back_btn);
         pricyView = (View) findViewById(R.id.pricy);
+        feedbackView = (View) findViewById(R.id.feedback);
         logoutBtn = (Button) findViewById(R.id.logout_btn);        
         notiBtn.setOnClickListener(this);
         notiBtn.setOnLongClickListener(this);
         backBtn.setOnClickListener(this);
         pricyView.setOnClickListener(this);
+        feedbackView.setOnClickListener(this);
         logoutBtn.setOnClickListener(this);
         Utils.isLogin(this);
         textView.setText(Config.username);
-        initDialog();
         String str = (new Utils()).getAlerm(this);
         if(str != null && !str.equals("")){
             isAlarm = true;
@@ -81,22 +72,22 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         }
         version.setText("版本 " + versionName);
     }
-    
-    private void initDialog(){
-        
-        dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        View view = LayoutInflater.from(this).inflate(R.layout.pickerdialog_layout, null);
-        dialog.addContentView(view, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-        timePicker = (TimePicker)view.findViewById(R.id.time_picker);
-        cancelBtn = (Button)view.findViewById(R.id.dialog_cancel);
-        okBtn = (Button)view.findViewById(R.id.dialog_ok);
-        cancelBtn.setOnClickListener(this);
-        okBtn.setOnClickListener(this);
-        timePicker.setIs24HourView(true);
-        timePicker.setCurrentHour(Utils.getCurrentHour());
-        timePicker.setCurrentMinute(Utils.getCurrentMin());
-    }
+//    change to new dialog
+//    private void initDialog(){
+//        
+//        dialog = new Dialog(this);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        View view = LayoutInflater.from(this).inflate(R.layout.pickerdialog_layout, null);
+//        dialog.addContentView(view, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+//        timePicker = (TimePicker)view.findViewById(R.id.time_picker);
+//        cancelBtn = (Button)view.findViewById(R.id.dialog_cancel);
+//        okBtn = (Button)view.findViewById(R.id.dialog_ok);
+//        cancelBtn.setOnClickListener(this);
+//        okBtn.setOnClickListener(this);
+//        timePicker.setIs24HourView(true);
+//        timePicker.setCurrentHour(Utils.getCurrentHour());
+//        timePicker.setCurrentMinute(Utils.getCurrentMin());
+//    }
     
     @Override
     public void onClick(View v) {
@@ -123,11 +114,16 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         case R.id.noti_btn:
 //            if(alermTime.getVisibility() == View.GONE){
                 isShow = true;
-                dialog.show();
+//                dialog.show();
+                BetterPickerUtils.showTimeEditDialog(getSupportFragmentManager(), R.style.BetterPickersDialogFragment);
 //            }
             break;
         case R.id.dialog_cancel:
-            if(dialog.isShowing())dialog.cancel();
+            break;
+        case R.id.feedback:
+            intent = new Intent(SetActivity.this, FeedbackActivity.class);
+            intent.setAction(Config.ACTION_FEEDBACK);
+            startActivity(intent);
             break;
         case R.id.dialog_ok:
             int hour = timePicker.getCurrentHour();
@@ -135,7 +131,6 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
             alermTime.setText("每日 " + hour+":"+ Utils.douInt(min) + " 提醒");
             setAlerm(hour, min);
             (new Utils()).storeAlerm(SetActivity.this, hour+":"+ Utils.douInt(min));
-            dialog.cancel();
             break;
         case R.id.pricy:
             intent = new Intent(Config.ACTION_SET);
@@ -148,9 +143,19 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
     
     private void setAlerm(int h, int m){
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, h);
-        calendar.set(Calendar.MINUTE, m);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int ch = calendar.get(Calendar.HOUR_OF_DAY); 
+        int cm = calendar.get(Calendar.MINUTE);
+        int r = 0;
+        if(h > ch) {
+                r = (h - ch) * 60 + (m - cm);
+        } else if(h < ch) {
+                r = (h + 24 - ch) * 60 + (m - cm);
+        } else {
+            r = m >= cm ? m - cm : 24 * 60 + m - cm;
+        }
+        r = r * 60;
+        calendar.add(Calendar.SECOND, r);
         Intent intent = new Intent(this, DiaryReciver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this, Config.ALERM_ID , intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
@@ -190,5 +195,13 @@ public class SetActivity extends Activity implements OnClickListener, OnLongClic
         // TODO Auto-generated method stub
         super.onResume();
         MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onDialogTimeSet(int hourOfDay, int minute) {
+        // TODO Auto-generated method stub
+        alermTime.setText("每日 " + Utils.douInt(hourOfDay)+":"+ Utils.douInt(minute) + " 提醒");
+        setAlerm(hourOfDay, minute);
+        (new Utils()).storeAlerm(SetActivity.this, Utils.douInt(hourOfDay)+":"+ Utils.douInt(minute));
     }
 }

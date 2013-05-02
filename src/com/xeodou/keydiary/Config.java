@@ -11,6 +11,7 @@ public class Config {
     public static final String ACTION_LOGOUT = "com.xeodou.keydiary.logout";
     public static final String ACTION_LOADING = "com.xeodou.keydiary.loaging";
     public static final String ACTION_REGISTER = "com.xeodou.keydiary.register";
+    public static final String ACTION_FEEDBACK = "com.xeodou.keydiary.feedback";
     
     //status code
     public static final int FAIL_CODE = -0x000001;

@@ -2,16 +2,12 @@ package com.xeodou.keydiary.adapter;
 
 import java.sql.SQLException;
 import java.util.Map;
-
-import org.json.JSONObject;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
-import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.xeodou.keydiary.Config;
-import com.xeodou.keydiary.MyApplication;
+import com.xeodou.keydiary.KeyDiaryResult;
 import com.xeodou.keydiary.PanningEditText;
 import com.xeodou.keydiary.PanningEditText.onLostFocusListener;
 import com.xeodou.keydiary.R;
@@ -19,7 +15,6 @@ import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.Diary;
 import com.xeodou.keydiary.bean.LoadADiary;
 import com.xeodou.keydiary.bean.Result;
-import com.xeodou.keydiary.database.DBHelper;
 import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
 
@@ -32,20 +27,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.EditorInfo;
@@ -68,9 +56,9 @@ public class DiaryAdapter extends BaseAdapter {
     private Context context;
     private int year, month;
     private ProgressDialog dialog;
-    private String text;
     private PanningEditText editText;
     private Diary diaryData;
+    private boolean lock = false;
     public DiaryAdapter(Context context, Map<String, Diary> diaries,int year, int month){
         this.context = context;
         this.diaries = diaries;
@@ -164,14 +152,17 @@ public class DiaryAdapter extends BaseAdapter {
         }
         
         editText.setOnKeyListener(new OnKeyListener() {
-            
+       
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // TODO Auto-generated method stub
-                if (KeyEvent.KEYCODE_ENTER == keyCode && event.getAction() == KeyEvent.ACTION_DOWN) {  
+                if (KeyEvent.KEYCODE_ENTER == keyCode && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    lock = true;
                     action(v, day);
                     ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
                             editText.getWindowToken(), 0);
+                    ((EditText)v).clearFocus();
+                    ((EditText)v).setSelected(false);
                     return false;
                 }
                 return false;
@@ -183,6 +174,7 @@ public class DiaryAdapter extends BaseAdapter {
             public void lostFocus(PanningEditText v, boolean islost) {
                 // TODO Auto-generated method stub
                 if(islost){
+                    if(lock) return;
                     action(v, day);
                 }
             }
@@ -194,7 +186,8 @@ public class DiaryAdapter extends BaseAdapter {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // TODO Auto-generated method stub
                 if(actionId == EditorInfo.IME_ACTION_DONE){
-                   action(v, day);
+                   lock = true;
+//                   action(v, day);
                    ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
                            editText.getWindowToken(), 0);
                    return false;
@@ -264,13 +257,13 @@ public class DiaryAdapter extends BaseAdapter {
     }
 
     public void addDiary(final Context c,String data, String content){
-        API.addDiary(data, content, new JsonHttpResponseHandler(){
+        API.addDiary(data, content, new AsyncHttpResponseHandler(){
             
             @Override
-            public void onSuccess(int statusCode, JSONObject response) {
+            public void onSuccess(int statusCode, String content) {
                 // TODO Auto-generated method stub
                 Gson gson = new Gson();
-                LoadADiary result = (LoadADiary)gson.fromJson(response.toString(), LoadADiary.class);
+                LoadADiary result = (LoadADiary)gson.fromJson(content, LoadADiary.class);
                 if(result.getStat() == 1 && result.getData() != null ) {
                     diaries.put(result.getData().getD(), result.getData());
                     sendMsg(Config.SUCCESSS_CODE, "添加日记成功");
@@ -280,15 +273,15 @@ public class DiaryAdapter extends BaseAdapter {
             }
 
             @Override
-            public void onFailure(Throwable e, JSONObject errorResponse) {
+            public void onFailure(Throwable error, String content) {
                 // TODO Auto-generated method stub
                 Gson gson = new Gson();
                 try {
-                    Result result = gson.fromJson(errorResponse.toString(), Result.class);
+                    Result result = gson.fromJson(content, Result.class);
                     if(result.getStat() == 2101){
                         sendMsg(Config.FAIL_TO_LONG, "您的日记太长");
                     } else {
-                        sendMsg(Config.FAIL_ADD, "添加日记失败");
+                        sendMsg(Config.FAIL_ADD, KeyDiaryResult.getMsg(result.getStat()));
                     }
                 } catch (JsonSyntaxException e1) {
                     // TODO Auto-generated catch block
@@ -308,19 +301,14 @@ public class DiaryAdapter extends BaseAdapter {
     } 
     
     public void delDiary(final Context c,final String data){
-        API.deleteDiary(data, new JsonHttpResponseHandler() {
+        API.deleteDiary(data, new AsyncHttpResponseHandler() {
+
 
             @Override
-            public void onFailure(Throwable e, JSONObject errorResponse) {
-                // TODO Auto-generated method stub
-                sendMsg(Config.FAIL_CODE, "删除日记失败");
-            }
-
-            @Override
-            public void onSuccess(int statusCode, JSONObject response) {
+            public void onSuccess(int statusCode, String content) {
                 // TODO Auto-generated method stub
                 Gson gson = new Gson();
-                Result result = (Result) gson.fromJson(response.toString(),
+                Result result = (Result) gson.fromJson(content,
                         Result.class);
                 if (result.getStat() == 1) {
                     diaries.remove(data);
@@ -328,6 +316,12 @@ public class DiaryAdapter extends BaseAdapter {
                 } else {
                     sendMsg(Config.FAIL_CODE, "删除日记失败");
                 }
+           }
+
+            @Override
+            public void onFailure(Throwable error, String content) {
+                // TODO Auto-generated method stub
+                sendMsg(Config.FAIL_CODE, "删除日记失败");
             }
 
             @Override
@@ -343,32 +337,12 @@ public class DiaryAdapter extends BaseAdapter {
     } 
     
     public void updateDiary(final Context c,final String data, String content, final Diary diary){
-        API.updateDiary(data, content, new JsonHttpResponseHandler(){
-
-            
-
+        API.updateDiary(data, content, new AsyncHttpResponseHandler(){
             @Override
-            public void onFailure(Throwable e, JSONObject errorResponse) {
+            public void onSuccess(int statusCode, String content) {
                 // TODO Auto-generated method stub
                 Gson gson = new Gson();
-                try {
-                    Result result = gson.fromJson(errorResponse.toString(), Result.class);
-                    if(result.getStat() == 2101){
-                        sendMsg(Config.FAIL_TO_LONG, "您的日记太长");
-                    } else {
-                        sendMsg(Config.FAIL_UPDATE, "修改日记失败");
-                    }
-                } catch (JsonSyntaxException e1) {
-                    // TODO Auto-generated catch block
-                    sendMsg(Config.FAIL_UPDATE, "修改日记失败");
-                }
-            }
-
-            @Override
-            public void onSuccess(int statusCode, JSONObject response) {
-                // TODO Auto-generated method stub
-                Gson gson = new Gson();
-                Result result = (Result)gson.fromJson(response.toString(), Result.class);
+                Result result = (Result)gson.fromJson(content, Result.class);
                 if(result.getStat() == 1) {
                     diaries.put(data, diary);
                     sendMsg(Config.SUCCESSS_CODE, "修改日记成功");
@@ -376,6 +350,23 @@ public class DiaryAdapter extends BaseAdapter {
                     sendMsg(Config.FAIL_UPDATE, "修改日记失败");
                 }
             }
+
+            @Override
+            public void onFailure(Throwable error, String content) {
+                // TODO Auto-generated method stub
+                Gson gson = new Gson();
+                try {
+                    Result result = gson.fromJson(content, Result.class);
+                    if(result.getStat() == 2101){
+                        sendMsg(Config.FAIL_TO_LONG, "您的日记太长");
+                    } else {
+                        sendMsg(Config.FAIL_ADD, KeyDiaryResult.getMsg(result.getStat()));
+                    }
+                } catch (JsonSyntaxException e1) {
+                    // TODO Auto-generated catch block
+                    sendMsg(Config.FAIL_UPDATE, "修改日记失败");
+                }
+           }
 
             @Override
             public void onStart() {
@@ -390,13 +381,13 @@ public class DiaryAdapter extends BaseAdapter {
     } 
     
     private void upsertDiary(final Context c ,String date, String content){
-        API.upsertDiary(date, content, new JsonHttpResponseHandler(){
+        API.upsertDiary(date, content, new AsyncHttpResponseHandler(){
 
             @Override
-            public void onSuccess(int statusCode, JSONObject response) {
+            public void onSuccess(int statusCode, String content) {
                 // TODO Auto-generated method stub
                 Gson gson = new Gson();
-                LoadADiary result = gson.fromJson(response.toString(), LoadADiary.class);
+                LoadADiary result = gson.fromJson(content, LoadADiary.class);
                 if(result.getStat() == 1 && result.getData() != null ) {
                     diaryData = diaries.get(result.getData().getD());
                     diaryData.setIsLocal(false);
@@ -408,7 +399,7 @@ public class DiaryAdapter extends BaseAdapter {
             }
 
             @Override
-            public void onFailure(Throwable e, JSONObject errorResponse) {
+            public void onFailure(Throwable e, String content) {
                 // TODO Auto-generated method stub
                 sendMsg(Config.FAIL_UPSERT, "上传日记失败");
             }
@@ -455,6 +446,7 @@ public class DiaryAdapter extends BaseAdapter {
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             String str = msg.obj.toString();
+            lock = false;
             if(dialog !=null && dialog.isShowing()) dialog.dismiss();
             dialog = null;
             if(msg.what == Config.SUCCESSS_CODE){

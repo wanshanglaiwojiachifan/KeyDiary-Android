@@ -28,16 +28,13 @@ import android.os.Handler;
 import android.os.Message;
 import org.json.JSONObject;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 
 public class MainActivity extends Activity {
 
@@ -189,7 +186,9 @@ public class MainActivity extends Activity {
             @Override
             public void onFailure(Throwable e, JSONObject errorResponse) {
                 // TODO Auto-generated method stub
-                sendMsg(Config.FAIL_CODE, errorResponse.toString());
+                String str = "未知错误";
+                if(errorResponse != null) str = errorResponse.toString();
+                sendMsg(Config.FAIL_CODE, str);
             }
 
             @Override
