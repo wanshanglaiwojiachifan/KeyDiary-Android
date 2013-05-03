@@ -98,7 +98,7 @@ public class Utils {
    
    public static String douInt(int a){
        if(a == 0){
-           return "";
+           return "00";
        } else if(a < 10) {
            return "0" + a;
        } else {

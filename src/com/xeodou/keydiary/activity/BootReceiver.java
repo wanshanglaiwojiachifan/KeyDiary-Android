@@ -18,11 +18,11 @@ public class BootReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
             String str = (new Utils()).getAlerm(context);
-            String h = str.split("-")[0];
-            String m = str.split("-")[1];
+            String hs = str.split("-")[0];
+            String ms = str.split("-")[1];
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(h));
-            calendar.set(Calendar.MINUTE, Integer.parseInt(m));
+            calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hs));
+            calendar.set(Calendar.MINUTE, Integer.parseInt(ms));
             calendar.set(Calendar.SECOND, 0);
             Intent in = new Intent(context, DiaryReciver.class);
             PendingIntent pi = PendingIntent.getBroadcast(context, Config.ALERM_ID , in, PendingIntent.FLAG_UPDATE_CURRENT);

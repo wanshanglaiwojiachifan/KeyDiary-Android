@@ -14,10 +14,10 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/logout_btn"
-        android:minHeight="38dp"
+        android:minHeight="40dp"
         android:text="退             出"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <include
         android:layout_width="match_parent"
