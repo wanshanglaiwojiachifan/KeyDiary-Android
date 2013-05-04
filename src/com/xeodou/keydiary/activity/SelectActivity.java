@@ -40,6 +40,7 @@ public class SelectActivity extends Activity implements OnClickListener {
 
         case R.id.login_select_btn:
             intent = new Intent(this, LoginActivity.class);
+            intent.setAction(Config.ACTION_SELECT_LOGIN);
             startActivityForResult(intent, Config.REQ_CODE);
             break;
         }

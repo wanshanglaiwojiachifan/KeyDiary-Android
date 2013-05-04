@@ -40,6 +40,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
     private EditText username;
     private EditText password;
     private Button button;
+    private View backBtn;
     private ProgressDialog dialog;
     private String action;
     @Override
@@ -52,15 +53,29 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         username = (EditText)findViewById(R.id.username_etv);
         password = (EditText)findViewById(R.id.password_etv);
         button = (Button)findViewById(R.id.login_btn);
+        backBtn = (View) findViewById(R.id.back_btn);
+        backBtn.setOnClickListener(this);
         button.setOnClickListener(this);
         username.setSelected(true);
         password.setOnEditorActionListener(this);
         password.setOnKeyListener(this);
+        String action = getIntent().getAction();
+        if(action != null && action.equals(Config.ACTION_SET)){
+            backBtn.setVisibility(View.GONE);
+        }
     }
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
-        login();
+        switch (v.getId()) {
+        case R.id.login_btn:
+            login();
+            break;
+
+        case R.id.back_btn:
+            finish();
+            break;
+        }
     }
     
     private void showDialog(String msg){
