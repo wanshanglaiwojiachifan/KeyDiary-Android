@@ -12,7 +12,16 @@
 * Holo Style in 2.2 or high
 * Action bar in 2.2 or high
 
+## Crash Report
+* [hockeyapp](https://rink.hockeyapp.net)
+
+## App Analytic
+* [友盟](http://www.umeng.com)
+
 ## Change log
+* v0.31
+ * 更改bug收集模块ACRA反馈地址位hockeyapp
+
 * v0.30
  * 修复选择页面的按钮背景色为统一色调
  * 在登录页添加返回键

@@ -3,6 +3,7 @@ package com.xeodou.keydiary.activity;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.Log;
@@ -29,15 +30,15 @@ public class DiaryReciver extends BroadcastReceiver {
         // TODO Auto-generated method stub
         this.context = context;
         if(!Utils.isLogin(context)) return;
-        API.getDiaryByDay(Utils.getFormatDayDate(), new JsonHttpResponseHandler(){
+        API.getDiaryByDay(Utils.getFormatDayDate(), new AsyncHttpResponseHandler(){
 
             @Override
-            public void onSuccess(int statusCode, JSONObject response) {
+            public void onSuccess(String content) {
                 // TODO Auto-generated method stub
-                Log.d("--------", response.toString());
+                Log.d("--------", content);
                 Gson gson = new Gson();
-                LoadADiary result = gson.fromJson(response.toString(), LoadADiary.class);
-                if(result.getStat() == 1){
+                LoadADiary result = gson.fromJson(content, LoadADiary.class);
+                if(result != null & result.getStat() == 1){
                     String str = result.getData().getContent();
                     if( str == null || str.equals("") ){
                         Message msg = new Message();
@@ -48,10 +49,11 @@ public class DiaryReciver extends BroadcastReceiver {
             }
 
             @Override
-            public void onFailure(Throwable e, JSONObject errorResponse) {
+            public void onFailure(Throwable error, String content) {
                 // TODO Auto-generated method stub
-                Log.d("--------+++++++", errorResponse.toString());
+                super.onFailure(error, content);
             }
+
         });
     }
     
