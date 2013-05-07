@@ -43,7 +43,7 @@ public class DiaryFragementAdapter extends PagerAdapter{
         v.setMinimumHeight((int)container.getContext().getResources().getDimension(R.dimen.headerHeight));
         grid.addHeaderView(v);
         TextView title = (TextView)view.findViewById(R.id.title);
-        diaryAdapter = new DiaryAdapter(container.getContext(), diaries, data.get(position).getYear(), data.get(position).getMonth());
+        diaryAdapter = new DiaryAdapter(container.getContext(), grid, diaries, data.get(position).getYear(), data.get(position).getMonth());
         grid.setAdapter(diaryAdapter);
         ScaleInAnimationAdapter sia = new ScaleInAnimationAdapter(diaryAdapter, 0.5f, 100, 500);
         sia.setListView(grid);

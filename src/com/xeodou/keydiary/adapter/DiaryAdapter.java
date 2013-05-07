@@ -27,13 +27,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.EditorInfo;
@@ -41,6 +44,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -59,12 +63,14 @@ public class DiaryAdapter extends BaseAdapter {
     private PanningEditText editText;
     private Diary diaryData;
     private boolean lock = false;
-    public DiaryAdapter(Context context, Map<String, Diary> diaries,int year, int month){
+    private ListView listView;
+    public DiaryAdapter(Context context,ListView listView, Map<String, Diary> diaries,int year, int month){
         this.context = context;
         this.diaries = diaries;
         this.year = year;
         this.month = month;
         this.diaryData = null;
+        this.listView = listView;
     }
     
     @Override
@@ -151,6 +157,9 @@ public class DiaryAdapter extends BaseAdapter {
             });
         }
         
+        listView.setOnTouchListener(onTouchListener);
+        viewHolder.day.setOnTouchListener(onTouchListener);
+        
         editText.setOnKeyListener(new OnKeyListener() {
        
             @Override
@@ -221,6 +230,26 @@ public class DiaryAdapter extends BaseAdapter {
         
         return convertView;
     }
+    
+    private OnTouchListener onTouchListener = new OnTouchListener() {
+        
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            // TODO Auto-generated method stub
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (editText.isFocused()) {
+                    Rect outRect = new Rect();
+                    editText.getGlobalVisibleRect(outRect);
+                    if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                        editText.clearFocus();
+                        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE); 
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                }
+            }
+            return false;
+        }
+    };
     
     private boolean action(View v, String day){
         String str = null;
@@ -460,16 +489,12 @@ public class DiaryAdapter extends BaseAdapter {
                 try {
                     Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
                     diaryDao.delete(diaryData);
+                    notifyDataSetChanged();
                 } catch (SQLException e) {
                     // TODO Auto-generated catch block
                     Crouton.showText((Activity)context, "数据库错误 ！", Style.ALERT);
                 }
                 return;
-            }
-            if (msg.what == Config.FAIL_TO_LONG){
-//                if(editText != null){
-//                    editText.setBackgroundResource(R.drawable.edit_text_e);
-//                }
             }
             
             if(str == null) str = "修改失败";
