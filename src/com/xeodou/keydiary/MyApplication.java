@@ -10,9 +10,9 @@ public class MyApplication extends Application {
 
     private static MyApplication instance;
     public static MyApplication getInstance(){
-        if (instance == null) {
-            instance = new MyApplication();
-        }
+//        if (instance == null) {
+//            instance = new MyApplication();
+//        }
         return instance;
     }
     
@@ -21,8 +21,8 @@ public class MyApplication extends Application {
         // TODO Auto-generated method stub
         ACRA.init(this);
         ACRA.getErrorReporter().setReportSender(new HockeySender());
-     
         super.onCreate();
+        instance = this;
     }
 
 }
