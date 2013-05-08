@@ -48,4 +48,16 @@ public class Config {
     //database
     public static final String DB_NAME = "keydiary.db";
     public static final int DB_VERSION = 1;
+    
+    //net state
+    public static final int TYPE_NET_WORK_DISABLED = 0; //网路不可用
+    public static final int TYPE_MNO_CM = 1;//移动网路
+    public static final int TYPE_MNO_CU = 2;//联通网络
+    public static final int TYPE_MNO_CT = 3;//电信网络
+    public static final int TYPE_CM_CU_WAP = 4;//移动联通wap
+    public static final int TYPE_CT_WAP = 5;//电信wap
+    public static final int TYPE_OTHER_NET = 6;//移动联通电信NET网络
+    public static final int TYPE_WIFI = 7;//wifi网络
+    public static int CURRENT_NET_WORK_TYPE = TYPE_OTHER_NET;//
+    
 }

@@ -12,6 +12,7 @@ public class KeyDiaryRequest {
     private static AsyncHttpClient client = new AsyncHttpClient();
     
     static {
+        client.setTimeout(5 * 1000);
         if (!Config.username.equals("") && !Config.password.equals("")) {
             client.setBasicAuth(Config.username, Config.password);
         }

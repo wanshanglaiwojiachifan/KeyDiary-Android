@@ -68,6 +68,10 @@ public class MainActivity extends Activity {
     }
     
     private void init(){
+        if(Utils.networkType() == Config.TYPE_NET_WORK_DISABLED) {
+            sendMsg(Config.FAIL_CODE, "您的网络有问题，请检查后重试！");
+            return;
+        }
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/FZLTHJW.TTF");
         Utils.setTypeface(typeface);
         loadAllDiaries();

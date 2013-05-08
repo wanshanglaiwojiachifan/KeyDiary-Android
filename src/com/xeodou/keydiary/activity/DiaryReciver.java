@@ -1,10 +1,7 @@
 package com.xeodou.keydiary.activity;
 
-import org.json.JSONObject;
-
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.Log;
 import com.xeodou.keydiary.R;
