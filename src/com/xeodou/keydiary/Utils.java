@@ -2,6 +2,7 @@ package com.xeodou.keydiary;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -190,6 +191,21 @@ public class Utils {
             // TODO Auto-generated catch block
             return 0;
         }
+    }
+    
+    @SuppressLint("SimpleDateFormat")
+    public static String getDayOfWeek(String day){
+        String[] days = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日", "未知"};
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(day);
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            return days[c.get(Calendar.DAY_OF_WEEK) - 1];
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return days[7];
     }
 
     public static Date getDate(long time) {

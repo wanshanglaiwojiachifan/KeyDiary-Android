@@ -7,6 +7,7 @@ import com.xeodou.keydiary.bean.Diary;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ public class EditDialog extends Dialog {
     private Map<String, Diary> diaries;
     private TextView title;
     private onDialogClickListener dialogClickListener;
+    private String day;
     public EditDialog(Context context) {
         this(context, 0);
         // TODO Auto-generated constructor stub
@@ -92,6 +94,7 @@ public class EditDialog extends Dialog {
 
     private void initView(){
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.dialog_edit, null);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -109,6 +112,8 @@ public class EditDialog extends Dialog {
     
     public void setDialogTitle(String text){
         if(title != null && text != null){
+            day = text;
+            text = text + "(" + Utils.getDayOfWeek(text) +")";
             title.setText(text);
         }
     }
@@ -125,20 +130,20 @@ public class EditDialog extends Dialog {
         @Override
         public void onClick(View v) {
             // TODO Auto-generated method stub
+            cancel();
             switch (v.getId()) {
             case R.id.dialog_delete:
                 if(dialogClickListener != null){
-                    dialogClickListener.onClick(ClickType.Delete, editText.getText().toString(), title.getText().toString(), v);
+                    dialogClickListener.onClick(ClickType.Delete, editText.getText().toString(), day, v);
                 }
                 break;
 
             case R.id.dialog_ok:
                 if(dialogClickListener != null){
-                    dialogClickListener.onClick(ClickType.Update, editText.getText().toString(), title.getText().toString(), v);
+                    dialogClickListener.onClick(ClickType.Update, editText.getText().toString(), day, v);
                 }
                 break;
             }
-            cancel();
         }
     }; 
     

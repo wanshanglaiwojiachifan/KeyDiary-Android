@@ -17,6 +17,7 @@ import com.xeodou.keydiary.bean.LoadADiary;
 import com.xeodou.keydiary.bean.Result;
 import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
+import com.xeodou.keydiary.views.CustomDialog;
 import com.xeodou.keydiary.views.EditDialog;
 import com.xeodou.keydiary.views.EditDialog.ClickType;
 import com.xeodou.keydiary.views.EditDialog.onDialogClickListener;
@@ -139,6 +140,8 @@ public class DiaryAdapter extends BaseAdapter {
                         public void onClick(DialogInterface dialog, int which) {
                             // TODO Auto-generated method stub
                             deleeteLocal(day);
+                            diaries.remove(day);
+                            notifyDataSetChanged();
                             dialog.cancel();
                         }
                     });
@@ -171,9 +174,13 @@ public class DiaryAdapter extends BaseAdapter {
         public void onItemClick(AdapterView<?> parent, View v, final int position,
                 long id) {
             // TODO Auto-generated method stub
-            Diary diary = diaries.get(year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position));
+            if(year > Utils.getCurrentYear()) return ;
+            if(year == Utils.getCurrentYear() && month > Utils.getCurrentMonth()) return ;
+            if(year == Utils.getCurrentYear() && month == Utils.getCurrentMonth() && position > Utils.getCurrentDay()) return;
+            String date = year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position);
+            Diary diary = diaries.get(date);
             EditDialog editDialog = new EditDialog(context);
-            editDialog.setDialogTitle(year + "-" + Utils.douInt(month) + "-" + Utils.douInt(position));
+            editDialog.setDialogTitle(date);
             if(diary != null){
                 editDialog.setEditContent(diary.getContent());
             } else {
@@ -182,13 +189,22 @@ public class DiaryAdapter extends BaseAdapter {
             editDialog.setOnDialogClickListener(new onDialogClickListener() {
                 
                 @Override
-                public void onClick(ClickType type, String content, String day, View v) {
+                public void onClick(ClickType type,final String content,final String day, View v) {
                     // TODO Auto-generated method stub
                     if(type.equals(ClickType.Delete)){
-                        Diary diary = new Diary();
-                        diary.setD(day);
-                        diaryData = diary;
-                        delDiary(context, day);
+                        CustomDialog dialog = new CustomDialog(context, new CustomDialog.onDialogInfoConfirmListener() {
+                            
+                            @Override
+                            public void onClick(View v) {
+                                // TODO Auto-generated method stub
+                                if(content.length() <= 0 && !diaries.containsKey(day)) return;
+                                Diary diary = new Diary();
+                                diary.setD(day);
+                                diaryData = diary;
+                                delDiary(context, day);
+                            }
+                        });
+                        dialog.show();
                     } else {
                         action(content, day);
                     }
@@ -201,13 +217,15 @@ public class DiaryAdapter extends BaseAdapter {
     private boolean action(String str, String day) {
         Diary diary = null;
         if (diaries.containsKey(day)) {
-            diary = diaries.get(day);
-            if (str.equals(diary.getContent())) {
-                return false;
+            if (str != null && str.length() > 0) {
+                diary = diaries.get(day);
+                if (str.equals(diary.getContent())) {
+                    return false;
+                }
+                diary.setContent(str);
+                diaryData = diary;
+                updateDiary(context, day, str, diary);
             }
-            diary.setContent(str);
-            diaryData = diary;
-            updateDiary(context, day, str, diary);
         } else {
             if (str != null && str.length() > 0) {
                 diary = new Diary();

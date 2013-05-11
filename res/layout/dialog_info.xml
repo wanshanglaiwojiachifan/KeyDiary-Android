@@ -2,52 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="30dp"
-    android:layout_marginRight="30dp"
     android:background="@drawable/dialog_bg"
-    android:layout_gravity="center_horizontal"
     android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/dialog_title"
+    
+    
+    <TextView 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="2013-12-12"
-        android:textColor="@color/maincolor"
-        android:textSize="25sp" />
-
-    <EditText
-        android:id="@+id/dialog_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textSize="22sp"
-        android:hint="输入日记内容"
-        android:textColor="@color/diarycontent"
+        android:minHeight="40dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:background="@drawable/input_text_n_white"
-        android:minHeight="40dp" />
-
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/maincolor"
+        android:textSize="20sp"
+        android:text="提示信息"/>
+    
+    
+    
+    <TextView 
+        android:id="@+id/dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="40dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/diarycontent"
+        android:textSize="20sp"
+        android:text="您确定删除日记么？"/>
+    
+    
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp" >
+        android:layout_marginTop="25dp" >
 
         <Button
-            android:id="@+id/dialog_delete"
+            android:id="@+id/dialog_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@null"
+            android:background="@drawable/login_btn"
             android:minHeight="40dp"
             android:minWidth="90dp"
-            android:text="删除"
-            android:textStyle="bold"
-            android:textColor="@color/dialog_delete"
+            android:text="取消"
+            android:textColor="@android:color/white"
             android:textSize="18sp" />
 
         <Button
@@ -63,5 +65,6 @@
             android:textColor="@android:color/white"
             android:textSize="18sp" />
     </RelativeLayout>
+    
 
 </LinearLayout>
