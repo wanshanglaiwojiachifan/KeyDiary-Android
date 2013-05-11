@@ -73,6 +73,7 @@ public class MainActivity extends Activity {
             return;
         }
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/FZLTHJW.TTF");
+        
         Utils.setTypeface(typeface);
         loadAllDiaries();
     }

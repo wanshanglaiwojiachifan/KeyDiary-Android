@@ -17,6 +17,9 @@ import com.xeodou.keydiary.bean.LoadADiary;
 import com.xeodou.keydiary.bean.Result;
 import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
+import com.xeodou.keydiary.views.EditDialog;
+import com.xeodou.keydiary.views.EditDialog.ClickType;
+import com.xeodou.keydiary.views.EditDialog.onDialogClickListener;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
@@ -26,6 +29,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -39,20 +43,24 @@ import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 public class DiaryAdapter extends BaseAdapter {
 
     class ViewHolder {
         TextView day;
-        PanningEditText content;
+        TextView content;
         Button uploadBtn;
     }
     
@@ -60,7 +68,6 @@ public class DiaryAdapter extends BaseAdapter {
     private Context context;
     private int year, month;
     private ProgressDialog dialog;
-    private PanningEditText editText;
     private Diary diaryData;
     private boolean lock = false;
     private ListView listView;
@@ -71,6 +78,7 @@ public class DiaryAdapter extends BaseAdapter {
         this.month = month;
         this.diaryData = null;
         this.listView = listView;
+        listView.setOnItemClickListener(itemClickListener);
     }
     
     @Override
@@ -99,27 +107,17 @@ public class DiaryAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         ViewHolder viewHolder = null;
-//        if(convertView == null){
+        if(convertView == null){
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.diary_item_layout, null);
             viewHolder.day = (TextView)convertView.findViewById(R.id.day_diary_tv);
             viewHolder.uploadBtn = (Button)convertView.findViewById(R.id.updload_btn);
-            editText = (PanningEditText)convertView.findViewById(R.id.content_diary_tv);
+            viewHolder.content = (TextView)convertView.findViewById(R.id.content_diary_tv);
             convertView.setTag(viewHolder);
-//        } else {
-//            viewHolder = (ViewHolder)convertView.getTag();
-//        }
-        if( year > Utils.getCurrentYear()){
-            editText.setEnabled(false);
-        } else if(year == Utils.getCurrentYear()){
-            if(month > Utils.getCurrentMonth()){
-                editText.setEnabled(false);
-            } else if(month == Utils.getCurrentMonth()){
-                if(position + 1 > Utils.getCurrentDay()){
-                    editText.setEnabled(false);
-                }
-            }
+        } else {
+            viewHolder = (ViewHolder)convertView.getTag();
         }
+        
         final String day = year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position + 1);
         viewHolder.day.setText(Utils.douInt(position+1));
         Diary diary = diaries.get(year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position + 1));
@@ -157,131 +155,69 @@ public class DiaryAdapter extends BaseAdapter {
             });
         }
         
-        listView.setOnTouchListener(onTouchListener);
-        viewHolder.day.setOnTouchListener(onTouchListener);
-        
-        editText.setOnKeyListener(new OnKeyListener() {
        
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // TODO Auto-generated method stub
-                if (KeyEvent.KEYCODE_ENTER == keyCode && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    lock = true;
-                    action(v, day);
-                    ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                            editText.getWindowToken(), 0);
-                    ((EditText)v).clearFocus();
-                    ((EditText)v).setSelected(false);
-                    return false;
-                }
-                return false;
-            }
-        });
-        editText.setOnLostFocusListener(new onLostFocusListener() {
-            
-            @Override
-            public void lostFocus(PanningEditText v, boolean islost) {
-                // TODO Auto-generated method stub
-                if(islost){
-                    if(lock) return;
-                    action(v, day);
-                }
-            }
-        });
-        
-        editText.setOnEditorActionListener(new OnEditorActionListener() {
-            
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                // TODO Auto-generated method stub
-                if(actionId == EditorInfo.IME_ACTION_DONE){
-                   lock = true;
-//                   action(v, day);
-                   ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                           editText.getWindowToken(), 0);
-                   return false;
-                }
-//                v.clearFocus();
-//                v.setSelected(false);
-                return true;
-            }
-        });
         if(diary != null){
-            editText.setText(diary.getContent());
+            viewHolder.content.setText(diary.getContent());
+        } else {
+            viewHolder.content.setText("");
         }
-        
-        if(Utils.getTypeface() != null){
-            editText.setTypeface(Utils.getTypeface());
-            viewHolder.day.setTypeface(Utils.getTypeface());
-        }
-        
-        editText.getRootView().getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-            
-            @Override
-            public void onGlobalLayout() {
-                // TODO Auto-generated method stub
-                if (context.getResources().getConfiguration().keyboardHidden == Configuration.KEYBOARDHIDDEN_YES) { // Check if keyboard is not hidden
-                    // ... do something here
-                    Crouton.showText((Activity)context, "key board hidden！", Style.ALERT);
-                    editText.clearFocus();
-                 }
-            }
-        });
         
         return convertView;
     }
     
-    private OnTouchListener onTouchListener = new OnTouchListener() {
-        
+    private OnItemClickListener itemClickListener = new OnItemClickListener() {
+
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
+        public void onItemClick(AdapterView<?> parent, View v, final int position,
+                long id) {
             // TODO Auto-generated method stub
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                if (editText.isFocused()) {
-                    Rect outRect = new Rect();
-                    editText.getGlobalVisibleRect(outRect);
-                    if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
-                        editText.clearFocus();
-                        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE); 
-                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            Diary diary = diaries.get(year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position));
+            EditDialog editDialog = new EditDialog(context);
+            editDialog.setDialogTitle(year + "-" + Utils.douInt(month) + "-" + Utils.douInt(position));
+            if(diary != null){
+                editDialog.setEditContent(diary.getContent());
+            } else {
+                editDialog.setEditContent("");
+            }
+            editDialog.setOnDialogClickListener(new onDialogClickListener() {
+                
+                @Override
+                public void onClick(ClickType type, String content, String day, View v) {
+                    // TODO Auto-generated method stub
+                    if(type.equals(ClickType.Delete)){
+                        Diary diary = new Diary();
+                        diary.setD(day);
+                        diaryData = diary;
+                        delDiary(context, day);
+                    } else {
+                        action(content, day);
                     }
                 }
-            }
-            return false;
+            });
+            editDialog.show();
         }
     };
     
-    private boolean action(View v, String day){
-        String str = null;
-        str = ((TextView)v).getText().toString();
-        if(str == null) return false;
+    private boolean action(String str, String day) {
         Diary diary = null;
-        if(diaries.containsKey(day)) {
-            if(str != null) {
-                if(str.equals("")){
-                   delDiary(context, day);
-                } else {
-                    diary = diaries.get(day);
-                    if(str.equals(diary.getContent())){
-                        return false;  
-                    } 
-                    diary.setContent(str);
-                    diaryData = diary;
-                    updateDiary(context, day, str, diary);
-                }
+        if (diaries.containsKey(day)) {
+            diary = diaries.get(day);
+            if (str.equals(diary.getContent())) {
+                return false;
             }
+            diary.setContent(str);
+            diaryData = diary;
+            updateDiary(context, day, str, diary);
         } else {
-            if(str != null && str.length() > 0){
+            if (str != null && str.length() > 0) {
                 diary = new Diary();
                 diary.setD(day);
                 diary.setContent(str);
-                diary.setDid((int)Math.random() * 1000 + "");
+                diary.setDid((int) Math.random() * 1000 + "");
                 diaryData = diary;
                 addDiary(context, day, str);
             }
         }
-//        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-//                editText.getWindowToken(), 0);
         return false;
     }
 
@@ -341,7 +277,7 @@ public class DiaryAdapter extends BaseAdapter {
                         Result.class);
                 if (result.getStat() == 1) {
                     diaries.remove(data);
-                    sendMsg(Config.SUCCESSS_CODE, "删除日记成功");
+                    sendMsg(Config.SUCCESS_DELETE, "删除日记成功");
                 } else {
                     sendMsg(Config.FAIL_CODE, "删除日记失败");
                 }
@@ -357,7 +293,7 @@ public class DiaryAdapter extends BaseAdapter {
             public void onStart() {
                 // TODO Auto-generated method stub
                 if (dialog == null) {
-                    dialog = ProgressDialog.show(c, null, "正在修改日记...");
+                    dialog = ProgressDialog.show(c, null, "正在删除日记...");
                     dialog.setCancelable(true);
                 }
             }
@@ -478,13 +414,16 @@ public class DiaryAdapter extends BaseAdapter {
             lock = false;
             if(dialog !=null && dialog.isShowing()) dialog.dismiss();
             dialog = null;
-            if(msg.what == Config.SUCCESSS_CODE){
+            switch (msg.what) {
+            case Config.SUCCESSS_CODE:
+                diaries.put(diaryData.getD(), diaryData);
+                notifyDataSetChanged();
                 if(diaryData != null) diaryData = null;
                 if(str == null) str = "修改失败";
                 Crouton.showText((Activity)context, str, Style.INFO);
                 return;
-            }
-            if(msg.what == Config.SUCCESS_UPSERT){
+
+            case Config.SUCCESS_UPSERT:
                 if(msg.obj != null) Crouton.showText((Activity)context, msg.obj.toString(), Style.INFO);
                 try {
                     Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
@@ -495,7 +434,12 @@ public class DiaryAdapter extends BaseAdapter {
                     Crouton.showText((Activity)context, "数据库错误 ！", Style.ALERT);
                 }
                 return;
-            }
+            case Config.SUCCESS_DELETE:
+                notifyDataSetChanged();
+                diaryData = null;
+                if(str == null) str = "删除失败";
+                Crouton.showText((Activity)context, str, Style.INFO);
+                return;            }
             
             if(str == null) str = "修改失败";
             if(str.length() <= 0) str = "修改失败";

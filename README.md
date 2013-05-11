@@ -19,6 +19,10 @@
 * [友盟](http://www.umeng.com)
 
 ## Change log
+* v0.35
+ * 修改编辑日记方式
+ * 其他更新
+
 * v0.34
  * 修复网络状态引起的crash
 

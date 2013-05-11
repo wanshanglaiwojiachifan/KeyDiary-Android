@@ -12,3 +12,7 @@ local.properties
 .project
 project.properties
 .externalToolBuilders/
+
+# OSX
+*/.DS_Store
+.DS_Store

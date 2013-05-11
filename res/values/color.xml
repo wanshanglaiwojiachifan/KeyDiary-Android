@@ -8,4 +8,7 @@
     <color name="diarycontent">#2f2f2f</color>
     <color name="title">#797979</color>
     <color name="alarm_p">#22797979</color>
+    <color name="transparent">#00FFFFFF</color>
+    <drawable name="list_normal">#00FFFFFF</drawable>
+    <drawable name="list_selected">#5545d4da</drawable>
 </resources>

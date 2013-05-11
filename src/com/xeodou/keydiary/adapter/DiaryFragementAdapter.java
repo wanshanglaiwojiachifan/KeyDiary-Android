@@ -8,11 +8,15 @@ import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.Diary;
 import com.xeodou.keydiary.bean.DiaryTime;
+import com.xeodou.keydiary.views.EditDialog;
+
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,7 +37,7 @@ public class DiaryFragementAdapter extends PagerAdapter{
     }
 
     @Override
-    public View instantiateItem(ViewGroup container, int position) {
+    public View instantiateItem(final ViewGroup container,final int position) {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.diaryitem_layout, null);
         ListView grid = (ListView)view.findViewById(R.id.diary_grid);
         View v = new View(container.getContext());

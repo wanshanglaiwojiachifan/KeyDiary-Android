@@ -20,8 +20,7 @@
         android:scrollbars="none"
         android:divider="@null"
         android:dividerHeight="10dp"
-        android:listSelector="@android:color/transparent"
-        android:descendantFocusability="beforeDescendants"
+        android:listSelector="@drawable/list_select"
         android:cacheColorHint="@android:color/transparent" >
     </ListView>
 

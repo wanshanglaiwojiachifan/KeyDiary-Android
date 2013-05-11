@@ -2,16 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:background="@drawable/dialog_bg"
+    android:layout_gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <com.xeodou.keydiary.PanningEditText
-        android:id="@+id/dialog_edt"
+    <TextView
+        android:id="@+id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/diary_input_ex"
-        android:ems="10" >
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="2013-12-12"
+        android:textColor="@color/maincolor"
+        android:textSize="25sp" />
 
-        <requestFocus />
-    </com.xeodou.keydiary.PanningEditText>
+    <EditText
+        android:id="@+id/dialog_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textSize="22sp"
+        android:textColor="@color/diarycontent"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@drawable/input_text_n_white"
+        android:minHeight="40dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp" >
+
+        <Button
+            android:id="@+id/dialog_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:background="@null"
+            android:minHeight="40dp"
+            android:minWidth="90dp"
+            android:text="删除"
+            android:textStyle="bold"
+            android:textColor="@color/dialog_delete"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/dialog_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/login_btn"
+            android:minHeight="40dp"
+            android:minWidth="90dp"
+            android:text="确定"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+    </RelativeLayout>
 
 </LinearLayout>
