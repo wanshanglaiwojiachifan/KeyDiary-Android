@@ -4,36 +4,32 @@
     android:layout_height="match_parent"
     android:background="@drawable/dialog_bg"
     android:orientation="vertical" >
-    
-    
-    <TextView 
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
         android:minHeight="40dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
+        android:text="提示信息"
         android:textColor="@color/maincolor"
-        android:textSize="20sp"
-        android:text="提示信息"/>
-    
-    
-    
-    <TextView 
+        android:textSize="20sp" />
+
+    <TextView
         android:id="@+id/dialog_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
         android:minHeight="40dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:gravity="center"
-        android:layout_marginTop="15dp"
+        android:text="您确定删除日记么？"
         android:textColor="@color/diarycontent"
-        android:textSize="20sp"
-        android:text="您确定删除日记么？"/>
-    
-    
+        android:textSize="20sp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,12 +41,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/login_btn"
+            android:background="@null"
             android:minHeight="40dp"
             android:minWidth="90dp"
             android:text="取消"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
+            android:textColor="@color/dialog_delete"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/dialog_ok"
@@ -65,6 +62,5 @@
             android:textColor="@android:color/white"
             android:textSize="18sp" />
     </RelativeLayout>
-    
 
 </LinearLayout>
