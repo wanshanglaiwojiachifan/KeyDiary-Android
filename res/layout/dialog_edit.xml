@@ -42,12 +42,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@null"
+            android:background="@drawable/login_btn"
             android:minHeight="40dp"
             android:minWidth="90dp"
-            android:text="删除"
-            android:textStyle="bold"
-            android:textColor="@color/dialog_delete"
+            android:text="取消"
+            android:textColor="@android:color/white"
             android:textSize="18sp" />
 
         <Button

@@ -113,7 +113,7 @@ public class EditDialog extends Dialog {
     public void setDialogTitle(String text){
         if(title != null && text != null){
             day = text;
-            text = text + "(" + Utils.getDayOfWeek(text) +")";
+            text = text + " " + Utils.getDayOfWeek(text) ;
             title.setText(text);
         }
     }
@@ -133,9 +133,9 @@ public class EditDialog extends Dialog {
             cancel();
             switch (v.getId()) {
             case R.id.dialog_delete:
-                if(dialogClickListener != null){
-                    dialogClickListener.onClick(ClickType.Delete, editText.getText().toString(), day, v);
-                }
+//                if(dialogClickListener != null){
+//                    dialogClickListener.onClick(ClickType.Delete, editText.getText().toString(), day, v);
+//                }
                 break;
 
             case R.id.dialog_ok:

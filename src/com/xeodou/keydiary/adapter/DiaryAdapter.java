@@ -64,7 +64,7 @@ public class DiaryAdapter extends BaseAdapter {
         TextView content;
         Button uploadBtn;
     }
-    
+
     private Map<String, Diary> diaries;
     private Context context;
     private int year, month;
@@ -72,7 +72,9 @@ public class DiaryAdapter extends BaseAdapter {
     private Diary diaryData;
     private boolean lock = false;
     private ListView listView;
-    public DiaryAdapter(Context context,ListView listView, Map<String, Diary> diaries,int year, int month){
+
+    public DiaryAdapter(Context context, ListView listView,
+            Map<String, Diary> diaries, int year, int month) {
         this.context = context;
         this.diaries = diaries;
         this.year = year;
@@ -81,7 +83,7 @@ public class DiaryAdapter extends BaseAdapter {
         this.listView = listView;
         listView.setOnItemClickListener(itemClickListener);
     }
-    
+
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
@@ -91,11 +93,12 @@ public class DiaryAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return diaries.get(year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position));
+        return diaries.get(year + "-" + Utils.douInt(month) + "-"
+                + Utils.douInt(position));
     }
-    
-    public String getDay(int position){
-        return year + "-" + month + "-" + ( position + 1);
+
+    public String getDay(int position) {
+        return year + "-" + month + "-" + (position + 1);
     }
 
     @Override
@@ -108,113 +111,117 @@ public class DiaryAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         ViewHolder viewHolder = null;
-        if(convertView == null){
+        if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.diary_item_layout, null);
-            viewHolder.day = (TextView)convertView.findViewById(R.id.day_diary_tv);
-            viewHolder.uploadBtn = (Button)convertView.findViewById(R.id.updload_btn);
-            viewHolder.content = (TextView)convertView.findViewById(R.id.content_diary_tv);
+            convertView = LayoutInflater.from(context).inflate(
+                    R.layout.diary_item_layout, null);
+            viewHolder.day = (TextView) convertView
+                    .findViewById(R.id.day_diary_tv);
+            viewHolder.uploadBtn = (Button) convertView
+                    .findViewById(R.id.updload_btn);
+            viewHolder.content = (TextView) convertView
+                    .findViewById(R.id.content_diary_tv);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder)convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
-        
-        final String day = year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position + 1);
-        viewHolder.day.setText(Utils.douInt(position+1));
-        Diary diary = diaries.get(year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position + 1));
+
+        final String day = year + "-" + Utils.douInt(month) + "-"
+                + Utils.douInt(position + 1);
+        viewHolder.day.setText(Utils.douInt(position + 1));
+        Diary diary = diaries.get(year + "-" + Utils.douInt(month) + "-"
+                + Utils.douInt(position + 1));
         boolean isLocal = false;
-        if(diary != null && diary.getIsLocal() != null) isLocal = diary.getIsLocal();
-        if(isLocal){
+        if (diary != null && diary.getIsLocal() != null)
+            isLocal = diary.getIsLocal();
+        if (isLocal) {
             viewHolder.uploadBtn.setVisibility(View.VISIBLE);
             viewHolder.uploadBtn.setOnClickListener(new OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            context);
                     builder.setTitle("未同步日记");
                     builder.setMessage("由于网络不好日记没有保存成功\n是否重新发送！");
-                    builder.setNegativeButton("算了", new DialogInterface.OnClickListener() {
-                        
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // TODO Auto-generated method stub
-                            deleeteLocal(day);
-                            diaries.remove(day);
-                            notifyDataSetChanged();
-                            dialog.cancel();
-                        }
-                    });
-                    builder.setPositiveButton("重新发送", new DialogInterface.OnClickListener() {
-                        
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // TODO Auto-generated method stub
-                            upsertDiary(context, day, diaries.get(day).getContent());
-                        }
-                    });
+                    builder.setNegativeButton("算了",
+                            new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                        int which) {
+                                    // TODO Auto-generated method stub
+                                    deleeteLocal(day);
+                                    diaries.remove(day);
+                                    notifyDataSetChanged();
+                                    dialog.cancel();
+                                }
+                            });
+                    builder.setPositiveButton("重新发送",
+                            new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                        int which) {
+                                    // TODO Auto-generated method stub
+                                    upsertDiary(context, day, diaries.get(day)
+                                            .getContent());
+                                }
+                            });
                     builder.show();
                 }
             });
         }
-        
-       
-        if(diary != null){
+
+        if (diary != null) {
             viewHolder.content.setText(diary.getContent());
         } else {
             viewHolder.content.setText("");
         }
-        
+
         return convertView;
     }
-    
+
     private OnItemClickListener itemClickListener = new OnItemClickListener() {
 
         @Override
-        public void onItemClick(AdapterView<?> parent, View v, final int position,
-                long id) {
+        public void onItemClick(AdapterView<?> parent, View v,
+                final int position, long id) {
             // TODO Auto-generated method stub
-            if(year > Utils.getCurrentYear()) return ;
-            if(year == Utils.getCurrentYear() && month > Utils.getCurrentMonth()) return ;
-            if(year == Utils.getCurrentYear() && month == Utils.getCurrentMonth() && position > Utils.getCurrentDay()) return;
-            String date = year+"-"+Utils.douInt(month)+"-" + Utils.douInt(position);
+            if (year > Utils.getCurrentYear())
+                return;
+            if (year == Utils.getCurrentYear()
+                    && month > Utils.getCurrentMonth())
+                return;
+            if (year == Utils.getCurrentYear()
+                    && month == Utils.getCurrentMonth()
+                    && position > Utils.getCurrentDay())
+                return;
+            String date = year + "-" + Utils.douInt(month) + "-"
+                    + Utils.douInt(position);
             Diary diary = diaries.get(date);
             EditDialog editDialog = new EditDialog(context);
             editDialog.setDialogTitle(date);
-            if(diary != null){
+            if (diary != null) {
                 editDialog.setEditContent(diary.getContent());
             } else {
                 editDialog.setEditContent("");
             }
             editDialog.setOnDialogClickListener(new onDialogClickListener() {
-                
+
                 @Override
-                public void onClick(ClickType type,final String content,final String day, View v) {
+                public void onClick(ClickType type, final String content,
+                        final String day, View v) {
                     // TODO Auto-generated method stub
-                    if(type.equals(ClickType.Delete)){
-                        CustomDialog dialog = new CustomDialog(context, new CustomDialog.onDialogInfoConfirmListener() {
-                            
-                            @Override
-                            public void onClick(View v) {
-                                // TODO Auto-generated method stub
-                                if(content.length() <= 0 && !diaries.containsKey(day)) return;
-                                Diary diary = new Diary();
-                                diary.setD(day);
-                                diaryData = diary;
-                                delDiary(context, day);
-                            }
-                        });
-                        dialog.show();
-                    } else {
-                        action(content, day);
-                    }
+                    action(content, day);
                 }
             });
             editDialog.show();
         }
     };
-    
-    private boolean action(String str, String day) {
+
+    private boolean action(final String str, final String day) {
         Diary diary = null;
         if (diaries.containsKey(day)) {
             if (str != null && str.length() > 0) {
@@ -225,6 +232,20 @@ public class DiaryAdapter extends BaseAdapter {
                 diary.setContent(str);
                 diaryData = diary;
                 updateDiary(context, day, str, diary);
+            } else if( str != null && str.length() == 0){
+                CustomDialog dialog = new CustomDialog(context, new CustomDialog.onDialogInfoConfirmListener() {
+                    
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        if(!diaries.containsKey(day)) return;
+                        Diary diary = new Diary();
+                        diary.setD(day);
+                        diaryData = diary;
+                        delDiary(context, day);
+                    }
+                });
+                dialog.show();
             }
         } else {
             if (str != null && str.length() > 0) {
@@ -239,20 +260,21 @@ public class DiaryAdapter extends BaseAdapter {
         return false;
     }
 
-    public void addDiary(final Context c,String data, String content){
-        API.addDiary(data, content, new AsyncHttpResponseHandler(){
-            
+    public void addDiary(final Context c, String data, String content) {
+        API.addDiary(data, content, new AsyncHttpResponseHandler() {
+
             @Override
             public void onSuccess(int statusCode, String content) {
                 // TODO Auto-generated method stub
                 Gson gson = new Gson();
-                LoadADiary result = (LoadADiary)gson.fromJson(content, LoadADiary.class);
-                if(result.getStat() == 1 && result.getData() != null ) {
+                LoadADiary result = (LoadADiary) gson.fromJson(content,
+                        LoadADiary.class);
+                if (result.getStat() == 1 && result.getData() != null) {
                     diaries.put(result.getData().getD(), result.getData());
                     sendMsg(Config.SUCCESSS_CODE, "添加日记成功");
                 } else {
                     sendMsg(Config.FAIL_ADD, "添加日记失败");
-                }            
+                }
             }
 
             @Override
@@ -261,45 +283,45 @@ public class DiaryAdapter extends BaseAdapter {
                 Gson gson = new Gson();
                 try {
                     Result result = gson.fromJson(content, Result.class);
-                    if(result.getStat() == 2101){
+                    if (result.getStat() == 2101) {
                         sendMsg(Config.FAIL_TO_LONG, "您的日记太长");
                     } else {
-                        sendMsg(Config.FAIL_ADD, KeyDiaryResult.getMsg(result.getStat()));
+                        sendMsg(Config.FAIL_ADD,
+                                KeyDiaryResult.getMsg(result.getStat()));
                     }
                 } catch (JsonSyntaxException e1) {
                     // TODO Auto-generated catch block
                     sendMsg(Config.FAIL_ADD, "添加日记失败");
                 }
             }
+
             @Override
             public void onStart() {
                 // TODO Auto-generated method stub
-                if(dialog == null){
+                if (dialog == null) {
                     dialog = ProgressDialog.show(c, null, "正在添加日记...");
                     dialog.setCancelable(true);
                 }
             }
-            
-        });
-    } 
-    
-    public void delDiary(final Context c,final String data){
-        API.deleteDiary(data, new AsyncHttpResponseHandler() {
 
+        });
+    }
+
+    public void delDiary(final Context c, final String data) {
+        API.deleteDiary(data, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, String content) {
                 // TODO Auto-generated method stub
                 Gson gson = new Gson();
-                Result result = (Result) gson.fromJson(content,
-                        Result.class);
+                Result result = (Result) gson.fromJson(content, Result.class);
                 if (result.getStat() == 1) {
                     diaries.remove(data);
                     sendMsg(Config.SUCCESS_DELETE, "删除日记成功");
                 } else {
                     sendMsg(Config.FAIL_CODE, "删除日记失败");
                 }
-           }
+            }
 
             @Override
             public void onFailure(Throwable error, String content) {
@@ -317,16 +339,17 @@ public class DiaryAdapter extends BaseAdapter {
             }
 
         });
-    } 
-    
-    public void updateDiary(final Context c,final String data, String content, final Diary diary){
-        API.updateDiary(data, content, new AsyncHttpResponseHandler(){
+    }
+
+    public void updateDiary(final Context c, final String data, String content,
+            final Diary diary) {
+        API.updateDiary(data, content, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, String content) {
                 // TODO Auto-generated method stub
                 Gson gson = new Gson();
-                Result result = (Result)gson.fromJson(content, Result.class);
-                if(result.getStat() == 1) {
+                Result result = (Result) gson.fromJson(content, Result.class);
+                if (result.getStat() == 1) {
                     diaries.put(data, diary);
                     sendMsg(Config.SUCCESSS_CODE, "修改日记成功");
                 } else {
@@ -340,45 +363,46 @@ public class DiaryAdapter extends BaseAdapter {
                 Gson gson = new Gson();
                 try {
                     Result result = gson.fromJson(content, Result.class);
-                    if(result.getStat() == 2101){
+                    if (result.getStat() == 2101) {
                         sendMsg(Config.FAIL_TO_LONG, "您的日记太长");
                     } else {
-                        sendMsg(Config.FAIL_ADD, KeyDiaryResult.getMsg(result.getStat()));
+                        sendMsg(Config.FAIL_ADD,
+                                KeyDiaryResult.getMsg(result.getStat()));
                     }
                 } catch (JsonSyntaxException e1) {
                     // TODO Auto-generated catch block
                     sendMsg(Config.FAIL_UPDATE, "修改日记失败");
                 }
-           }
+            }
 
             @Override
             public void onStart() {
                 // TODO Auto-generated method stub
-                if(dialog == null){
+                if (dialog == null) {
                     dialog = ProgressDialog.show(c, null, "正在修改日记...");
                     dialog.setCancelable(true);
                 }
             }
-            
+
         });
-    } 
-    
-    private void upsertDiary(final Context c ,String date, String content){
-        API.upsertDiary(date, content, new AsyncHttpResponseHandler(){
+    }
+
+    private void upsertDiary(final Context c, String date, String content) {
+        API.upsertDiary(date, content, new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, String content) {
                 // TODO Auto-generated method stub
                 Gson gson = new Gson();
                 LoadADiary result = gson.fromJson(content, LoadADiary.class);
-                if(result.getStat() == 1 && result.getData() != null ) {
+                if (result.getStat() == 1 && result.getData() != null) {
                     diaryData = diaries.get(result.getData().getD());
                     diaryData.setIsLocal(false);
                     diaries.put(diaryData.getD(), diaryData);
                     sendMsg(Config.SUCCESS_UPSERT, "上传日记成功");
                 } else {
                     sendMsg(Config.FAIL_UPSERT, "上传日记失败");
-                }  
+                }
             }
 
             @Override
@@ -390,93 +414,108 @@ public class DiaryAdapter extends BaseAdapter {
             @Override
             public void onStart() {
                 // TODO Auto-generated method stub
-                if(dialog == null){
+                if (dialog == null) {
                     dialog = ProgressDialog.show(c, null, "正在上传日记...");
                     dialog.setCancelable(true);
                 }
             }
-            
+
         });
     }
-    
-    
-    private void deleeteLocal(String day){
+
+    private void deleeteLocal(String day) {
         try {
-            Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
+            Dao<Diary, Integer> diaryDao = DBUtils.getHelper(context)
+                    .getDiaryDao();
             Diary d = diaries.get(day);
-            if(d !=null){
+            if (d != null) {
                 diaryDao.delete(d);
                 diaries.remove(d.getD());
-                Crouton.showText((Activity)context, "数据已清除 ！", Style.INFO);
+                Crouton.showText((Activity) context, "数据已清除 ！", Style.INFO);
                 notifyDataSetChanged();
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            Crouton.showText((Activity)context, "数据库错误 ！", Style.ALERT);
+            Crouton.showText((Activity) context, "数据库错误 ！", Style.ALERT);
         }
     }
-    
-    private void sendMsg(int code, Object obj){
+
+    private void sendMsg(int code, Object obj) {
         Message msg = new Message();
         msg.what = code;
         msg.obj = obj;
         handler.sendMessage(msg);
     }
-    
-    private Handler handler = new Handler(){
+
+    private Handler handler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             String str = msg.obj.toString();
             lock = false;
-            if(dialog !=null && dialog.isShowing()) dialog.dismiss();
+            if (dialog != null && dialog.isShowing())
+                dialog.dismiss();
             dialog = null;
             switch (msg.what) {
             case Config.SUCCESSS_CODE:
                 diaries.put(diaryData.getD(), diaryData);
                 notifyDataSetChanged();
-                if(diaryData != null) diaryData = null;
-                if(str == null) str = "修改失败";
-                Crouton.showText((Activity)context, str, Style.INFO);
+                if (diaryData != null)
+                    diaryData = null;
+                if (str == null)
+                    str = "修改失败";
+                Crouton.showText((Activity) context, str, Style.INFO);
                 return;
 
             case Config.SUCCESS_UPSERT:
-                if(msg.obj != null) Crouton.showText((Activity)context, msg.obj.toString(), Style.INFO);
+                if (msg.obj != null)
+                    Crouton.showText((Activity) context, msg.obj.toString(),
+                            Style.INFO);
                 try {
-                    Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
+                    Dao<Diary, Integer> diaryDao = DBUtils.getHelper(context)
+                            .getDiaryDao();
                     diaryDao.delete(diaryData);
                     notifyDataSetChanged();
                 } catch (SQLException e) {
                     // TODO Auto-generated catch block
-                    Crouton.showText((Activity)context, "数据库错误 ！", Style.ALERT);
+                    Crouton.showText((Activity) context, "数据库错误 ！", Style.ALERT);
                 }
                 return;
             case Config.SUCCESS_DELETE:
                 notifyDataSetChanged();
                 diaryData = null;
-                if(str == null) str = "删除失败";
-                Crouton.showText((Activity)context, str, Style.INFO);
-                return;            }
-            
-            if(str == null) str = "修改失败";
-            if(str.length() <= 0) str = "修改失败";
-            Crouton.showText((Activity)context, str, Style.ALERT);
-            if(diaryData != null  && msg.what != Config.FAIL_TO_LONG){
+                if (str == null)
+                    str = "删除失败";
+                Crouton.showText((Activity) context, str, Style.INFO);
+                return;
+            }
+
+            if (str == null)
+                str = "修改失败";
+            if (str.length() <= 0)
+                str = "修改失败";
+            Crouton.showText((Activity) context, str, Style.ALERT);
+            if (diaryData != null && msg.what != Config.FAIL_TO_LONG) {
                 diaryData.setIsLocal(true);
                 diaryData.setCreated(Utils.getFormatDate());
                 try {
-                    Dao<Diary , Integer> diaryDao = DBUtils.getHelper(context).getDiaryDao();
-                    if(msg.what == Config.FAIL_ADD || msg.what == Config.FAIL_UPDATE || msg.what == Config.FAIL_UPSERT){
+                    Dao<Diary, Integer> diaryDao = DBUtils.getHelper(context)
+                            .getDiaryDao();
+                    if (msg.what == Config.FAIL_ADD
+                            || msg.what == Config.FAIL_UPDATE
+                            || msg.what == Config.FAIL_UPSERT) {
                         diaryDao.createOrUpdate(diaryData);
-                        diaries.put(diaryData.getD(), diaryData);                        
-                        Crouton.showText((Activity)context, "您的日记已经被缓存到本地", Style.INFO);
+                        diaries.put(diaryData.getD(), diaryData);
+                        Crouton.showText((Activity) context, "您的日记已经被缓存到本地",
+                                Style.INFO);
                         notifyDataSetChanged();
-                    }                 
-//                    diaryDao.update(diaryData);
+                    }
+                    // diaryDao.update(diaryData);
                 } catch (SQLException e) {
                     // TODO Auto-generated catch block
-                    Crouton.showText((Activity)context, "插入数据库失败！", Style.ALERT);
+                    Crouton.showText((Activity) context, "插入数据库失败！",
+                            Style.ALERT);
                 }
             }
         }

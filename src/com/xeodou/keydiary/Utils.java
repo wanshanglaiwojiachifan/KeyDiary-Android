@@ -195,7 +195,7 @@ public class Utils {
     
     @SuppressLint("SimpleDateFormat")
     public static String getDayOfWeek(String day){
-        String[] days = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日", "未知"};
+        String[] days = {"周日", "周一", "周二", "周三", "周四", "周五", "周六", "未知"};
         try {
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(day);
             Calendar c = Calendar.getInstance();
