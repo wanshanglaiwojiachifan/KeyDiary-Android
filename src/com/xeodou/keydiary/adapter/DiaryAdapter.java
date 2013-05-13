@@ -180,6 +180,11 @@ public class DiaryAdapter extends BaseAdapter {
             viewHolder.content.setText("");
         }
 
+        if(Utils.getTypeface() != null){
+            viewHolder.content.setTypeface(Utils.getTypeface());
+            viewHolder.day.setTypeface(Utils.getTypeface());
+        }
+
         return convertView;
     }
 

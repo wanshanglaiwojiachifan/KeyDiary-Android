@@ -29,6 +29,7 @@ public class Config {
     public static final int FAIL_TO_LONG = 0x00012;
     public static final int SUCCESS_REGISTER = 0x00013;
     public static final int SUCCESS_DELETE = 0x00014;
+    public static final int CODE_COMP = 0x00015;
   
     //user pass
     public static String username = "";

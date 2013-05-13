@@ -18,13 +18,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="45dp"
+            android:layout_marginTop="40dp"
             android:background="@drawable/pager_logo" />
 
         <RelativeLayout
+            android:id="@+id/logind_rela"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" >
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp" >
 
             <EditText
                 android:id="@+id/username_etv"
@@ -33,7 +35,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginTop="50dp"
                 android:background="@drawable/input_ex"
                 android:ems="10"
                 android:hint="注册邮箱"

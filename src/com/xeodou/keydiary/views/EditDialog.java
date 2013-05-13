@@ -122,6 +122,9 @@ public class EditDialog extends Dialog {
         if(editText != null && content != null){
             editText.setText(content);
             editText.setSelection(content.length());
+            if(Utils.getTypeface() != null) {
+                editText.setTypeface(Utils.getTypeface());
+            }
         }
     }
     

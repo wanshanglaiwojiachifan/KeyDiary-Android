@@ -1,5 +1,6 @@
 package com.xeodou.keydiary.activity;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +13,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.xeodou.keydiary.Config;
+import com.xeodou.keydiary.FontManager;
+import com.xeodou.keydiary.FontManager.onFontCommpressListener;
 import com.xeodou.keydiary.Log;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
@@ -23,6 +26,7 @@ import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -72,11 +76,60 @@ public class MainActivity extends Activity {
             sendMsg(Config.FAIL_CODE, "您的网络有问题，请检查后重试！");
             return;
         }
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/FZLTHJW.TTF");
-        
-        Utils.setTypeface(typeface);
-        loadAllDiaries();
+        new UnCompressTask().execute();
     }
+    
+    private class UnCompressTask extends AsyncTask<String, Void, String>{
+
+        @Override
+        protected String doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            FontManager fontManager = new FontManager(MainActivity.this);
+            fontManager.setOnFontCommpressListener(fontCommpressListener);
+            fontManager.unCompressTar(); 
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+//            super.onPostExecute(result);
+          sendMsg(Config.CODE_COMP, null);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            if (dialog == null) {
+                dialog = ProgressDialog.show(MainActivity.this, null, "正在解压字体请等待...");
+            }        
+        }
+        
+    }
+    
+    private onFontCommpressListener fontCommpressListener = new onFontCommpressListener() {
+        
+        @Override
+        public void onSuccess(File path) {
+            // TODO Auto-generated method stub
+//            dialog.setMessage("解压字体成功");
+            Typeface typeface = Typeface.createFromFile(path);
+            Utils.setTypeface(typeface);
+        }
+        
+        @Override
+        public void onStart() {
+            // TODO Auto-generated method stub
+            if (dialog == null) {
+                dialog = ProgressDialog.show(MainActivity.this, null, "正在解压字体请等待...");
+            }
+        }
+        
+        @Override
+        public void onFailed() {
+            // TODO Auto-generated method stub
+        }
+    };
     
     private OnClickListener clickListener = new OnClickListener() {
         
@@ -200,6 +253,8 @@ public class MainActivity extends Activity {
                 // TODO Auto-generated method stub
                 if (dialog == null) {
                     dialog = ProgressDialog.show(MainActivity.this, null, "正在加载日记...");
+                } else {
+                    dialog.setMessage("正在加载日记...");
                 }
             }
             
@@ -218,6 +273,10 @@ public class MainActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
+            if(msg.what == Config.CODE_COMP){
+                loadAllDiaries();
+                return;
+            }
             if(msg.what == Config.SUCCESSS_CODE){
                 getFiveMonth();
                 checkLocal();

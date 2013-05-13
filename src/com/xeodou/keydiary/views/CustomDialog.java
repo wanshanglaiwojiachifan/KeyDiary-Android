@@ -1,6 +1,7 @@
 package com.xeodou.keydiary.views;
 
 import com.xeodou.keydiary.R;
+import com.xeodou.keydiary.Utils;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -33,6 +34,9 @@ public class CustomDialog extends Dialog {
     public void setDialogInfo(String title){
         if(info != null){
             info.setText(title);
+            if(Utils.getTypeface() != null) {
+                info.setTypeface(Utils.getTypeface());
+            }
         }
     }
     

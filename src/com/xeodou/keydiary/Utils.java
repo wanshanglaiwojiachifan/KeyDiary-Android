@@ -17,7 +17,7 @@ import android.net.NetworkInfo;
 public class Utils {
 
     private static Date date = null;
-    private static Typeface typeface;
+    private static Typeface typeface = null;
 
     public static Typeface getTypeface() {
         return typeface;

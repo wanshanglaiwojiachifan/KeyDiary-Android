@@ -26,39 +26,45 @@ import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class LoginActivity extends Activity implements OnClickListener, OnEditorActionListener, OnKeyListener{
+public class LoginActivity extends Activity implements OnClickListener, OnEditorActionListener, OnKeyListener, OnFocusChangeListener{
 
     private final String TAG = "LoginActivity";
     private EditText username;
     private EditText password;
     private Button button;
-    private View backBtn;
+    private View backBtn, rela;
     private ProgressDialog dialog;
     private String action;
+    private int t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         action = getIntent().getAction();
         username = (EditText)findViewById(R.id.username_etv);
         password = (EditText)findViewById(R.id.password_etv);
         button = (Button)findViewById(R.id.login_btn);
         backBtn = (View) findViewById(R.id.back_btn);
+        rela = (View)findViewById(R.id.logind_rela);
+        t = ((LayoutParams)rela.getLayoutParams()).topMargin;
         backBtn.setOnClickListener(this);
         button.setOnClickListener(this);
-        username.setSelected(true);
         password.setOnEditorActionListener(this);
         password.setOnKeyListener(this);
+        username.setOnFocusChangeListener(this);
+        password.setOnFocusChangeListener(this);
         String action = getIntent().getAction();
         if(action != null && action.equals(Config.ACTION_SET)){
             backBtn.setVisibility(View.GONE);
@@ -210,5 +216,25 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
             return false;
         }
         return false;
+    }
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        // TODO Auto-generated method stub
+        LayoutParams params = (LayoutParams) rela.getLayoutParams();
+        switch (v.getId()) {
+        case R.id.username_etv:
+            if(hasFocus){
+                params.setMargins(params.leftMargin, t - 30, params.rightMargin, params.bottomMargin);
+                rela.setLayoutParams(params);
+            }
+            break;
+
+        case R.id.password_etv:
+            if(!hasFocus){
+                params.setMargins(params.leftMargin, t, params.rightMargin, params.bottomMargin);
+                rela.setLayoutParams(params);
+            }
+            break;
+        }
     }
 }
