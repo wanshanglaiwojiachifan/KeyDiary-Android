@@ -7,22 +7,31 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.KeyDiaryResult;
+import com.xeodou.keydiary.KeyboardDetectorLineayLayout;
+import com.xeodou.keydiary.KeyboardDetectorLineayLayout.IKeyboardChanged;
 import com.xeodou.keydiary.Log;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.LoadUser;
 import com.xeodou.keydiary.bean.Result;
 import com.xeodou.keydiary.http.API;
+import com.xeodou.keydiary.views.LinearLayoutThatDetectsSoftKeyboard;
+import com.xeodou.keydiary.views.LinearLayoutThatDetectsSoftKeyboard.Listener;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,45 +39,52 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class LoginActivity extends Activity implements OnClickListener, OnEditorActionListener, OnKeyListener, OnFocusChangeListener{
+public class LoginActivity extends Activity implements OnClickListener, OnEditorActionListener, OnKeyListener,  IKeyboardChanged{
 
     private final String TAG = "LoginActivity";
     private EditText username;
     private EditText password;
-    private Button button;
-    private View backBtn, rela;
+    private Button button, btn_register;
+    private View rela, logo;
+    private KeyboardDetectorLineayLayout root;
     private ProgressDialog dialog;
     private String action;
-    private int t;
+    private boolean isInput = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         action = getIntent().getAction();
         username = (EditText)findViewById(R.id.username_etv);
         password = (EditText)findViewById(R.id.password_etv);
         button = (Button)findViewById(R.id.login_btn);
-        backBtn = (View) findViewById(R.id.back_btn);
         rela = (View)findViewById(R.id.logind_rela);
-        t = ((LayoutParams)rela.getLayoutParams()).topMargin;
-        backBtn.setOnClickListener(this);
+        btn_register = (Button)findViewById(R.id.btn_rigester);
+        btn_register.setText(Html.fromHtml("<u>"+"注册帐号"+"</u>"));
+        logo = (View) findViewById(R.id.login_logo);
+        root = (KeyboardDetectorLineayLayout) findViewById(R.id.login_root);
+        btn_register.setOnClickListener(this);
         button.setOnClickListener(this);
         password.setOnEditorActionListener(this);
         password.setOnKeyListener(this);
-        username.setOnFocusChangeListener(this);
-        password.setOnFocusChangeListener(this);
-        String action = getIntent().getAction();
-        if(action != null && action.equals(Config.ACTION_SET)){
-            backBtn.setVisibility(View.GONE);
-        }
+        password.clearFocus();
+        username.clearFocus();
+        username.addTextChangedListener(watcher);
+        password.addTextChangedListener(watcher);
+        root.addKeyboardStateChangedListener(this);
+        username.setOnClickListener(this);
+        password.setOnClickListener(this);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
     }
     @Override
     public void onClick(View v) {
@@ -77,11 +93,36 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         case R.id.login_btn:
             login();
             break;
-
-        case R.id.back_btn:
-            finish();
+        case R.id.btn_rigester:
+            Intent intent = new Intent(this, WebActivity.class);
+            intent.setAction(Config.ACTION_REGISTER);
+            startActivity(intent);
             break;
         }
+    }
+    
+    private void moveUp(){
+        if(isInput) return;
+        LayoutParams params = (LayoutParams)logo.getLayoutParams();
+        int t = params.topMargin - (int)getResources().getDimension(R.dimen.moveHeight);
+        params.topMargin = t;
+        logo.setLayoutParams(params);
+        params = (LayoutParams)rela.getLayoutParams();
+        params.topMargin = t;
+        rela.setLayoutParams(params);
+        isInput = true;
+    }
+    
+    private void moveDown(){
+        if(!isInput) return;
+        LayoutParams params = (LayoutParams)logo.getLayoutParams();
+        int t = params.topMargin + (int)getResources().getDimension(R.dimen.moveHeight);
+        params.topMargin = t;
+        logo.setLayoutParams(params);
+        params = (LayoutParams)rela.getLayoutParams();
+        params.topMargin = t;
+        rela.setLayoutParams(params);
+        isInput = false;
     }
     
     private void showDialog(String msg){
@@ -107,6 +148,32 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         msg.obj = str;
         handler.sendMessage(msg);
     }
+    
+    private TextWatcher watcher = new TextWatcher() {
+        
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // TODO Auto-generated method stub
+            
+        }
+        
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                int after) {
+            // TODO Auto-generated method stub
+            
+        }
+        
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+            if(username.getText().toString().length() > 0 && password.getText().toString().length() > 0){
+                button.setEnabled(true);
+            } else {
+                button.setEnabled(false);
+            }
+        }
+    };
     
     private void login(){
         Config.username = Config.password = "";
@@ -217,24 +284,28 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         }
         return false;
     }
+    
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        // TODO Auto-generated method stub
-        LayoutParams params = (LayoutParams) rela.getLayoutParams();
-        switch (v.getId()) {
-        case R.id.username_etv:
-            if(hasFocus){
-                params.setMargins(params.leftMargin, t - 30, params.rightMargin, params.bottomMargin);
-                rela.setLayoutParams(params);
-            }
-            break;
-
-        case R.id.password_etv:
-            if(!hasFocus){
-                params.setMargins(params.leftMargin, t, params.rightMargin, params.bottomMargin);
-                rela.setLayoutParams(params);
-            }
-            break;
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            setResult(Config.FAIL_CODE);
+            finish();
         }
+        return super.onKeyDown(keyCode, event);
     }
+    @Override
+    public void onKeyboardShown() {
+        // TODO Auto-generated method stub
+        btn_register.setVisibility(View.GONE);
+        // Toast.makeText(this, "show", Toast.LENGTH_SHORT).show();
+        moveUp();
+    }
+    @Override
+    public void onKeyboardHidden() {
+        // TODO Auto-generated method stub
+        btn_register.setVisibility(View.VISIBLE);
+//        Toast.makeText(this, "hidden", Toast.LENGTH_SHORT).show();
+        moveDown();
+    }
+    
 }

@@ -5,17 +5,35 @@
     android:background="@drawable/dialog_bg"
     android:orientation="vertical" >
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:minHeight="40dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="提示信息"
-        android:textColor="@color/maincolor"
-        android:textSize="20sp" />
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="提示信息"
+            android:textColor="@color/maincolor"
+            android:textSize="20sp" />
+
+        <ProgressBar
+            android:id="@+id/dialog_pro"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:visibility="gone"
+            android:minHeight="10dp"
+            android:minWidth="10dp" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/dialog_content"
@@ -26,6 +44,7 @@
         android:minHeight="40dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
+        android:singleLine="false"
         android:text="您确定删除日记么？"
         android:textColor="@color/diarycontent"
         android:textSize="20sp" />
@@ -41,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@null"
+            android:background="@drawable/btn_alarm"
             android:minHeight="40dp"
             android:minWidth="90dp"
             android:text="取消"

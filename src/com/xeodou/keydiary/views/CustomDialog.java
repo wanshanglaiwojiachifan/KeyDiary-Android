@@ -2,6 +2,7 @@ package com.xeodou.keydiary.views;
 
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
+import com.xeodou.keydiary.views.EditDialog.ClickType;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,13 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class CustomDialog extends Dialog {
 
     private Context context;
-    private TextView info;
+    private TextView info, title;
     private onDialogInfoConfirmListener confirmListener;
+    private Button left , right;
     public CustomDialog(Context context) {
         this(context, null);
         // TODO Auto-generated constructor stub
@@ -40,17 +43,32 @@ public class CustomDialog extends Dialog {
         }
     }
     
+    public void setDialogTitle(String str){
+        if(title != null){
+            title.setText(str);
+        }
+    }
+    
+    public void setLeftBtnText(String str){
+        if(left != null) left.setText(str);
+    }
+    
+    public void setRightBtnText(String str){
+        if(right != null) right.setText(str);
+    }
+    
     private void initView(){
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_info, null);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         info = (TextView)v.findViewById(R.id.dialog_content);
-        View cancel = v.findViewById(R.id.dialog_cancel);
-        View ok = v.findViewById(R.id.dialog_ok);
+        title =(TextView)v.findViewById(R.id.dialog_title); 
+        left = (Button)v.findViewById(R.id.dialog_cancel);
+        right = (Button)v.findViewById(R.id.dialog_ok);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         this.addContentView(v, params);
-        cancel.setOnClickListener(clickListener);
-        ok.setOnClickListener(clickListener);
+        left.setOnClickListener(clickListener);
+        right.setOnClickListener(clickListener);
     }
     
     private android.view.View.OnClickListener clickListener = new android.view.View.OnClickListener() {
@@ -58,25 +76,28 @@ public class CustomDialog extends Dialog {
         @Override
         public void onClick(View v) {
             // TODO Auto-generated method stub
+            cancel();
             switch (v.getId()) {
             case R.id.dialog_ok:
                 if(confirmListener != null){
-                    confirmListener.onClick(v);
+                    confirmListener.onClick(v, ClickType.Ok);
                 }
                 break;
 
-            default:
+            case R.id.dialog_cancel:
+                if(confirmListener != null){
+                    confirmListener.onClick(v, ClickType.Cancel);
+                }
                 break;
             }
-            cancel();
         }
     };
     
-    public void onDialogInfoConfirmListener(onDialogInfoConfirmListener confirmListener){
+    public void setOnDialogInfoConfirmListener(onDialogInfoConfirmListener confirmListener){
         this.confirmListener = confirmListener;
     }
     
     public interface onDialogInfoConfirmListener{
-        void onClick(View v);
+        void onClick(View v, ClickType type);
     }
 }

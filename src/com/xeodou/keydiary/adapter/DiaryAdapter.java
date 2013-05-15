@@ -18,6 +18,7 @@ import com.xeodou.keydiary.bean.Result;
 import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
 import com.xeodou.keydiary.views.CustomDialog;
+import com.xeodou.keydiary.views.CustomDialog.onDialogInfoConfirmListener;
 import com.xeodou.keydiary.views.EditDialog;
 import com.xeodou.keydiary.views.EditDialog.ClickType;
 import com.xeodou.keydiary.views.EditDialog.onDialogClickListener;
@@ -70,8 +71,7 @@ public class DiaryAdapter extends BaseAdapter {
     private int year, month;
     private ProgressDialog dialog;
     private Diary diaryData;
-    private boolean lock = false;
-    private ListView listView;
+    private EditDialog editDialog;
 
     public DiaryAdapter(Context context, ListView listView,
             Map<String, Diary> diaries, int year, int month) {
@@ -80,7 +80,6 @@ public class DiaryAdapter extends BaseAdapter {
         this.year = year;
         this.month = month;
         this.diaryData = null;
-        this.listView = listView;
         listView.setOnItemClickListener(itemClickListener);
     }
 
@@ -141,37 +140,31 @@ public class DiaryAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     // TODO Auto-generated method stub
-                    AlertDialog.Builder builder = new AlertDialog.Builder(
-                            context);
-                    builder.setTitle("未同步日记");
-                    builder.setMessage("由于网络不好日记没有保存成功\n是否重新发送！");
-                    builder.setNegativeButton("算了",
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                        int which) {
-                                    // TODO Auto-generated method stub
-                                    deleeteLocal(day);
-                                    diaries.remove(day);
-                                    notifyDataSetChanged();
-                                    dialog.cancel();
-                                }
-                            });
-                    builder.setPositiveButton("重新发送",
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                        int which) {
-                                    // TODO Auto-generated method stub
-                                    upsertDiary(context, day, diaries.get(day)
-                                            .getContent());
-                                }
-                            });
-                    builder.show();
+                    CustomDialog customDialog = new CustomDialog(context);
+                    customDialog.setDialogTitle("未同步日记");
+                    customDialog.setDialogInfo("由于网络不好日记没有保存成功\n是否重新发送！");
+                    customDialog.setLeftBtnText("算了");
+                    customDialog.setRightBtnText("重新发送");
+                    customDialog.setOnDialogInfoConfirmListener(new onDialogInfoConfirmListener() {
+                        
+                        @Override
+                        public void onClick(View v, ClickType type) {
+                            // TODO Auto-generated method stub
+                            if(type.equals(ClickType.Ok)){
+                                upsertDiary(context, day, diaries.get(day)
+                                        .getContent());
+                            } else {
+                                deleeteLocal(day);
+                                diaries.remove(day);
+                                notifyDataSetChanged();
+                            }
+                        }
+                    });
+                    customDialog.show();
                 }
             });
+        } else {
+            viewHolder.uploadBtn.setVisibility(View.GONE);
         }
 
         if (diary != null) {
@@ -206,7 +199,7 @@ public class DiaryAdapter extends BaseAdapter {
             String date = year + "-" + Utils.douInt(month) + "-"
                     + Utils.douInt(position);
             Diary diary = diaries.get(date);
-            EditDialog editDialog = new EditDialog(context);
+            editDialog = new EditDialog(context);
             editDialog.setDialogTitle(date);
             if (diary != null) {
                 editDialog.setEditContent(diary.getContent());
@@ -219,7 +212,9 @@ public class DiaryAdapter extends BaseAdapter {
                 public void onClick(ClickType type, final String content,
                         final String day, View v) {
                     // TODO Auto-generated method stub
-                    action(content, day);
+                    if(!type.equals(ClickType.Delete)){
+                        action(content, day);
+                    }
                 }
             });
             editDialog.show();
@@ -234,14 +229,16 @@ public class DiaryAdapter extends BaseAdapter {
                 if (str.equals(diary.getContent())) {
                     return false;
                 }
+                editDialog.setFrozeView(true);
                 diary.setContent(str);
                 diaryData = diary;
                 updateDiary(context, day, str, diary);
             } else if( str != null && str.length() == 0){
-                CustomDialog dialog = new CustomDialog(context, new CustomDialog.onDialogInfoConfirmListener() {
+                editDialog.cancel();
+                CustomDialog customDialog = new CustomDialog(context, new CustomDialog.onDialogInfoConfirmListener() {
                     
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View v, ClickType type) {
                         // TODO Auto-generated method stub
                         if(!diaries.containsKey(day)) return;
                         Diary diary = new Diary();
@@ -250,7 +247,7 @@ public class DiaryAdapter extends BaseAdapter {
                         delDiary(context, day);
                     }
                 });
-                dialog.show();
+                customDialog.show();
             }
         } else {
             if (str != null && str.length() > 0) {
@@ -259,6 +256,7 @@ public class DiaryAdapter extends BaseAdapter {
                 diary.setContent(str);
                 diary.setDid((int) Math.random() * 1000 + "");
                 diaryData = diary;
+                editDialog.setFrozeView(true);
                 addDiary(context, day, str);
             }
         }
@@ -288,11 +286,14 @@ public class DiaryAdapter extends BaseAdapter {
                 Gson gson = new Gson();
                 try {
                     Result result = gson.fromJson(content, Result.class);
+                    if(result == null) {
+                        sendMsg(Config.FAIL_ADD, "未知问题");
+                        return;
+                    }
                     if (result.getStat() == 2101) {
                         sendMsg(Config.FAIL_TO_LONG, "您的日记太长");
                     } else {
-                        sendMsg(Config.FAIL_ADD,
-                                KeyDiaryResult.getMsg(result.getStat()));
+                        sendMsg(Config.FAIL_ADD, KeyDiaryResult.getMsg(result.getStat()));
                     }
                 } catch (JsonSyntaxException e1) {
                     // TODO Auto-generated catch block
@@ -368,6 +369,10 @@ public class DiaryAdapter extends BaseAdapter {
                 Gson gson = new Gson();
                 try {
                     Result result = gson.fromJson(content, Result.class);
+                    if(result == null) {
+                        sendMsg(Config.FAIL_ADD, "未知问题");
+                        return;
+                    }
                     if (result.getStat() == 2101) {
                         sendMsg(Config.FAIL_TO_LONG, "您的日记太长");
                     } else {
@@ -458,10 +463,11 @@ public class DiaryAdapter extends BaseAdapter {
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             String str = msg.obj.toString();
-            lock = false;
             if (dialog != null && dialog.isShowing())
                 dialog.dismiss();
             dialog = null;
+            editDialog.setFrozeView(true);
+            if(msg.what != Config.FAIL_TO_LONG) editDialog.cancel();
             switch (msg.what) {
             case Config.SUCCESSS_CODE:
                 diaries.put(diaryData.getD(), diaryData);

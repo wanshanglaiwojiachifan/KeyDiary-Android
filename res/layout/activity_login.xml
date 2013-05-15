@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true" >
 
-    <LinearLayout
+    <com.xeodou.keydiary.KeyboardDetectorLineayLayout
+        android:id="@+id/login_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
@@ -15,6 +17,7 @@
             layout="@layout/head_layout" />
 
         <ImageView
+            android:id="@+id/login_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -26,56 +29,66 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="25dp" >
 
-            <EditText
-                android:id="@+id/username_etv"
+            <LinearLayout
+                android:id="@+id/login_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
                 android:background="@drawable/input_ex"
-                android:ems="10"
-                android:hint="注册邮箱"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"
-                android:minHeight="44dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:singleLine="true"
-                android:textColor="@color/title" >
-            </EditText>
+                android:orientation="vertical" >
 
-            <EditText
-                android:id="@+id/password_etv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/username_etv"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/input_ex"
-                android:ems="10"
-                android:hint="密码"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:minHeight="44dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:singleLine="true"
-                android:textColor="@color/title" >
-            </EditText>
+                <EditText
+                    android:id="@+id/username_etv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:ems="10"
+                    android:hint="注册邮箱"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:minHeight="44dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/title" >
+                </EditText>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:background="@color/diaryday" />
+
+                <EditText
+                    android:id="@+id/password_etv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/username_etv"
+                    android:layout_centerHorizontal="true"
+                    android:background="@null"
+                    android:ems="10"
+                    android:hint="密码"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:minHeight="44dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/title" >
+                </EditText>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/login_btn"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignRight="@id/password_etv"
-                android:layout_below="@id/password_etv"
-                android:layout_marginRight="12dp"
-                android:layout_marginTop="24dp"
+                android:layout_alignRight="@id/login_content"
+                android:layout_below="@id/login_content"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/login_btn"
                 android:gravity="center|center_horizontal"
                 android:minHeight="40dp"
@@ -84,20 +97,20 @@
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
         </RelativeLayout>
-    </LinearLayout>
+    </com.xeodou.keydiary.KeyboardDetectorLineayLayout>
 
-    <RelativeLayout
+    <Button
+        android:id="@+id/btn_rigester"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="25dp" >
-
-        <Button
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/back_btn" />
-    </RelativeLayout>
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="30dp"
+        android:background="@null"
+        android:minHeight="40dp"
+        android:minWidth="90dp"
+        android:text="@string/rigest"
+        android:textColor="@color/dialog_delete"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
 </FrameLayout>

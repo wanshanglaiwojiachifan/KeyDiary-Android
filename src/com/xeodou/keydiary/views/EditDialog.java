@@ -8,12 +8,12 @@ import com.xeodou.keydiary.bean.Diary;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -23,10 +23,11 @@ public class EditDialog extends Dialog {
     private String date;
     private String content;
     private EditText editText;
-    private Map<String, Diary> diaries;
     private TextView title;
     private onDialogClickListener dialogClickListener;
     private String day;
+    private ProgressBar bar;
+    private View contentView;
     public EditDialog(Context context) {
         this(context, 0);
         // TODO Auto-generated constructor stub
@@ -41,7 +42,6 @@ public class EditDialog extends Dialog {
     
     public EditDialog(Context context, Map<String, Diary> diaries){
         this(context, 0);
-        this.diaries = diaries;
     }
     
     public EditDialog(Context context, String date, String content){
@@ -91,18 +91,36 @@ public class EditDialog extends Dialog {
             }
         }
     }
+    
+    public void stopProgress(){
+        bar.setVisibility(View.GONE);
+    }
+    
+    public void startProgress(){
+        bar.setVisibility(View.VISIBLE);
+    }
+    
+    public void setFrozeView(boolean froze){
+        if(contentView != null) {
+            contentView.setEnabled(!froze);
+            setCanceledOnTouchOutside(!froze);
+            setCancelable(!froze);
+        }
+    }
 
     private void initView(){
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         LayoutInflater inflater = LayoutInflater.from(context);
-        View v = inflater.inflate(R.layout.dialog_edit, null);
+        contentView = inflater.inflate(R.layout.dialog_edit, null);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        this.addContentView(v, params);
-        editText = (EditText)v.findViewById(R.id.dialog_edit);
-        View delete = (View)v.findViewById(R.id.dialog_delete);
-        View ok = (View)v.findViewById(R.id.dialog_ok);
-        title = (TextView)v.findViewById(R.id.dialog_title);
+        this.addContentView(contentView, params);
+        editText = (EditText)contentView.findViewById(R.id.dialog_edit);
+        View delete = (View)contentView.findViewById(R.id.dialog_delete);
+        View ok = (View)contentView.findViewById(R.id.dialog_ok);
+        title = (TextView)contentView.findViewById(R.id.dialog_title);
+        bar = (ProgressBar)contentView.findViewById(R.id.dialog_pro);
+        bar.setVisibility(View.GONE);
         delete.setOnClickListener(clickListener);
         ok.setOnClickListener(clickListener);
         if(Utils.getTypeface() != null){
@@ -133,12 +151,12 @@ public class EditDialog extends Dialog {
         @Override
         public void onClick(View v) {
             // TODO Auto-generated method stub
-            cancel();
             switch (v.getId()) {
             case R.id.dialog_delete:
-//                if(dialogClickListener != null){
-//                    dialogClickListener.onClick(ClickType.Delete, editText.getText().toString(), day, v);
-//                }
+                cancel();
+                if(dialogClickListener != null){
+                    dialogClickListener.onClick(ClickType.Delete, editText.getText().toString(), day, v);
+                }
                 break;
 
             case R.id.dialog_ok:
@@ -161,7 +179,9 @@ public class EditDialog extends Dialog {
     public enum ClickType{
         Delete("delete"),
         Update("update"),
-        Add("add");
+        Add("add"),
+        Ok("ok"),
+        Cancel("cancel");
         String type;
         ClickType(String type){
             this.type = type;

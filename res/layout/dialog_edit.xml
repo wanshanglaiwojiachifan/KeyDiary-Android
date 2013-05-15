@@ -2,32 +2,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/dialog_bg"
     android:layout_gravity="center_horizontal"
+    android:background="@drawable/dialog_bg"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/dialog_title"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:text="2013-12-12"
-        android:textColor="@color/maincolor"
-        android:textSize="25sp" />
+        android:layout_marginTop="15dp" >
+
+        <TextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:text="2013-12-12"
+            android:textColor="@color/maincolor"
+            android:textSize="25sp" />
+
+        <ProgressBar
+            android:id="@+id/dialog_pro"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:minHeight="10dp"
+            android:minWidth="10dp" />
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/dialog_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:textSize="22sp"
-        android:hint="输入日记内容"
-        android:textColor="@color/diarycontent"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/input_text_n_white"
+        android:hint="七字记录每一天"
+        android:minHeight="40dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:background="@drawable/input_text_n_white"
-        android:minHeight="40dp" />
+        android:singleLine="true"
+        android:textColor="@color/diarycontent"
+        android:textSize="22sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -40,13 +58,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:background="@null"
+            android:background="@drawable/btn_alarm"
             android:minHeight="40dp"
             android:minWidth="90dp"
             android:text="取消"
-            android:textStyle="bold"
             android:textColor="@color/dialog_delete"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/dialog_ok"

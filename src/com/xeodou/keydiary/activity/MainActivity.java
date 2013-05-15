@@ -198,7 +198,7 @@ public class MainActivity extends Activity {
     
     private void login(){
         if(!Utils.isLogin(this)){
-            Intent intent = new Intent(this, SelectActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             intent.setAction(Config.ACTION_LOGIN);
             startActivityForResult(intent, Config.LOGIN_CODE);
         }
@@ -334,7 +334,7 @@ public class MainActivity extends Activity {
         if(resultCode == Config.FAIL_CODE){
             finish();
         } else if(resultCode == Config.LOGIN_CODE) {
-            loadAllDiaries();
+            init();
         } else if(resultCode == Config.LOGOUT_CODE){
             finish();
         }

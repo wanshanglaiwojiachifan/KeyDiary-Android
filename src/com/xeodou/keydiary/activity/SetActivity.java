@@ -32,9 +32,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
     private Button logoutBtn;
     private View backBtn, notiBtn, pricyView, feedbackView;
     private TextView textView, alermTime, version;
-    private boolean isShow = false;
     private TimePicker timePicker;
-    private Button cancelBtn, okBtn;
     private boolean isAlarm = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +111,6 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
             break;
         case R.id.noti_btn:
 //            if(alermTime.getVisibility() == View.GONE){
-                isShow = true;
 //                dialog.show();
                 BetterPickerUtils.showTimeEditDialog(getSupportFragmentManager(), R.style.BetterPickersDialogFragment);
 //            }
