@@ -19,6 +19,9 @@
 * [友盟](http://www.umeng.com)
 
 ## Change log
+* v0.45
+ * 修复删除键取消事件
+
 * v0.44
  * 修改logo
  * 更改对话框可取消

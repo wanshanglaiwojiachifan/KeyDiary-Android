@@ -237,6 +237,7 @@ public class DiaryAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v, ClickType type) {
                         // TODO Auto-generated method stub
+                        if(type.equals(ClickType.Cancel)) return;
                         if(!diaries.containsKey(day)) return;
                         Diary diary = new Diary();
                         diary.setD(day);
