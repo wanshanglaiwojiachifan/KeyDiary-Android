@@ -2,6 +2,7 @@
 <resources>
     <dimen name="footerHeight">30dp</dimen>
     <dimen name="headerHeight">20dp</dimen>
-    <dimen name="moveHeight">30dp</dimen>
+    <dimen name="moveHeight">90dp</dimen>
+    <dimen name="topMargin">25dp</dimen>
     
 </resources>

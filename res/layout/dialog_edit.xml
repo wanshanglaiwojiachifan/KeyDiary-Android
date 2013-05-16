@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:background="@drawable/input_text_n_white"
-        android:hint="七字记录每一天"
+        android:hint="7字记录每一天"
         android:minHeight="40dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"

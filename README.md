@@ -19,6 +19,10 @@
 * [友盟](http://www.umeng.com)
 
 ## Change log
+* v0.43
+ * 修改首页
+ * 修改文案
+
 * v0.42
  * 修复bug
  * 替换提示条

@@ -111,7 +111,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         params.topMargin = t;
         logo.setLayoutParams(params);
         params = (LayoutParams)rela.getLayoutParams();
-        params.topMargin = t;
+        params.topMargin = (int)getResources().getDimension(R.dimen.topMargin);
         rela.setLayoutParams(params);
         isInput = false;
     }
