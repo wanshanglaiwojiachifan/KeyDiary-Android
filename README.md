@@ -19,6 +19,10 @@
 * [友盟](http://www.umeng.com)
 
 ## Change log
+* v0.44
+ * 修改logo
+ * 更改对话框可取消
+
 * v0.43
  * 修改首页
  * 修改文案

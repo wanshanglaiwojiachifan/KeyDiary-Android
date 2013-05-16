@@ -227,7 +227,6 @@ public class DiaryAdapter extends BaseAdapter {
                 if (str.equals(diary.getContent())) {
                     return false;
                 }
-                editDialog.setFrozeView(true);
                 diary.setContent(str);
                 diaryData = diary;
                 updateDiary(context, day, str, diary);
@@ -254,7 +253,6 @@ public class DiaryAdapter extends BaseAdapter {
                 diary.setContent(str);
                 diary.setDid((int) Math.random() * 1000 + "");
                 diaryData = diary;
-                editDialog.setFrozeView(true);
                 addDiary(context, day, str);
             }
         }
@@ -464,7 +462,6 @@ public class DiaryAdapter extends BaseAdapter {
             if (dialog != null && dialog.isShowing())
                 dialog.dismiss();
             dialog = null;
-            editDialog.setFrozeView(true);
             if(msg.what != Config.FAIL_TO_LONG) editDialog.cancel();
             switch (msg.what) {
             case Config.SUCCESSS_CODE:

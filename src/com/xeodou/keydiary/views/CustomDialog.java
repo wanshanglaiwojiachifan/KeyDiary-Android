@@ -67,6 +67,7 @@ public class CustomDialog extends Dialog {
         right = (Button)v.findViewById(R.id.dialog_ok);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         this.addContentView(v, params);
+        setCanceledOnTouchOutside(true);
         left.setOnClickListener(clickListener);
         right.setOnClickListener(clickListener);
     }

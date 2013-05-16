@@ -100,14 +100,6 @@ public class EditDialog extends Dialog {
         bar.setVisibility(View.VISIBLE);
     }
     
-    public void setFrozeView(boolean froze){
-        if(contentView != null) {
-            contentView.setEnabled(!froze);
-            setCanceledOnTouchOutside(!froze);
-            setCancelable(!froze);
-        }
-    }
-
     private void initView(){
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -123,6 +115,7 @@ public class EditDialog extends Dialog {
         bar.setVisibility(View.GONE);
         delete.setOnClickListener(clickListener);
         ok.setOnClickListener(clickListener);
+        setCanceledOnTouchOutside(true);
         if(Utils.getTypeface() != null){
             editText.setTypeface(Utils.getTypeface());
         }
