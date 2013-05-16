@@ -53,6 +53,7 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:singleLine="true"
+                    android:autoText="false"
                     android:textColor="@color/title" >
                 </EditText>
 
@@ -67,8 +68,6 @@
                     android:id="@+id/password_etv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/username_etv"
-                    android:layout_centerHorizontal="true"
                     android:background="@null"
                     android:ems="10"
                     android:hint="密码"

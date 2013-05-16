@@ -17,15 +17,15 @@ import com.xeodou.keydiary.FontManager;
 import com.xeodou.keydiary.FontManager.onFontCommpressListener;
 import com.xeodou.keydiary.Log;
 import com.xeodou.keydiary.R;
+import com.xeodou.keydiary.UIHelper;
 import com.xeodou.keydiary.Utils;
+import com.xeodou.keydiary.UIHelper.ToastStyle;
 import com.xeodou.keydiary.adapter.DiaryFragementAdapter;
 import com.xeodou.keydiary.bean.Diary;
 import com.xeodou.keydiary.bean.DiaryTime;
 import com.xeodou.keydiary.bean.LoadDiary;
 import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,11 +72,12 @@ public class MainActivity extends Activity {
     }
     
     private void init(){
-        if(Utils.networkType() == Config.TYPE_NET_WORK_DISABLED) {
-            sendMsg(Config.FAIL_CODE, "您的网络有问题，请检查后重试！");
-            return;
-        }
-        new UnCompressTask().execute();
+//        if(Utils.networkType() == Config.TYPE_NET_WORK_DISABLED) {
+//            sendMsg(Config.FAIL_CODE, "您的网络有问题，请检查后重试！");
+//            return;
+//        }
+//        new UnCompressTask().execute();
+        loadAllDiaries();
     }
     
     private class UnCompressTask extends AsyncTask<String, Void, String>{
@@ -160,7 +161,7 @@ public class MainActivity extends Activity {
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            Crouton.showText(this, "数据库异常", Style.ALERT);
+            UIHelper.show(this, "数据库异常", ToastStyle.Alert);
         }
     }
     
@@ -282,12 +283,14 @@ public class MainActivity extends Activity {
                 checkLocal();
                 adapter.notifyDataSetChanged();
                 viewPager.setCurrentItem(titles.size() - 1);
-                Crouton.showText(MainActivity.this , "加载成功", Style.INFO);
+                UIHelper.show(MainActivity.this, "加载成功", ToastStyle.Info);
+
             } else {
                 String str = msg.obj.toString();
                 if(str == null) str = "加载失败";
                 if(str.length() <= 0) str = "加载失败";
-                Crouton.showText(MainActivity.this, str, Style.ALERT);   
+                UIHelper.show(MainActivity.this, str, ToastStyle.Alert);
+
             }
             if(dialog != null && dialog.isShowing() ) dialog.dismiss();
             dialog = null;

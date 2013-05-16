@@ -8,41 +8,29 @@ import com.umeng.analytics.MobclickAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.KeyDiaryResult;
 import com.xeodou.keydiary.KeyboardDetectorLineayLayout;
+import com.xeodou.keydiary.UIHelper;
 import com.xeodou.keydiary.KeyboardDetectorLineayLayout.IKeyboardChanged;
+import com.xeodou.keydiary.UIHelper.ToastStyle;
 import com.xeodou.keydiary.Log;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.LoadUser;
 import com.xeodou.keydiary.bean.Result;
 import com.xeodou.keydiary.http.API;
-import com.xeodou.keydiary.views.LinearLayoutThatDetectsSoftKeyboard;
-import com.xeodou.keydiary.views.LinearLayoutThatDetectsSoftKeyboard.Listener;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
 import android.text.Html;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnKeyListener;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -58,6 +46,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
     private ProgressDialog dialog;
     private String action;
     private boolean isInput = false;
+    private int time = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -78,12 +67,14 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         password.setOnKeyListener(this);
         password.clearFocus();
         username.clearFocus();
-        username.addTextChangedListener(watcher);
-        password.addTextChangedListener(watcher);
         root.addKeyboardStateChangedListener(this);
         username.setOnClickListener(this);
         password.setOnClickListener(this);
 //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        String action = getIntent().getAction();
+        if(action != null && action.endsWith(Config.ACTION_SET)){
+            time = 2;
+        }
 
     }
     @Override
@@ -149,32 +140,6 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         handler.sendMessage(msg);
     }
     
-    private TextWatcher watcher = new TextWatcher() {
-        
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // TODO Auto-generated method stub
-            
-        }
-        
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                int after) {
-            // TODO Auto-generated method stub
-            
-        }
-        
-        @Override
-        public void afterTextChanged(Editable s) {
-            // TODO Auto-generated method stub
-            if(username.getText().toString().length() > 0 && password.getText().toString().length() > 0){
-                button.setEnabled(true);
-            } else {
-                button.setEnabled(false);
-            }
-        }
-    };
-    
     private void login(){
         Config.username = Config.password = "";
         if(username.getText().length() > 1 && password.getText().length() > 1){
@@ -218,11 +183,11 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
             });
         } else {
             if(username.getText().toString().length() <= 0){
-                Crouton.showText(this, "邮箱不能为空", Style.ALERT);
+                UIHelper.show(this, "邮箱不能为空", ToastStyle.Alert);
                 return;
             }
             if(password.getText().toString().length() <= 0){
-                Crouton.showText(this, "密码不能为空", Style.ALERT);
+                UIHelper.show(this, "密码不能为空", ToastStyle.Alert);
                 return;
             }
         }
@@ -248,7 +213,8 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
                 break;
             }
             if(msg.obj != null){
-                Crouton.showText(LoginActivity.this, msg.obj.toString(), Style.ALERT);
+                UIHelper.show(LoginActivity.this, msg.obj.toString(), ToastStyle.Alert);
+
             }
         }
        
@@ -296,9 +262,12 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
     @Override
     public void onKeyboardShown() {
         // TODO Auto-generated method stub
-        btn_register.setVisibility(View.GONE);
-        // Toast.makeText(this, "show", Toast.LENGTH_SHORT).show();
-        moveUp();
+        if(time != 1){
+            btn_register.setVisibility(View.GONE);
+            // Toast.makeText(this, "show", Toast.LENGTH_SHORT).show();
+            moveUp();
+        }
+        time = 2;
     }
     @Override
     public void onKeyboardHidden() {

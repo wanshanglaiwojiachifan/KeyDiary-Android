@@ -9,7 +9,9 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.KeyDiaryResult;
 import com.xeodou.keydiary.PanningEditText;
+import com.xeodou.keydiary.UIHelper;
 import com.xeodou.keydiary.PanningEditText.onLostFocusListener;
+import com.xeodou.keydiary.UIHelper.ToastStyle;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.Utils;
 import com.xeodou.keydiary.bean.Diary;
@@ -22,10 +24,6 @@ import com.xeodou.keydiary.views.CustomDialog.onDialogInfoConfirmListener;
 import com.xeodou.keydiary.views.EditDialog;
 import com.xeodou.keydiary.views.EditDialog.ClickType;
 import com.xeodou.keydiary.views.EditDialog.onDialogClickListener;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -441,12 +439,12 @@ public class DiaryAdapter extends BaseAdapter {
             if (d != null) {
                 diaryDao.delete(d);
                 diaries.remove(d.getD());
-                Crouton.showText((Activity) context, "数据已清除 ！", Style.INFO);
+                UIHelper.show(context, "数据已清除 ！", ToastStyle.Alert);
                 notifyDataSetChanged();
             }
         } catch (SQLException e) {
             // TODO Auto-generated catch block
-            Crouton.showText((Activity) context, "数据库错误 ！", Style.ALERT);
+            UIHelper.show(context, "数据库错误 ！", ToastStyle.Alert);
         }
     }
 
@@ -476,13 +474,12 @@ public class DiaryAdapter extends BaseAdapter {
                     diaryData = null;
                 if (str == null)
                     str = "修改失败";
-                Crouton.showText((Activity) context, str, Style.INFO);
+                UIHelper.show(context, str, ToastStyle.Info);
                 return;
 
             case Config.SUCCESS_UPSERT:
                 if (msg.obj != null)
-                    Crouton.showText((Activity) context, msg.obj.toString(),
-                            Style.INFO);
+                    UIHelper.show(context, str, ToastStyle.Info);
                 try {
                     Dao<Diary, Integer> diaryDao = DBUtils.getHelper(context)
                             .getDiaryDao();
@@ -490,7 +487,7 @@ public class DiaryAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                 } catch (SQLException e) {
                     // TODO Auto-generated catch block
-                    Crouton.showText((Activity) context, "数据库错误 ！", Style.ALERT);
+                    UIHelper.show(context, "数据库错误 ！", ToastStyle.Alert);
                 }
                 return;
             case Config.SUCCESS_DELETE:
@@ -498,7 +495,8 @@ public class DiaryAdapter extends BaseAdapter {
                 diaryData = null;
                 if (str == null)
                     str = "删除失败";
-                Crouton.showText((Activity) context, str, Style.INFO);
+                UIHelper.show(context, str, ToastStyle.Info);
+
                 return;
             }
 
@@ -506,7 +504,8 @@ public class DiaryAdapter extends BaseAdapter {
                 str = "修改失败";
             if (str.length() <= 0)
                 str = "修改失败";
-            Crouton.showText((Activity) context, str, Style.ALERT);
+//            Crouton.showText((Activity) context, str, Style.ALERT);
+            UIHelper.show(context, str, ToastStyle.Alert);
             if (diaryData != null && msg.what != Config.FAIL_TO_LONG) {
                 diaryData.setIsLocal(true);
                 diaryData.setCreated(Utils.getFormatDate());
@@ -518,15 +517,15 @@ public class DiaryAdapter extends BaseAdapter {
                             || msg.what == Config.FAIL_UPSERT) {
                         diaryDao.createOrUpdate(diaryData);
                         diaries.put(diaryData.getD(), diaryData);
-                        Crouton.showText((Activity) context, "您的日记已经被缓存到本地",
-                                Style.INFO);
+                        UIHelper.show(context, "您的日记已经被缓存到本地",
+                                ToastStyle.Info);
                         notifyDataSetChanged();
                     }
                     // diaryDao.update(diaryData);
                 } catch (SQLException e) {
                     // TODO Auto-generated catch block
-                    Crouton.showText((Activity) context, "插入数据库失败！",
-                            Style.ALERT);
+                    UIHelper.show( context, "插入数据库失败！",
+                            ToastStyle.Alert);
                 }
             }
         }

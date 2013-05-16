@@ -7,10 +7,10 @@ import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment.Tim
 import com.umeng.analytics.MobclickAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.R;
+import com.xeodou.keydiary.UIHelper;
 import com.xeodou.keydiary.Utils;
+import com.xeodou.keydiary.UIHelper.ToastStyle;
 import com.xeodou.keydiary.database.DBUtils;
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -97,7 +97,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
 
         case R.id.logout_btn:
             if(!DBUtils.clearTables(this)){
-                Crouton.showText(SetActivity.this, "清除数据失败！请重试！", Style.ALERT);
+                UIHelper.show(SetActivity.this, "清除数据失败！请重试！", ToastStyle.Alert);
                 return;
             }
             (new Utils()).storePass(SetActivity.this, "", "");
@@ -157,7 +157,8 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
         PendingIntent pi = PendingIntent.getBroadcast(this, Config.ALERM_ID , intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
-        Crouton.showText(SetActivity.this, "设置每日提醒成功！", Style.CONFIRM);
+        UIHelper.show(SetActivity.this, "设置每日提醒成功！", ToastStyle.Confirm);
+
         isAlarm = true;
     }
     
@@ -175,7 +176,8 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
         isAlarm = !isAlarm;
         delAlarm();
         (new Utils()).storeAlerm(SetActivity.this, "");
-        Crouton.showText(SetActivity.this, "删除每日提醒成功！", Style.CONFIRM);
+        UIHelper.show(SetActivity.this, "删除每日提醒成功！", ToastStyle.Confirm);
+
         alermTime.setText("点击设置提醒");
         return true;
 

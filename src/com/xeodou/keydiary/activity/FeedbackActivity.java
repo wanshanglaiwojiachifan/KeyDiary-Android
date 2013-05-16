@@ -3,11 +3,9 @@ package com.xeodou.keydiary.activity;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.R;
+import com.xeodou.keydiary.UIHelper;
+import com.xeodou.keydiary.UIHelper.ToastStyle;
 import com.xeodou.keydiary.http.API;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -89,7 +87,7 @@ public class FeedbackActivity extends Activity implements OnClickListener {
             isDone = true;
             if(msg.what == Config.SUCCESSS_CODE){
                 done = true;
-                Crouton.showText(FeedbackActivity.this, msg.obj.toString(), Style.CONFIRM);
+                UIHelper.show(FeedbackActivity.this, msg.obj.toString(), ToastStyle.Confirm);
                 new Handler().postDelayed(new Runnable() {
                     
                     @Override
@@ -99,7 +97,7 @@ public class FeedbackActivity extends Activity implements OnClickListener {
                     }
                 }, 500);
             } else {
-                Crouton.showText(FeedbackActivity.this, msg.obj.toString(), Style.ALERT);
+                UIHelper.show(FeedbackActivity.this, msg.obj.toString(), ToastStyle.Alert);
             }
         }
         
@@ -116,11 +114,12 @@ public class FeedbackActivity extends Activity implements OnClickListener {
         case R.id.send_btn:
             if(content_ext.getText().length() > 0){
                 if(str != null && str.equals(content_ext.getText().toString()) && done){
-                    Crouton.showText(FeedbackActivity.this, "相同的内容已经提交", Style.ALERT);
+                    UIHelper.show(FeedbackActivity.this, "相同的内容已经提交", ToastStyle.Alert);
+
                     return;
                 }
                 if(done) {
-                    Crouton.showText(FeedbackActivity.this, "您提交的内容次数过多，请等待完成后重试！", Style.ALERT);
+                    UIHelper.show(FeedbackActivity.this, "您提交的内容次数过多，请等待完成后重试！", ToastStyle.Alert);
                     return;
                 }
                 feedBack(content_ext.getText().toString());
