@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xeodou.keydiary"
-    android:versionCode="45"
-    android:versionName="0.45" >
+    android:versionCode="46"
+    android:versionName="0.46" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -32,6 +32,7 @@
         </activity>
         <activity
             android:name="com.xeodou.keydiary.activity.LoadingActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,9 +42,11 @@
         </activity>
         <activity
             android:name="com.xeodou.keydiary.activity.LoginActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:configChanges="keyboardHidden|orientation" 
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" >
                 </action>
@@ -55,24 +58,34 @@
         </activity>
         <activity
             android:name="com.xeodou.keydiary.activity.AddDiaryActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar"
             android:windowSoftInputMode="adjustResize" >
+
         </activity>
         <activity
             android:name="com.xeodou.keydiary.activity.SelectActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
+
         </activity>
         <activity
             android:name="com.xeodou.keydiary.activity.SetActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
+
         </activity>
         <activity
             android:name="com.xeodou.keydiary.activity.WebActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
+
         </activity>
         <activity
             android:name="com.xeodou.keydiary.activity.FeedbackActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
+
         </activity>
 
         <receiver
