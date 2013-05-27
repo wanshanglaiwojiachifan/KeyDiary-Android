@@ -3,8 +3,10 @@ package com.xeodou.keydiary.activity;
 import org.json.JSONObject;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.KeyDiaryResult;
 import com.xeodou.keydiary.KeyboardDetectorLineayLayout;
@@ -52,6 +54,8 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        UmengUpdateAgent.setUpdateOnlyWifi(false);
+        UmengUpdateAgent.update(this);
         action = getIntent().getAction();
         username = (EditText)findViewById(R.id.username_etv);
         password = (EditText)findViewById(R.id.password_etv);
@@ -164,8 +168,17 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
                     // TODO Auto-generated method stub
                     Log.d(TAG, errorResponse.toString() + "  " + e.getMessage());
                     Gson gson = new Gson();
-                    Result result = gson.fromJson(errorResponse.toString(), Result.class);
-                    sendMsg(Config.FAIL_CODE, KeyDiaryResult.getMsg(result.getStat()));
+                    try {
+                        Result result = gson.fromJson(errorResponse.toString(), Result.class);
+                        if(result == null) {
+                            sendMsg(Config.FAIL_ADD, "未知问题");
+                            return;
+                        }
+                        sendMsg(Config.FAIL_CODE, KeyDiaryResult.getMsg(result.getStat()));
+                    } catch (JsonSyntaxException e1) {
+                        // TODO Auto-generated catch block
+                        sendMsg(Config.FAIL_ADD, "登录失败");
+                    }
                 }
                
                 @Override

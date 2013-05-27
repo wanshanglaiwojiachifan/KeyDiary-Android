@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -116,6 +117,7 @@ public class EditDialog extends Dialog {
         delete.setOnClickListener(clickListener);
         ok.setOnClickListener(clickListener);
         setCanceledOnTouchOutside(true);
+        editText.requestFocus();
         if(Utils.getTypeface() != null){
             editText.setTypeface(Utils.getTypeface());
         }
@@ -161,6 +163,33 @@ public class EditDialog extends Dialog {
         }
     }; 
     
+    
+    
+    
+    @Override
+    public void cancel() {
+        // TODO Auto-generated method stub
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(),0);
+        super.cancel();
+    }
+
+    @Override
+    public void dismiss() {
+        // TODO Auto-generated method stub
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(),0);
+        super.dismiss();
+    }
+
+    @Override
+    public void show() {
+        // TODO Auto-generated method stub
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        super.show();
+    }
+
     public void setOnDialogClickListener(onDialogClickListener dialogClickListener){
         this.dialogClickListener = dialogClickListener;
     }

@@ -92,7 +92,7 @@
                 android:gravity="center|center_horizontal"
                 android:minHeight="40dp"
                 android:minWidth="90dp"
-                android:text="@string/login"
+                android:text="登             录"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
         </RelativeLayout>

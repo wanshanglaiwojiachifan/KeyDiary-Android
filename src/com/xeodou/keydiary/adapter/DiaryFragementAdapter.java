@@ -10,6 +10,7 @@ import com.xeodou.keydiary.bean.Diary;
 import com.xeodou.keydiary.bean.DiaryTime;
 import com.xeodou.keydiary.views.EditDialog;
 
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,8 @@ public class DiaryFragementAdapter extends PagerAdapter{
     public View instantiateItem(final ViewGroup container,final int position) {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.diaryitem_layout, null);
         ListView grid = (ListView)view.findViewById(R.id.diary_grid);
+        grid.setCacheColorHint(Color.TRANSPARENT);
+//        grid.setAlwaysDrawnWithCacheEnabled(true);
         View v = new View(container.getContext());
         v.setMinimumHeight((int)container.getContext().getResources().getDimension(R.dimen.footerHeight));
         grid.addFooterView(v);

@@ -17,11 +17,14 @@
         android:id="@+id/diary_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
+        android:cacheColorHint="@color/transparent"
         android:divider="@null"
         android:dividerHeight="10dp"
+        android:fadingEdge="none"
         android:listSelector="@color/transparent"
-        android:cacheColorHint="@android:color/transparent" >
+        android:scrollbars="none"
+        android:scrollingCache="false" >
+
     </ListView>
 
 </LinearLayout>

@@ -131,6 +131,12 @@ public class DiaryAdapter extends BaseAdapter {
         boolean isLocal = false;
         if (diary != null && diary.getIsLocal() != null)
             isLocal = diary.getIsLocal();
+        if (year == Utils.getCurrentYear() && month == Utils.getCurrentMonth() && position + 1 == Utils.getCurrentDay())
+//            convertView.setBackgroundResource(R.color.alarm_p);
+            viewHolder.day.setTextColor(context.getResources().getColor(R.color.maincolor));
+        else 
+//            convertView.setBackgroundResource(R.color.white);
+            viewHolder.day.setTextColor(context.getResources().getColor(R.color.diaryday));
         if (isLocal) {
             viewHolder.uploadBtn.setVisibility(View.VISIBLE);
             viewHolder.uploadBtn.setOnClickListener(new OnClickListener() {
