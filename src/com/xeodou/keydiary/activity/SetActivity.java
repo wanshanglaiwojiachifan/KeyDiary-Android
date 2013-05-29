@@ -6,6 +6,7 @@ import com.doomonafireball.betterpickers.BetterPickerUtils;
 import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment.TimePickerDialogHandler;
 import com.umeng.analytics.MobclickAgent;
 import com.xeodou.keydiary.Config;
+import com.xeodou.keydiary.KeyAlarm;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.UIHelper;
 import com.xeodou.keydiary.Utils;
@@ -139,24 +140,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
     }
     
     private void setAlerm(int h, int m){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        int ch = calendar.get(Calendar.HOUR_OF_DAY); 
-        int cm = calendar.get(Calendar.MINUTE);
-        int r = 0;
-        if(h > ch) {
-                r = (h - ch) * 60 + (m - cm);
-        } else if(h < ch) {
-                r = (h + 24 - ch) * 60 + (m - cm);
-        } else {
-            r = m >= cm ? m - cm : 24 * 60 + m - cm;
-        }
-        r = r * 60;
-        calendar.add(Calendar.SECOND, r);
-        Intent intent = new Intent(this, DiaryReciver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(this, Config.ALERM_ID , intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+        KeyAlarm.setAlarm(h, m, this);
         UIHelper.show(SetActivity.this, "设置每日提醒成功！", ToastStyle.Confirm);
 
         isAlarm = true;

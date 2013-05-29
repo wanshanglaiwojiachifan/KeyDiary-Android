@@ -243,6 +243,7 @@ public class LoginActivity extends Activity implements OnClickListener, OnEditor
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
+        time = 1;
         MobclickAgent.onResume(this);
     }
     @Override
