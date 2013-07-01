@@ -1,5 +1,8 @@
 package com.xeodou.keydiary.activity;
 
+import group.pals.android.lib.ui.lockpattern.LockPatternActivity;
+import group.pals.android.lib.ui.lockpattern.prefs.SecurityPrefs;
+
 import java.util.Calendar;
 
 import com.doomonafireball.betterpickers.BetterPickerUtils;
@@ -7,6 +10,7 @@ import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment.Tim
 import com.umeng.analytics.MobclickAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.KeyAlarm;
+import com.xeodou.keydiary.MyApplication;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.UIHelper;
 import com.xeodou.keydiary.Utils;
@@ -32,7 +36,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
     
     private Button logoutBtn;
     private View backBtn, notiBtn, pricyView, feedbackView;
-    private TextView textView, alermTime, version;
+    private TextView textView, alermTime, version, lockView;
     private TimePicker timePicker;
     private boolean isAlarm = false;
     @Override
@@ -47,6 +51,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
         notiBtn = (View) findViewById(R.id.noti_btn);
         backBtn = (View) findViewById(R.id.back_btn);
         pricyView = (View) findViewById(R.id.pricy);
+        lockView = (TextView) findViewById(R.id.lock);
         feedbackView = (View) findViewById(R.id.feedback);
         logoutBtn = (Button) findViewById(R.id.logout_btn);        
         notiBtn.setOnClickListener(this);
@@ -55,12 +60,16 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
         pricyView.setOnClickListener(this);
         feedbackView.setOnClickListener(this);
         logoutBtn.setOnClickListener(this);
+        lockView.setOnClickListener(this);
         Utils.isLogin(this);
         textView.setText(Config.username);
         String str = (new Utils()).getAlerm(this);
         if(str != null && !str.equals("")){
             isAlarm = true;
             alermTime.setText("每日 " + str + " 提醒");
+        }
+        if(SecurityPrefs.getPattern(getApplicationContext()) != null) {
+            lockView.setText("已设置密码");
         }
         String versionName;
         try {
@@ -102,6 +111,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
                 return;
             }
             (new Utils()).storePass(SetActivity.this, "", "");
+            SecurityPrefs.setPattern(getApplicationContext(), null);
             Config.username = "";
             Config.password = "";
             Intent intent = new Intent(SetActivity.this, LoginActivity.class);
@@ -135,6 +145,21 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
             intent.setClass(SetActivity.this, WebActivity.class);
             intent.putExtra("URL", "http://api.keydiary.net/app/static/android/copyright");
             startActivity(intent);
+            break;
+        case R.id.lock:
+            char[] savedPattern = SecurityPrefs.getPattern(getApplicationContext());
+            if( savedPattern != null) {
+                intent = new Intent(LockPatternActivity.ACTION_COMPARE_PATTERN,
+                        null, SetActivity.this, LockPatternActivity.class);
+                intent.putExtra(LockPatternActivity.EXTRA_PATTERN, savedPattern);
+                startActivityForResult(intent, Config.LOCK_CODE_REQ);
+
+//                lockView.setText("已设置密码");
+            } else {
+                intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
+                        SetActivity.this, LockPatternActivity.class);
+                startActivityForResult(intent, Config.LOCK_CODE_ADD);
+            }
             break;
         }
     }
@@ -178,6 +203,39 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
         // TODO Auto-generated method stub
         super.onResume();
         MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        switch (requestCode) {
+        case Config.LOCK_CODE_ADD: {
+            if (resultCode == RESULT_OK) {
+                char[] pattern = data
+                        .getCharArrayExtra(LockPatternActivity.EXTRA_PATTERN);
+                SecurityPrefs.setPattern(getApplicationContext(), pattern);
+                lockView.setText("已设置密码");
+            }
+            break;
+        }// REQ_CREATE_PATTERN
+        case Config.LOCK_CODE_REQ:
+            switch (resultCode) {
+            case RESULT_OK:
+                // The user passed
+                SecurityPrefs.setPattern(getApplicationContext(), null);
+                UIHelper.show(SetActivity.this, "删除安全密码成功", ToastStyle.Confirm);
+                lockView.setText("点击设置");
+                break;
+            case RESULT_CANCELED:
+                // The user cancelled the task
+                break;
+            case LockPatternActivity.RESULT_FAILED:
+                // The user failed to enter the pattern
+                UIHelper.show(SetActivity.this, "您输入的安全密码有误", ToastStyle.Alert);
+                break;
+            }
+            break;
+        }
     }
 
     @Override

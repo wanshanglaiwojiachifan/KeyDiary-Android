@@ -7,6 +7,7 @@
 * [ListViewAnimations](https://github.com/nhaarman/ListViewAnimations)
 * [ormlite](http://www.ormlite.com)
 * [ACRA](https://github.com/ACRA/acra)
+* [lock-pattern](https://code.google.com/p/android-lockpattern)
 
 ## Support
 * Holo Style in 2.2 or high
@@ -19,6 +20,10 @@
 * [友盟](http://www.umeng.com)
 
 ## Change log
+* v1.3
+ * 添加安全密码
+ * 其他细节修复
+
 * v1.2
  * 修复重启后提醒失效的bug
  * 修复其他可能造成crash的地方

@@ -126,6 +126,43 @@
             android:layout_height="1dp"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp"
+            android:background="@color/diaryday" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="45dp"
+            android:orientation="horizontal"
+            android:padding="1dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:gravity="left|center_vertical"
+                android:minWidth="100dp"
+                android:paddingLeft="15dp"
+                android:text="安全密码"
+                android:textColor="@color/title"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/lock"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="20dp"
+                android:text="点击设置"
+                android:textColor="@color/diarycontent"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
             android:background="@color/diaryday"
             android:visibility="gone" />
 

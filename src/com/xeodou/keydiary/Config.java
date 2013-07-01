@@ -30,6 +30,8 @@ public class Config {
     public static final int SUCCESS_REGISTER = 0x00013;
     public static final int SUCCESS_DELETE = 0x00014;
     public static final int CODE_COMP = 0x00015;
+    public static final int LOCK_CODE_REQ = 0x00016;
+    public static final int LOCK_CODE_ADD = 0x00017;
   
     //user pass
     public static String username = "";
