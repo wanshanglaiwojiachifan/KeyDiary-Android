@@ -250,6 +250,13 @@ public class MainActivity extends Activity {
             }
 
             @Override
+            public void onFailure(Throwable error) {
+                // TODO Auto-generated method stub
+//                super.onFailure(error);
+                sendMsg(Config.FAIL_CODE, "连接服务器超时！");
+            }
+
+            @Override
             public void onStart() {
                 // TODO Auto-generated method stub
                 if (dialog == null) {
