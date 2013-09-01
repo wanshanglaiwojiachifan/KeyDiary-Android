@@ -1,6 +1,6 @@
 # [KeyDiary](http://www.keydiary.net/) for Android
 
-## Dependence on
+## Dependence
 * [Crouton](https://github.com/keyboardsurfer/Crouton)
 * [Asy-http](https://github.com/loopj/android-async-http)
 * [Gson](https://code.google.com/p/google-gson)
@@ -19,7 +19,7 @@
 ## App Analytic
 * [友盟](http://www.umeng.com)
 
-## Change log
+## Changelogs
 * v1.3
  * 添加安全密码
  * 其他细节修复
