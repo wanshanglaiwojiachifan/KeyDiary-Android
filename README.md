@@ -1,4 +1,4 @@
-# [Keydiary](wwww.keydiary.net) Android client
+# [KeyDiary](www.keydiary.net) for Android
 
 ## Dependence on
 * [Crouton](https://github.com/keyboardsurfer/Crouton)
