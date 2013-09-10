@@ -1,6 +1,6 @@
-# [Keydiary](wwww.keydiary.net) Android client
+# [KeyDiary](http://www.keydiary.net/) for Android
 
-## Dependence on
+## Dependence
 * [Crouton](https://github.com/keyboardsurfer/Crouton)
 * [Asy-http](https://github.com/loopj/android-async-http)
 * [Gson](https://code.google.com/p/google-gson)
