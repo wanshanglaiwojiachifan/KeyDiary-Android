@@ -114,6 +114,8 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
             SecurityPrefs.setPattern(getApplicationContext(), null);
             Config.username = "";
             Config.password = "";
+            delAlarm();
+            (new Utils()).storeAlerm(SetActivity.this, "");
             Intent intent = new Intent(SetActivity.this, LoginActivity.class);
             intent.setAction(Config.ACTION_SET);
             startActivity(intent);

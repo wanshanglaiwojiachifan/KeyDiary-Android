@@ -26,6 +26,10 @@ import com.xeodou.keydiary.bean.DiaryTime;
 import com.xeodou.keydiary.bean.LoadDiary;
 import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
+import com.xeodou.keydiary.views.CustomDialog;
+import com.xeodou.keydiary.views.CustomDialog.onDialogInfoConfirmListener;
+import com.xeodou.keydiary.views.EditDialog.ClickType;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -285,6 +289,7 @@ public class MainActivity extends Activity {
                 loadAllDiaries();
                 return;
             }
+            
             if(msg.what == Config.SUCCESSS_CODE){
                 getFiveMonth();
                 checkLocal();
@@ -296,8 +301,22 @@ public class MainActivity extends Activity {
                 String str = msg.obj.toString();
                 if(str == null) str = "加载失败";
                 if(str.length() <= 0) str = "加载失败";
-                UIHelper.show(MainActivity.this, str, ToastStyle.Alert);
-
+//                UIHelper.show(MainActivity.this, str, ToastStyle.Alert);
+                CustomDialog customDialog = new CustomDialog(MainActivity.this);
+                customDialog.setDialogTitle("提示信息");
+                customDialog.setDialogInfo("网络问题数据未加载，请重试！");
+                customDialog.setLeftBtnText("算了");
+                customDialog.setRightBtnText("确定");
+                customDialog.setOnDialogInfoConfirmListener(new onDialogInfoConfirmListener() {
+                    
+                    @Override
+                    public void onClick(View v, ClickType type) {
+                        // TODO Auto-generated method stub
+                        if(type.equals(ClickType.Cancel)) return;
+                        loadAllDiaries();
+                    }
+                });
+                customDialog.show();
             }
             if(dialog != null && dialog.isShowing() ) dialog.dismiss();
             dialog = null;
