@@ -72,6 +72,16 @@ public class EditDialog extends Dialog {
         }
     }
     
+    public void setEditHint(String str) {
+        if(editText != null) {
+            editText.setHint(str);
+        }
+    }
+    
+    public EditText getEditContent() {
+        return editText;
+    }
+    
     public void setDate(String date){
         this.date = date;
     }
@@ -129,6 +139,10 @@ public class EditDialog extends Dialog {
             text = text + " " + Utils.getDayOfWeek(text) ;
             title.setText(text);
         }
+    }
+    
+    public TextView getTitleText() {
+        return title;
     }
     
     public void setEditContent(String content){

@@ -20,7 +20,7 @@
             android:paddingRight="20dp"
             android:text="提示信息"
             android:textColor="@color/maincolor"
-            android:textSize="20sp" />
+            android:textSize="25sp" />
 
         <ProgressBar
             android:id="@+id/dialog_pro"
