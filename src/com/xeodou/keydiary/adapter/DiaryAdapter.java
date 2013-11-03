@@ -469,7 +469,7 @@ public class DiaryAdapter extends BaseAdapter {
             if (dialog != null && dialog.isShowing())
                 dialog.dismiss();
             dialog = null;
-            if(msg.what != Config.FAIL_TO_LONG) editDialog.cancel();
+            if(msg.what != Config.FAIL_TO_LONG && editDialog != null) editDialog.cancel();
             switch (msg.what) {
             case Config.SUCCESSS_CODE:
                 diaries.put(diaryData.getD(), diaryData);
