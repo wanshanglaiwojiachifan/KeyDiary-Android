@@ -1,18 +1,4 @@
-# Android generated
-bin/
-gen/
-download
-
-# Ant
-build.xml
-local.properties
-
-# Eclipse
-.classpath
-.project
-project.properties
-.externalToolBuilders/
-
-# OSX
-*/.DS_Store
+.gradle
+/local.properties
+/.idea/workspace.xml
 .DS_Store
