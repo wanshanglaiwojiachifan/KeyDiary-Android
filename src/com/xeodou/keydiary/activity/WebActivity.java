@@ -67,7 +67,7 @@ public class WebActivity extends Activity {
             public void onPageFinished(WebView view, String url) {
                 // TODO Auto-generated method stub
                 super.onPageFinished(view, url);
-                if(dialog != null && dialog.isShowing()){
+                if(dialog != null && dialog.isIndeterminate()){
                     dialog.dismiss();
                 }
             }
@@ -75,6 +75,35 @@ public class WebActivity extends Activity {
         });
     }
     
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        /**
+         * Fix bug 
+         * <link> http://crashes.to/s/de2f9a082cc</link>
+         * */
+        if(dialog != null)
+            dialog.dismiss();
+    }
+    
+    
+
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        /**
+         * Fix bug 
+         * <link> http://crashes.to/s/de2f9a082cc</link>
+         * */
+        if(dialog != null)
+            dialog.dismiss();
+        dialog = null;
+    }
+
+
+
     private OnClickListener backClickListener = new OnClickListener() {
         
         @Override

@@ -2,3 +2,9 @@
 /local.properties
 /.idea/workspace.xml
 .DS_Store
+.classpath
+.project
+bin/
+gen
+xeodou_keystore
+build.xml

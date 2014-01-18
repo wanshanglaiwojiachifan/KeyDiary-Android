@@ -32,6 +32,8 @@ public class Config {
     public static final int CODE_COMP = 0x00015;
     public static final int LOCK_CODE_REQ = 0x00016;
     public static final int LOCK_CODE_ADD = 0x00017;
+    public static final int AUTH_PASS = 0x00018;
+    public static final int AUTH_FAIL = 0x00019;
   
     //user pass
     public static String username = "";

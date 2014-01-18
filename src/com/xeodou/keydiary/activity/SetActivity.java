@@ -1,16 +1,12 @@
 package com.xeodou.keydiary.activity;
 
 import group.pals.android.lib.ui.lockpattern.LockPatternActivity;
-import group.pals.android.lib.ui.lockpattern.prefs.SecurityPrefs;
-
-import java.util.Calendar;
-
+import group.pals.android.lib.ui.lockpattern.util.Settings;
 import com.doomonafireball.betterpickers.BetterPickerUtils;
 import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment.TimePickerDialogHandler;
 import com.umeng.analytics.MobclickAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.KeyAlarm;
-import com.xeodou.keydiary.MyApplication;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.UIHelper;
 import com.xeodou.keydiary.Utils;
@@ -68,7 +64,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
             isAlarm = true;
             alermTime.setText("每日 " + str + " 提醒");
         }
-        if(SecurityPrefs.getPattern(getApplicationContext()) != null) {
+        if(Settings.Security.getPattern(getApplicationContext()) != null) {
             lockView.setText("已设置密码");
         }
         String versionName;
@@ -111,7 +107,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
                 return;
             }
             (new Utils()).storePass(SetActivity.this, "", "");
-            SecurityPrefs.setPattern(getApplicationContext(), null);
+            Settings.Security.setPattern(getApplicationContext(), null);
             Config.username = "";
             Config.password = "";
             delAlarm();
@@ -149,7 +145,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
             startActivity(intent);
             break;
         case R.id.lock:
-            char[] savedPattern = SecurityPrefs.getPattern(getApplicationContext());
+            char[] savedPattern = Settings.Security.getPattern(getApplicationContext());
             if( savedPattern != null) {
                 intent = new Intent(LockPatternActivity.ACTION_COMPARE_PATTERN,
                         null, SetActivity.this, LockPatternActivity.class);
@@ -215,7 +211,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
             if (resultCode == RESULT_OK) {
                 char[] pattern = data
                         .getCharArrayExtra(LockPatternActivity.EXTRA_PATTERN);
-                SecurityPrefs.setPattern(getApplicationContext(), pattern);
+                Settings.Security.setPattern(getApplicationContext(), pattern);
                 lockView.setText("已设置密码");
             }
             break;
@@ -224,7 +220,7 @@ public class SetActivity extends FragmentActivity implements OnClickListener, On
             switch (resultCode) {
             case RESULT_OK:
                 // The user passed
-                SecurityPrefs.setPattern(getApplicationContext(), null);
+                Settings.Security.setPattern(getApplicationContext(), null);
                 UIHelper.show(SetActivity.this, "删除安全密码成功", ToastStyle.Confirm);
                 lockView.setText("点击设置");
                 break;

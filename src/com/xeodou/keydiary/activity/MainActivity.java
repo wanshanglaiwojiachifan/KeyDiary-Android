@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.j256.ormlite.dao.Dao;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
@@ -15,6 +16,7 @@ import com.umeng.update.UmengUpdateAgent;
 import com.xeodou.keydiary.Config;
 import com.xeodou.keydiary.FontManager;
 import com.xeodou.keydiary.FontManager.onFontCommpressListener;
+import com.xeodou.keydiary.KeyDiaryResult;
 import com.xeodou.keydiary.Log;
 import com.xeodou.keydiary.R;
 import com.xeodou.keydiary.UIHelper;
@@ -24,10 +26,13 @@ import com.xeodou.keydiary.adapter.DiaryFragementAdapter;
 import com.xeodou.keydiary.bean.Diary;
 import com.xeodou.keydiary.bean.DiaryTime;
 import com.xeodou.keydiary.bean.LoadDiary;
+import com.xeodou.keydiary.bean.LoadUser;
+import com.xeodou.keydiary.bean.Result;
 import com.xeodou.keydiary.database.DBUtils;
 import com.xeodou.keydiary.http.API;
 import com.xeodou.keydiary.views.CustomDialog;
 import com.xeodou.keydiary.views.CustomDialog.onDialogInfoConfirmListener;
+import com.xeodou.keydiary.views.EditDialog;
 import com.xeodou.keydiary.views.EditDialog.ClickType;
 
 import android.os.AsyncTask;
@@ -41,8 +46,13 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
+
+import group.pals.android.lib.ui.lockpattern.LockPatternActivity;
+import group.pals.android.lib.ui.lockpattern.util.Settings;
 
 public class MainActivity extends Activity {
 
@@ -54,6 +64,7 @@ public class MainActivity extends Activity {
     private View setBtn;
     private ProgressDialog dialog;
     private long startDate, endDate;
+    private EditDialog editDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +92,17 @@ public class MainActivity extends Activity {
 //            return;
 //        }
 //        new UnCompressTask().execute();
-        loadAllDiaries();
+        char[] savedPattern = Settings.Security.getPattern(getApplicationContext());
+        if (savedPattern != null) {
+            Intent intent = new Intent(
+                    LockPatternActivity.ACTION_COMPARE_PATTERN, null,
+                    MainActivity.this, LockPatternActivity.class);
+            intent.putExtra(LockPatternActivity.EXTRA_PATTERN,
+                    savedPattern);
+            startActivityForResult(intent, Config.LOCK_CODE_REQ);
+        } else {
+            loadAllDiaries();
+        }
     }
     
     private class UnCompressTask extends AsyncTask<String, Void, String>{
@@ -285,9 +306,25 @@ public class MainActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
+            String str = null;
+            if (msg.obj != null) str = msg.obj.toString();
+            if(str == null || str.length() <= 0) str = "加载失败";
             if(msg.what == Config.CODE_COMP){
                 loadAllDiaries();
                 return;
+            }
+
+            if (msg.what == Config.AUTH_PASS) {
+                /**
+                 * Fix bug 
+                 * <link> http://crashes.to/s/ee9ebb903a8 </link>
+                 * */
+                if(editDialog != null && editDialog.isShowing()) editDialog.dismiss();
+                UIHelper.show(MainActivity.this, "验证成功正在跳转", ToastStyle.Info);
+                clearSafePass();
+                loadAllDiaries();
+            } else if(msg.what == Config.AUTH_FAIL) {
+                UIHelper.show(MainActivity.this, str, ToastStyle.Alert);
             }
             
             if(msg.what == Config.SUCCESSS_CODE){
@@ -297,10 +334,8 @@ public class MainActivity extends Activity {
                 viewPager.setCurrentItem(titles.size() - 1);
                 UIHelper.show(MainActivity.this, "加载成功", ToastStyle.Info);
 
-            } else {
-                String str = msg.obj.toString();
-                if(str == null) str = "加载失败";
-                if(str.length() <= 0) str = "加载失败";
+            } else if (msg.what == Config.FAIL_CODE)  {
+
 //                UIHelper.show(MainActivity.this, str, ToastStyle.Alert);
                 CustomDialog customDialog = new CustomDialog(MainActivity.this);
                 customDialog.setDialogTitle("提示信息");
@@ -319,7 +354,6 @@ public class MainActivity extends Activity {
                 customDialog.show();
             }
             if(dialog != null && dialog.isShowing() ) dialog.dismiss();
-            dialog = null;
         }
         
     };
@@ -360,13 +394,165 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
 //        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Config.FAIL_CODE){
-            finish();
-        } else if(resultCode == Config.LOGIN_CODE) {
-            init();
-        } else if(resultCode == Config.LOGOUT_CODE){
-            finish();
+        if (requestCode == Config.LOCK_CODE_REQ) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    // The user passed
+                    loadAllDiaries();
+                    break;
+                case RESULT_CANCELED:
+                    // The user cancelled the task
+                    finish();
+                    break;
+                case LockPatternActivity.RESULT_FAILED:
+                    // The user failed to enter the pattern
+                    break;
+            }
+
+            /*
+             * In any case, there's always a key EXTRA_RETRY_COUNT, which holds
+             * the number of tries that the user did.
+             */
+            int retryCount = data.getIntExtra(
+                    LockPatternActivity.EXTRA_RETRY_COUNT, 0);
+            if(retryCount >= 3) {
+                // 用密码找回
+                CustomDialog customDialog = new CustomDialog(MainActivity.this);
+                customDialog.setDialogTitle("忘记安全密码");
+                customDialog.setDialogInfo("输入安全密码错误超过5次，\n是否通过密码找回？");
+                customDialog.setLeftBtnText("算了");
+                customDialog.setRightBtnText("确定");
+                customDialog.setOnDialogInfoConfirmListener(new onDialogInfoConfirmListener() {
+
+                    @Override
+                    public void onClick(View v, ClickType type) {
+                        // TODO Auto-generated method stub
+                        if(type.equals(ClickType.Ok)){
+                            editDialog = new EditDialog(MainActivity.this);
+                            editDialog.getTitleText().setText("验证密码");
+                            editDialog.setEditHint("请输入密码");
+                            editDialog.setEditContent("");
+                            editDialog.getEditContent().setTransformationMethod(PasswordTransformationMethod.getInstance());
+                            editDialog.setOnDialogClickListener(new EditDialog.onDialogClickListener() {
+
+                                @Override
+                                public void onClick(ClickType type, final String content,
+                                                    final String day, View v) {
+                                    // TODO Auto-generated method stub
+                                    if(!type.equals(ClickType.Delete)){
+                                        if (!Utils.isLogin(MainActivity.this)) {
+                                            clearSafePass();
+                                            loadAllDiaries();
+                                            return;
+                                        }
+                                        if (content.length() <= 0) return ;
+                                        Config.password = content;
+                                        vertifyUser();
+                                    } else {
+                                        setBtn.setVisibility(View.GONE);
+                                        closeSelf();
+                                    }
+                                }
+                            });
+                            editDialog.show();
+
+                        } else {
+                            closeSelf();
+                        }
+                    }
+                });
+                customDialog.show();
+
+            }
+        } else {
+            if(resultCode == Config.FAIL_CODE){
+                finish();
+            } else if(resultCode == Config.LOGIN_CODE) {
+                init();
+            } else if(resultCode == Config.LOGOUT_CODE){
+                finish();
+            }
         }
+    }
+
+    private void  vertifyUser() {
+        API.getUser(new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(JSONObject response) {
+                // TODO Auto-generated method stub
+
+                Gson gson = new Gson();
+                LoadUser user = gson.fromJson(response.toString(), LoadUser.class);
+                if (user.getStat() == 1 && user != null) {
+//                    (new Utils()).storeUser(LoginActivity.this, user.getData());
+                    sendMsg(Config.AUTH_PASS, null);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable e, JSONObject errorResponse) {
+                // TODO Auto-generated method stub
+                Gson gson = new Gson();
+                try {
+                    Result result = gson.fromJson(errorResponse.toString(), Result.class);
+                    if(result == null) {
+                        sendMsg(Config.AUTH_FAIL, "未知问题");
+                        return;
+                    }
+                    sendMsg(Config.AUTH_FAIL, KeyDiaryResult.getMsg(result.getStat()));
+                } catch (JsonSyntaxException e1) {
+                    // TODO Auto-generated catch block
+                    sendMsg(Config.AUTH_FAIL, "验证失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable error, String content) {
+                // TODO Auto-generated method stub
+                sendMsg(Config.AUTH_FAIL, content);
+            }
+
+            @Override
+            public void onStart() {
+                // TODO Auto-generated method stub
+                showDialog(getResources().getString(R.string.loading));
+            }
+
+        });
+    }
+
+    private void showDialog(String msg){
+        if (dialog == null) {
+            dialog = new ProgressDialog(this);
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(false);
+            dialog.setMessage(msg);
+        }
+        dialog.show();
+    }
+
+    private void dismissDialog(){
+        if (dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
+    }
+
+    private void closeSelf() {
+        Toast.makeText(MainActivity.this, "程序即将关闭。", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                finish();
+            }
+        }, 2000);
+    }
+
+    private void clearSafePass() {
+        Settings.Security.setPattern(getApplicationContext(), null);
     }
 
     @Override
